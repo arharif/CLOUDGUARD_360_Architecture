@@ -1,0 +1,10 @@
+# Make a copy named terraform.tfvars and adapt these variables.
+# Never put credentials, secrets, or account IDs into a committed tfvars file.
+prefix   = "cg360"
+location = "westeurope"
+
+tags = {
+  project     = "CloudGuard360"
+  environment = "lab"
+  managed_by  = "terraform"
+}
