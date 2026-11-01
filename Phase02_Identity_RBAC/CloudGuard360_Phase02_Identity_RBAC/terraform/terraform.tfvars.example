@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars and keep it out of public Git.
+prefix                 = "CG360"
+app_resource_group     = "rg-cg360-app"
+network_resource_group = "rg-cg360-network"
+
+# RELEASE A: start with groups only.
+enable_role_assignments = false
+
+# Keep elevated rights DISABLED unless you have documented authorization.
+enable_app_contributor = false
+
+# Do not add actual users to groups during the initial configuration.
+demo_member_object_id = ""
