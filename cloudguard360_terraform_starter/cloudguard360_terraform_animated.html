@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#0d2344">
+<title>CloudGuard 360 — Animated Terraform Guide</title>
+<style>
+:root{--bg:#f3f6fb;--surface:#fff;--ink:#14223b;--muted:#63728c;--nav:#102445;--line:#dfe8f3;--blue:#2563eb;--teal:#0ea5a4;--warn:#b45309;--red:#dc2626;--shadow:0 12px 36px rgba(11,38,72,.07);font-family:Inter,Segoe UI,Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:78px}body{margin:0;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.67}a{color:#1a54c4}button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #83cfff;outline-offset:3px}
+.top{position:sticky;top:0;height:68px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:8;display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:15px}
+.brand{display:flex;align-items:center;gap:11px;white-space:nowrap}.logo{background:linear-gradient(140deg,#0e489e,#22b9c7);color:white;font-weight:900;border-radius:12px;display:grid;place-items:center;width:38px;height:38px;letter-spacing:-1px}.brand strong{font-size:15px}.brand span{display:block;font-size:10px;letter-spacing:1.3px;color:var(--muted);font-weight:800}.top-controls{display:flex;align-items:center;gap:12px}.top-controls button{background:#edf4ff;border:1px solid #dae7fa;border-radius:10px;padding:8px 12px;color:#164990;font-weight:700}.top-controls input{height:38px;background:#f4f7fc;border:1px solid #d9e2ef;border-radius:10px;padding:8px 12px;width:230px}.progress-mini{font-size:12px;color:var(--muted);font-weight:800;white-space:nowrap}
+.layout{max-width:1600px;margin:auto;display:grid;grid-template-columns:288px minmax(0,1fr);gap:25px;padding:25px}.sidebar{position:sticky;top:92px;align-self:start;height:calc(100vh - 113px);background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);overflow-y:auto;padding:18px}.sidebar small{color:#8994a6;font-size:10px;font-weight:900;letter-spacing:1.8px}.side-progress{margin:14px 0 20px}.track{height:7px;background:#eaf1fa;border-radius:50px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#1c64e0,#08b5ae);width:0%;transition:width .35s ease}.pct{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:8px}.nav-item{display:flex;align-items:flex-start;gap:8px;color:#54657d;text-decoration:none;border-radius:10px;padding:9px 8px;font-weight:550;font-size:11.4px;line-height:1.4;transition:background .2s}.nav-item:hover{background:#eff6ff}.nav-item.active{background:#eaf2ff;color:#1647a7;font-weight:800}.nav-dot{background:#d0dce9;width:8px;height:8px;border-radius:100%;margin-top:5px;flex-shrink:0}.nav-item.active .nav-dot{background:#2469f6}.nav-item.done .nav-dot{background:#05a78a}.nav-check{margin-left:auto;color:#04a78b;opacity:0}.nav-item.done .nav-check{opacity:1}
+main{min-width:0}.hero{background:linear-gradient(125deg,#0a2247,#0d3975 56%,#0f6585);border-radius:19px;padding:36px 38px 26px;color:white;box-shadow:var(--shadow);position:relative;overflow:hidden}.hero:before{content:"";position:absolute;right:-130px;top:-190px;height:460px;width:460px;border-radius:50%;border:95px solid rgba(255,255,255,.035);pointer-events:none}.hero .eyebrow{font-size:11px;font-weight:900;letter-spacing:2px;color:#78e6e6}.hero h1{font-size:clamp(30px,3.3vw,47px);letter-spacing:-1.1px;line-height:1.16;max-width:720px;margin:11px 0 12px}.hero p{color:#c5d9ef;font-size:15px;max-width:740px}.hero .chips{display:flex;gap:9px;flex-wrap:wrap;margin:17px 0}.chip{font-size:11px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:100px;padding:5px 12px;font-weight:700}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:19px}.hero-actions a{display:inline-flex;align-items:center;background:#fff;color:#153b78;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:900}.hero-actions a.secondary{background:transparent;color:#d9edff;border:1px solid rgba(255,255,255,.34)}
+.diagram{margin-top:29px;padding:16px;border:1px solid rgba(255,255,255,.15);border-radius:14px;background:rgba(0,0,0,.13);overflow:hidden}.diagram svg{width:100%;height:auto;display:block}.diagram .route{stroke-dasharray:9 8;animation:flow 5s linear infinite}@keyframes flow{to{stroke-dashoffset:-75}}.diagram .pulse{animation:pulse 2s ease-in-out infinite alternate;transform-origin:center}@keyframes pulse{to{opacity:.5;transform:scale(1.03)}}
+.article{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-top:19px;padding:34px 40px 45px}.article h1{font-size:25px;letter-spacing:-.5px;margin-top:12px}.article h2{font-size:23px;letter-spacing:-.5px;border-top:1px solid var(--line);margin-top:49px;padding-top:31px;scroll-margin-top:75px;position:relative;padding-right:130px}.article h3{font-size:16px;margin-top:26px}.article h4{font-size:14px}.sec-label{font-size:9px;letter-spacing:1.4px;color:#618ac4;display:block;margin-bottom:3px}.article p{margin:12px 0 16px}.article blockquote{border-left:4px solid #f0ad4e;background:#fff9e8;padding:10px 19px;margin:18px 0;border-radius:0 10px 10px 0}.article blockquote p{margin:5px 0}.article hr{border:0;border-top:1px solid var(--line);margin:34px 0}.article ul,.article ol{padding-left:24px}.article li{margin:6px 0}.article table{width:100%;border-collapse:separate;border-spacing:0;margin:22px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:block;overflow-x:auto;white-space:normal}.article th{background:#edf4fc;color:#25416b;font-weight:900}.article td,.article th{border-bottom:1px solid var(--line);padding:11px 13px;text-align:left;font-size:12px;min-width:100px;vertical-align:top}.article tr:last-child td{border-bottom:0}.article code:not(pre code){background:#edf4fa;color:#124c9e;padding:2px 5px;border-radius:5px;overflow-wrap:anywhere;font-size:.94em}
+.code-card{margin:17px 0 23px;background:#0a1830;border-radius:13px;overflow:hidden;border:1px solid #273c5b}.code-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#132b4c;color:#b8d8ff;font-size:10px;font-weight:900;letter-spacing:.8px;padding:10px 12px}.code-bar span:first-child{margin-right:auto}.terminal-dot{width:7px;height:7px;background:#43d4c1;border-radius:50%;display:inline-block}.copy-btn{padding:6px 11px;border:1px solid #49729e;border-radius:8px;color:#d6efff;background:#23466f;font-size:11px;font-weight:800}.copy-btn:hover{background:#315b8c}.code-card pre{padding:15px 18px;margin:0;color:#dcf0ff;overflow:auto;font:12px/1.7 'Cascadia Code',Consolas,Monaco,monospace;white-space:pre}.code-card code{font-family:inherit}.mark-btn{position:absolute;right:0;top:37px;background:#f3f9fd;border:1px solid #d8e7f3;color:#25639c;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:850}.mark-btn.done{background:#ddfbf1;color:#08795f;border-color:#a8e9d5}.filter-dim{display:none!important}.article h2:target{color:#1355b6}.article a{text-decoration-thickness:1px;text-underline-offset:3px}
+.footer{padding:25px;text-align:center;color:#6b7889;font-size:11px}.toast{position:fixed;right:25px;bottom:24px;background:#123d55;color:white;padding:12px 17px;border-radius:12px;box-shadow:0 8px 25px #0003;font-weight:800;opacity:0;transform:translateY(15px);transition:.3s;pointer-events:none;z-index:15}.toast.visible{opacity:1;transform:translateY(0)}
+@media(max-width:1100px){.layout{grid-template-columns:230px minmax(0,1fr);gap:14px;padding:14px}.article{padding:25px}.sidebar{padding:12px}}@media(max-width:790px){.sidebar{position:relative;height:auto;top:auto;max-height:320px}.layout{display:block}.sidebar{margin-bottom:14px}.top{padding:0 12px}.top-controls input{width:115px}.progress-mini{display:none}.article h2{padding-right:0}.mark-btn{position:static;display:inline-block;vertical-align:middle;margin-left:10px;margin-top:8px}.hero{padding:23px}.article{padding:19px}.nav-item{font-size:12px}}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}@media print{.top,.sidebar,.hero-actions,.mark-btn,.copy-btn,.toast{display:none!important}.layout{display:block;margin:0;padding:0}.hero{background:#fff;color:#14223b;border:1px solid #ccc}.hero p{color:#3b4658}.diagram{display:none}.article{border:0;box-shadow:none;padding:0}.article h2{page-break-after:avoid}.code-card{break-inside:avoid}.code-card pre{white-space:pre-wrap;color:#111}.code-card{background:#fff;border:1px solid #ccc}.code-bar{background:#ddd;color:#111}.article table{display:table}.footer{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="logo">CG</div><div><strong>CloudGuard 360</strong><span>TERRAFORM ENGINEERING LAB</span></div></div><div class="top-controls"><div class="progress-mini" id="statusTop">0% complete</div><input type="search" id="search" placeholder="Search the guide…" aria-label="Search guide"><button type="button" id="resetProgress" title="Reset completion tracking">Reset</button><button type="button" id="printGuide">Print / PDF</button></div></header>
+<div class="layout">
+<aside class="sidebar"><small>YOUR LEARNING PATH</small><div class="side-progress"><div class="track"><div class="fill" id="progressFill"></div></div><div class="pct"><span id="progressText">0 completed</span><span id="progressPct">0%</span></div></div><nav aria-label="Guide sections"><a class="nav-item" href="#important-start-here-if-you-have-already-received-the-azure-403-error"><span class="nav-dot"></span><span class="nav-label">Important: start here if you have already received the Azure 403 error</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#table-of-contents"><span class="nav-dot"></span><span class="nav-label">Table of contents</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#1-the-outcome-and-architecture"><span class="nav-dot"></span><span class="nav-label">1. The outcome and architecture</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#2-understand-the-terraform-files-and-costs"><span class="nav-dot"></span><span class="nav-label">2. Understand the Terraform files and costs</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#path-a-begin-from-zero-azure-portal-and-cloud-shell"><span class="nav-dot"></span><span class="nav-label">Path A — begin from zero: Azure Portal and Cloud Shell</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#4-download-the-zip-and-upload-it-to-cloud-shell"><span class="nav-dot"></span><span class="nav-label">4. Download the ZIP and upload it to Cloud Shell</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#5-select-the-correct-subscription-and-register-the-provider"><span class="nav-dot"></span><span class="nav-label">5. Select the correct subscription and register the provider</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#6-path-a-first-clean-terraform-plan-and-apply"><span class="nav-dot"></span><span class="nav-label">6. Path A — first clean Terraform plan and apply</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#path-b-recover-an-existing-partially-failed-deployment"><span class="nav-dot"></span><span class="nav-label">Path B — recover an existing partially failed deployment</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#8-verify-the-deployment-with-terraform-azure-cli-and-azure-portal"><span class="nav-dot"></span><span class="nav-label">8. Verify the deployment with Terraform, Azure CLI and Azure Portal</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#9-inspect-nsgs-subnets-cidrs-and-network-behaviour"><span class="nav-dot"></span><span class="nav-label">9. Inspect NSGs, subnets, CIDRs and network behaviour</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#10-repeatability-source-control-and-evidence"><span class="nav-dot"></span><span class="nav-label">10. Repeatability, source control and evidence</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#11-controlled-deletion-and-cost-hygiene"><span class="nav-dot"></span><span class="nav-label">11. Controlled deletion and cost hygiene</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#12-troubleshooting-and-incident-playbooks"><span class="nav-dot"></span><span class="nav-label">12. Troubleshooting and incident playbooks</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#13-mastery-exercises-and-next-module"><span class="nav-dot"></span><span class="nav-label">13. Mastery exercises and next module</span><span class="nav-check" aria-hidden="true">✓</span></a>
+<a class="nav-item" href="#14-references"><span class="nav-dot"></span><span class="nav-label">14. References</span><span class="nav-check" aria-hidden="true">✓</span></a></nav></aside>
+<main><section class="hero"><div class="eyebrow">COMPLETE HANDS-ON WALKTHROUGH · 2026</div><h1>Build your first Azure architecture with Terraform.</h1><p>From the Azure Portal and persistent Cloud Shell storage to secure recovery from your exact 403 region error, reviewed plans, Hub-and-Spoke deployment, verification and cleanup.</p><div class="chips"><span class="chip">AZURE CLOUD SHELL</span><span class="chip">TERRAFORM 4.x PROVIDER</span><span class="chip">HUB & SPOKE</span><span class="chip">11 MANAGED RESOURCES</span><span class="chip">COST-CONTROLLED LAB</span></div><div class="hero-actions"><a href="#path-b-recover-an-existing-partially-failed-deployment">Resume after Azure 403 ↗</a><a class="secondary" href="#path-a-begin-from-zero-azure-portal-and-cloud-shell">Start from zero ↗</a></div><div class="diagram"><svg viewBox="0 0 780 210" role="img" aria-label="Animated Hub-and-Spoke Azure networking design"><defs><linearGradient id="nGrad" x1="0" x2="1"><stop stop-color="#35a7fc"/><stop offset="1" stop-color="#24dec4"/></linearGradient></defs><rect x="10" y="8" width="760" height="194" rx="13" fill="#113c67" stroke="#34648e"/><text x="28" y="30" fill="#98cfeb" font-family="sans-serif" font-size="12" font-weight="800">AZURE SUBSCRIPTION · TERRAFORM MANAGED</text><rect x="34" y="50" width="255" height="128" rx="12" fill="#16496d" stroke="#53b3de"/><text x="51" y="73" fill="#d6f7ff" font-size="16" font-weight="bold">HUB VNET</text><text x="51" y="93" fill="#9ddaff" font-size="11">10.0.0.0/16</text><rect x="51" y="110" width="213" height="44" rx="7" fill="#27618c"/><text x="65" y="128" fill="#e9ffff" font-size="12">snet-shared</text><text x="65" y="145" fill="#b9dafa" font-size="11">10.0.1.0/24</text><rect x="489" y="50" width="255" height="128" rx="12" fill="#16496d" stroke="#53b3de"/><text x="505" y="73" fill="#d6f7ff" font-size="16" font-weight="bold">APPLICATION SPOKE</text><text x="505" y="93" fill="#9ddaff" font-size="11">10.10.0.0/16</text><rect x="506" y="103" width="220" height="50" rx="7" fill="#27618c"/><text x="520" y="123" fill="#e9ffff" font-size="11">snet-workload · NSG</text><text x="520" y="140" fill="#b9dafa" font-size="11">10.10.1.0/24</text><path class="route" d="M291 115 H487" stroke="url(#nGrad)" stroke-width="5" fill="none"/><circle class="pulse" cx="390" cy="115" r="7" fill="#5cf8d8"/><text x="313" y="100" fill="#bdffff" font-size="12" font-weight="bold">VNet Peering ↔</text><text x="360" y="161" fill="#a9d7ef" font-size="10">Azure private routing</text></svg></div></section>
+<article class="article" id="content"><h1 id="cloudguard-360-terraform-on-azure">CloudGuard 360 — Terraform on Azure</h1>
+<blockquote>
+<p><strong>Complete hands-on lab: Azure Cloud Shell → Terraform → Hub-and-Spoke networking → safe region-error recovery → verification → controlled cleanup.</strong><br />
+<strong>Audience:</strong> beginner-to-intermediate Azure / Terraform learners. <strong>Language:</strong> English.<br />
+<strong>Revision:</strong> 1 November 2026. <strong>Lab scope:</strong> the first 11 Azure networking resources, not yet the later AKS/DevSecOps platform.<br />
+<strong>Companion:</strong> open <code>index.html</code> for an <strong>animated, offline, interactive version</strong> of this walkthrough, with clickable steps, copy buttons and progress tracking.</p>
+</blockquote>
+<h2 id="important-start-here-if-you-have-already-received-the-azure-403-error" data-section="true"><span class="sec-label">SECTION</span> Important: start here if you have already received the Azure 403 error<button class="mark-btn" data-mark="important-start-here-if-you-have-already-received-the-azure-403-error" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<p>Your exact error was:</p>
+<div class="code-card" data-lang="text"><div class="code-bar"><span class="terminal-dot"></span><span>TEXT · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-text">RequestDisallowedByAzure: The selected region is currently not accepting new customers.
+Virtual Network: vnet-cg360-hub / vnet-cg360-app
+Requested region: westeurope
+</code></pre></div>
+<p><strong>Do not rerun your saved <code>step01.tfplan</code>. Do not delete <code>terraform.tfstate</code>, destroy your Resource Groups or simply change <code>location</code> without inspecting the state.</strong> An unsuccessful <code>terraform apply</code> can leave already-created resources recorded in Terraform state. HashiCorp documents that <code>apply</code> does <strong>not</strong> automatically roll back a partially completed operation.</p>
+<p>Go directly to <strong><a href="#path-b-recover-an-existing-partially-failed-deployment">Path B — recover an existing partially failed deployment</a></strong>. The updated source includes a controlled region fix that keeps the previously created Resource Groups in their original region while placing new VNets and NSG in another region.</p>
+<hr />
+<h2 id="table-of-contents" data-section="true"><span class="sec-label">SECTION</span> Table of contents<button class="mark-btn" data-mark="table-of-contents" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<ol>
+<li><a href="#1-the-outcome-and-architecture">The outcome and architecture</a></li>
+<li><a href="#2-understand-the-terraform-files-and-costs">Understand the Terraform files and costs</a></li>
+<li><a href="#path-a-begin-from-zero-azure-portal-and-cloud-shell">Path A — begin from zero: Azure Portal and Cloud Shell</a></li>
+<li><a href="#4-download-the-zip-and-upload-it-to-cloud-shell">Download the ZIP and upload it to Cloud Shell</a></li>
+<li><a href="#5-select-the-correct-subscription-and-register-the-provider">Select the correct subscription and register the provider</a></li>
+<li><a href="#6-path-a-first-clean-terraform-plan-and-apply">Path A — first clean Terraform plan and apply</a></li>
+<li><a href="#path-b-recover-an-existing-partially-failed-deployment">Path B — recover an existing partially failed deployment</a></li>
+<li><a href="#8-verify-the-deployment-with-terraform-azure-cli-and-azure-portal">Verify the deployment with Terraform, Azure CLI and Azure Portal</a></li>
+<li><a href="#9-inspect-nsgs-subnets-cidrs-and-network-behaviour">Inspect NSGs, subnets, CIDRs and network behaviour</a></li>
+<li><a href="#10-repeatability-source-control-and-evidence">Repeatability, source control and evidence</a></li>
+<li><a href="#11-controlled-deletion-and-cost-hygiene">Controlled deletion and cost hygiene</a></li>
+<li><a href="#12-troubleshooting-and-incident-playbooks">Troubleshooting and incident playbooks</a></li>
+<li><a href="#13-mastery-exercises-and-next-module">Mastery exercises and next module</a></li>
+<li><a href="#14-references">References</a></li>
+</ol>
+<hr />
+<h2 id="1-the-outcome-and-architecture" data-section="true"><span class="sec-label">SECTION</span> 1. The outcome and architecture<button class="mark-btn" data-mark="1-the-outcome-and-architecture" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="11-business-story">1.1 Business story</h3>
+<p>You are the Cloud Engineer for a fictional company, <strong>CloudGuard 360</strong>. Your assignment is to deploy the base Azure networking platform for an application. You must use <strong>Terraform</strong>, not manual point-and-click creation of the networks. Later, this platform will host an existing Docker application, AKS, Entra ID access controls, Zabbix, Grafana and incident workflows.</p>
+<p>For now, the acceptance criteria are measurable: <strong>2 Resource Groups, 2 VNets, 3 subnets, 1 NSG, 1 NSG-to-subnet association and 2 reciprocal peerings</strong>.</p>
+<div class="code-card" data-lang="text"><div class="code-bar"><span class="terminal-dot"></span><span>TEXT · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-text">Azure Subscription (Free Trial / eligible subscription)
+│
+├── rg-cg360-network                     (Resource Group metadata location)
+│   └── vnet-cg360-hub                    (Network region: northeurope*)
+│       ├── CIDR: 10.0.0.0/16
+│       └── snet-shared: 10.0.1.0/24
+│
+└── rg-cg360-app                         (Resource Group metadata location)
+    ├── vnet-cg360-app                    (Network region: northeurope*)
+    │   ├── CIDR: 10.10.0.0/16
+    │   ├── snet-workload: 10.10.1.0/24 ── NSG association
+    │   └── snet-private-endpoints: 10.10.2.0/24
+    └── nsg-cg360-workload                (Same region as application VNet)
+
+vnet-cg360-hub &lt;---- two directional VNet peerings ----&gt; vnet-cg360-app
+
+* The sample choice of northeurope is not a guarantee of subscription eligibility.
+</code></pre></div>
+<h3 id="12-network-vocabulary-made-simple">1.2 Network vocabulary made simple</h3>
+<table>
+<thead>
+<tr>
+  <th>Concept</th>
+  <th>Meaning</th>
+  <th>Practical example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Resource Group</td>
+  <td>Logical lifecycle and management boundary</td>
+  <td><code>rg-cg360-app</code></td>
+</tr>
+<tr>
+  <td>VNet</td>
+  <td>An isolated IP network inside Azure</td>
+  <td><code>10.10.0.0/16</code></td>
+</tr>
+<tr>
+  <td>Subnet</td>
+  <td>A smaller address space within a VNet</td>
+  <td><code>10.10.1.0/24</code></td>
+</tr>
+<tr>
+  <td>NSG</td>
+  <td>Stateful allow/deny rules evaluated for network traffic</td>
+  <td>Attached to <code>snet-workload</code></td>
+</tr>
+<tr>
+  <td>Peering</td>
+  <td>Private connectivity between two VNets</td>
+  <td>Hub ↔ Application Spoke</td>
+</tr>
+<tr>
+  <td>Terraform configuration</td>
+  <td>Desired Azure resources described in <code>.tf</code> files</td>
+  <td><code>network.tf</code></td>
+</tr>
+<tr>
+  <td>Terraform state</td>
+  <td>Terraform's mapping of managed resources to actual IDs</td>
+  <td><code>terraform.tfstate</code></td>
+</tr>
+<tr>
+  <td>Plan</td>
+  <td>Proposed actions without making changes</td>
+  <td><code>terraform plan</code></td>
+</tr>
+<tr>
+  <td>Apply</td>
+  <td>Execute an approved Terraform plan</td>
+  <td><code>terraform apply planfile</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Architectural honesty:</strong> Hub-and-Spoke <strong>without</strong> Azure Firewall or a network virtual appliance is not a centrally inspected network. VNet peering is not transitive. The sample NSG initially has only Azure's default rules. No VM, workload, packet test or AKS cluster exists yet.</p>
+<h3 id="13-why-the-region-fix-requires-care">1.3 Why the region fix requires care</h3>
+<p>There are <strong>two distinct region settings</strong> in this revised starter:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl"># terraform.tfvars
+location                = &quot;northeurope&quot;  # VNets and NSG
+resource_group_location = &quot;westeurope&quot;   # preserve existing RG metadata location
+</code></pre></div>
+<p>A Resource Group's metadata location <strong>does not need to match the location of the resources it contains</strong>. However, changing the Resource Group's own <code>location</code> property in Terraform triggers <strong>replacement</strong>, which can lead to deletion of the entire Resource Group and its contents. This course therefore preserves Resource Group location during recovery and changes only the actual network resources' region.</p>
+<p><strong>For a brand-new deployment with no existing Resource Groups</strong>, you may instead choose the same eligible region for both settings, for example <code>northeurope</code>. Only do so if you are on Path A, with no pre-existing state or similarly named resources.</p>
+<hr />
+<h2 id="2-understand-the-terraform-files-and-costs" data-section="true"><span class="sec-label">SECTION</span> 2. Understand the Terraform files and costs<button class="mark-btn" data-mark="2-understand-the-terraform-files-and-costs" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="21-deliverable-package">2.1 Deliverable package</h3>
+<p>The complete downloadable package contains:</p>
+<div class="code-card" data-lang="text"><div class="code-bar"><span class="terminal-dot"></span><span>TEXT · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-text">CloudGuard360_Terraform_Course/
+├── terraform.md                     ← this deep technical guide
+├── index.html                       ← animated interactive guide (offline)
+└── cloudguard360_terraform_starter/
+    ├── README.md
+    ├── versions.tf
+    ├── providers.tf
+    ├── variables.tf
+    ├── terraform.tfvars.example
+    ├── main.tf
+    ├── network.tf
+    ├── outputs.tf
+    ├── .gitignore
+    └── scripts/
+        ├── preflight.sh
+        ├── verify.sh
+        ├── verify.ps1
+        ├── repair_existing_lab.sh
+        └── check_plan.py
+</code></pre></div>
+<p>The <strong>old ZIP</strong> had a single location variable that applied to Resource Groups and VNets. The <strong>revised ZIP</strong> deliberately separates <code>resource_group_location</code> from <code>location</code>, for the region-recovery scenario you encountered.</p>
+<h3 id="22-what-is-and-isnt-free">2.2 What is and isn't free</h3>
+<table>
+<thead>
+<tr>
+  <th>Item</th>
+  <th>Cost note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Resource Groups</td>
+  <td>No separate management fee</td>
+</tr>
+<tr>
+  <td>VNets and subnets</td>
+  <td>Generally no hourly charge for the VNet itself; associated services and traffic may cost</td>
+</tr>
+<tr>
+  <td>NSG</td>
+  <td>No separate NSG hourly fee; related network services may cost</td>
+</tr>
+<tr>
+  <td>VNet peering</td>
+  <td>Creation itself does not generate traffic charges, but peered data transfers can be billed</td>
+</tr>
+<tr>
+  <td>Cloud Shell</td>
+  <td>Shell usage is free; attached Azure Files storage has a charge</td>
+</tr>
+<tr>
+  <td>Terraform CLI</td>
+  <td>No licence required for this local lab</td>
+</tr>
+<tr>
+  <td>AKS, Azure Firewall, VPN Gateway</td>
+  <td><strong>Not deployed in this lab</strong>; can be chargeable in later stages</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Budget gate:</strong> Azure Portal → <strong>Cost Management + Billing</strong> → check your <strong>actual subscription type</strong>, <strong>credit balance</strong>, <strong>expiry date</strong>, and <strong>Costs/Budgets</strong>. An Azure budget notification is <strong>not</strong> a hard spending cap. Do <strong>not</strong> upgrade the subscription or remove a spending limit just to run this exercise. Regions can have different service rates, so check pricing if deploying additional services.</p>
+<h3 id="23-secrets-and-state-safety">2.3 Secrets and state safety</h3>
+<p>Never publish or share:</p>
+<ul>
+<li><code>terraform.tfstate</code>, <code>terraform.tfstate.backup</code>, or <code>terraform state pull</code> output;</li>
+<li><code>terraform.tfvars</code> if it contains confidential values;</li>
+<li>saved plan files (<code>*.tfplan</code>), which can contain sensitive settings;</li>
+<li>access tokens, tenant IDs, subscription IDs, credentials or device-login codes.</li>
+</ul>
+<p>The provided <code>.gitignore</code> excludes local state, plans and <code>terraform.tfvars</code>. <strong>Commit <code>.terraform.lock.hcl</code></strong> when setting up Git; it records the exact selected provider versions.</p>
+<p>In this lab, we start with the local state file under persistent <code>~/clouddrive</code>. This is acceptable for <strong>a controlled single-user training lab</strong>, but is <strong>not an enterprise-grade remote state setup</strong>. A later exercise will migrate to an Azure Blob Storage backend with locking and Microsoft Entra authentication.</p>
+<hr />
+<h2 id="path-a-begin-from-zero-azure-portal-and-cloud-shell" data-section="true"><span class="sec-label">SECTION</span> Path A — begin from zero: Azure Portal and Cloud Shell<button class="mark-btn" data-mark="path-a-begin-from-zero-azure-portal-and-cloud-shell" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<blockquote>
+<p><strong>Skip this path if Terraform has already created any of your 11 resources.</strong> Use Path B instead.</p>
+</blockquote>
+<h3 id="31-open-azure-portal">3.1 Open Azure Portal</h3>
+<ol>
+<li>Open your browser (Chrome or Edge).</li>
+<li>Navigate to <strong><a href="https://portal.azure.com/">https://portal.azure.com/</a></strong>.</li>
+<li>Sign in with the account that owns your Azure subscription.</li>
+<li>In the top search bar, type <strong>Subscriptions</strong> and click the <strong>Subscriptions</strong> service result.</li>
+<li>Open <strong>Azure subscription 1</strong> (or the subscription shown in your own portal).</li>
+<li>Check <strong>Status = Enabled</strong>. Confirm the correct tenant/directory and verify remaining credit via <strong>Cost Management + Billing</strong>.</li>
+<li><strong>Do not</strong> create a VNet manually. Terraform will create it.</li>
+</ol>
+<p><strong>Expected:</strong> you see an active subscription. The label &quot;Azure subscription 1&quot; alone does <strong>not</strong> prove that Free Trial credit remains.</p>
+<h3 id="32-open-azure-cloud-shell">3.2 Open Azure Cloud Shell</h3>
+<ol>
+<li>In the Azure Portal top toolbar, find the Cloud Shell icon <code>&gt;_</code> and click it. Alternatively visit <strong><a href="https://shell.azure.com/">https://shell.azure.com/</a></strong>.</li>
+<li>Select <strong>Bash</strong> (not PowerShell) when asked.</li>
+<li>If Cloud Shell opens immediately, continue to 3.4.</li>
+<li>If an initial setup window is shown, choose an option to <strong>mount a storage account</strong>, rather than an ephemeral session. Follow the wizard to select your subscription and create or attach a compatible Azure Files share.</li>
+<li>Confirm any storage charges before provisioning. Do not enable unnecessary paid services.</li>
+</ol>
+<h3 id="33-if-cloud-shell-has-no-clouddrive">3.3 If Cloud Shell has no <code>clouddrive</code></h3>
+<p>If you previously chose ephemeral storage, in Cloud Shell toolbar click <strong>Settings (gear)</strong> → <strong>Reset User Settings</strong> → <strong>Reset</strong>. Relaunch Cloud Shell, choose <strong>Bash</strong>, and select the persistent storage mount path during setup. This may create an Azure Storage Account and Azure Files share, which can cost money. <strong>Download any important ephemeral files before resetting</strong>, because they can be lost.</p>
+<p>Test your mount:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">mountpoint -q &quot;$HOME/clouddrive&quot; \
+  &amp;&amp; echo 'SUCCESS: persistent Cloud Shell storage' \
+  || echo 'ERROR: no persistent Cloud Shell storage'
+</code></pre></div>
+<p><strong>Expected:</strong> <code>SUCCESS: persistent Cloud Shell storage</code>. If you see <code>ERROR</code>, stop before any <code>terraform apply</code>.</p>
+<p>Prove that files survive reconnecting:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">echo 'CloudGuard 360 storage test' &gt; &quot;$HOME/clouddrive/cg360-storage-test.txt&quot;
+cat &quot;$HOME/clouddrive/cg360-storage-test.txt&quot;
+</code></pre></div>
+<p>Close and reopen the shell; then:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">cat &quot;$HOME/clouddrive/cg360-storage-test.txt&quot;
+</code></pre></div>
+<p>The text should still be there. <strong>Your Terraform project must stay inside this persistent mount, not in the ephemeral home directory.</strong></p>
+<h3 id="34-verify-installed-tools">3.4 Verify installed tools</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform version
+az version
+</code></pre></div>
+<p>You previously observed Terraform <code>1.17.0</code> and Azure CLI <code>2.91.0</code>. A minor Terraform update notification does <strong>not</strong> explain the Azure region 403; you need not update Terraform simply to fix that error.</p>
+<p>In Cloud Shell, do <strong>not</strong> run <code>az login</code> automatically. It is usually already authenticated. A manual device-code login in your environment produced an <code>AADSTS530035</code> policy block; using the inherited portal session avoids that unnecessary flow.</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az account list --query '[].{Name:name,State:state,IsDefault:isDefault}' -o table
+az account show --query '{Name:name,State:state}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> your target subscription is <code>Enabled</code> and <code>IsDefault=True</code>.</p>
+<hr />
+<h2 id="4-download-the-zip-and-upload-it-to-cloud-shell" data-section="true"><span class="sec-label">SECTION</span> 4. Download the ZIP and upload it to Cloud Shell<button class="mark-btn" data-mark="4-download-the-zip-and-upload-it-to-cloud-shell" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="41-download-the-package-from-the-chatgpt-conversation">4.1 Download the package from the ChatGPT conversation</h3>
+<ol>
+<li>In this conversation, find the <strong>CloudGuard 360 Complete Terraform Package</strong> attachment/link.</li>
+<li>Click <strong>Download</strong>. Your browser should save a <code>.zip</code> file (often into <strong>Downloads</strong>).</li>
+<li>If the download fails with <em>“This action couldn't be completed”</em>, use the alternative standalone Markdown and HTML links provided in the chat, or ask for a working attachment. Do not assume a ZIP was downloaded until it appears in your local Downloads folder.</li>
+<li><strong>Do not paste a <code>sandbox:</code> link into Azure Cloud Shell</strong>: that is a ChatGPT attachment link, not a public HTTP address Azure can fetch.</li>
+</ol>
+<h3 id="42-upload-via-azure-portal-cloud-shell-toolbar">4.2 Upload via Azure Portal Cloud Shell toolbar</h3>
+<ol>
+<li>Open <strong><a href="https://portal.azure.com/">https://portal.azure.com/</a></strong> and open <strong>Cloud Shell</strong>.</li>
+<li>In Cloud Shell's toolbar, click <strong>Manage files</strong> (the upload/download file menu; wording can vary).</li>
+<li>Choose <strong>Upload</strong>.</li>
+<li>In your computer's file picker, navigate to <strong>Downloads</strong>.</li>
+<li>Choose <code>CloudGuard360_Terraform_Complete_Package.zip</code>.</li>
+<li>Click <strong>Open</strong> to start uploading.</li>
+<li>Return to the Bash prompt and confirm the archive exists:</li>
+</ol>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">ls -lh &quot;$HOME/CloudGuard360_Terraform_Complete_Package.zip&quot;
+</code></pre></div>
+<p><strong>Troubleshooting:</strong> If it is not in <code>$HOME</code>, run <code>pwd</code> and <code>ls -lah ~/</code> and inspect the upload notification. Avoid changing directories randomly. You can upload the archive again if necessary.</p>
+<h3 id="43-extract-without-overwriting-the-old-project">4.3 Extract without overwriting the old project</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash"># Create a course folder on the PERSISTENT mount.
+mkdir -p &quot;$HOME/clouddrive/cloudguard360/course&quot;
+
+# Extract the newly downloaded course; DO NOT overwrite your previous live state.
+unzip -o &quot;$HOME/CloudGuard360_Terraform_Complete_Package.zip&quot; \
+  -d &quot;$HOME/clouddrive/cloudguard360/course&quot;
+
+# Verify all components were extracted.
+ls -lah &quot;$HOME/clouddrive/cloudguard360/course/CloudGuard360_Terraform_Course&quot;
+</code></pre></div>
+<p><strong>Expected:</strong> <code>terraform.md</code>, <code>index.html</code>, and <code>cloudguard360_terraform_starter/</code>.</p>
+<blockquote>
+<p><strong>Path A:</strong> use the newly extracted starter.<br />
+<strong>Path B:</strong> keep working in your <strong>old existing Terraform folder</strong> because it contains your real state; use the repair script from the new package to patch its source safely. <strong>Never replace the old state file with a new ZIP.</strong></p>
+</blockquote>
+<h3 id="44-path-a-only-change-to-the-clean-starter">4.4 (Path A only) Change to the clean starter</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/course/CloudGuard360_Terraform_Course/cloudguard360_terraform_starter&quot;
+pwd
+ls -lah
+</code></pre></div>
+<hr />
+<h2 id="5-select-the-correct-subscription-and-register-the-provider" data-section="true"><span class="sec-label">SECTION</span> 5. Select the correct subscription and register the provider<button class="mark-btn" data-mark="5-select-the-correct-subscription-and-register-the-provider" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="51-set-the-subscription-environment-variable">5.1 Set the subscription environment variable</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash"># Azure Cloud Shell is already authenticated.
+az account show --query '{Name:name,State:state}' -o table
+
+# Required by AzureRM provider 4.x: set subscription ID privately in this shell.
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+
+# Check presence WITHOUT printing the identifier.
+test -n &quot;${ARM_SUBSCRIPTION_ID:-}&quot; \
+  &amp;&amp; echo 'PASS: ARM_SUBSCRIPTION_ID set' \
+  || echo 'FAIL: missing subscription'
+</code></pre></div>
+<p><strong>Why:</strong> <code>az account show</code> finds the active subscription; <code>--query id -o tsv</code> selects only its ID; <code>export</code> makes it available to Terraform. This is an environment variable, not a password. You must repeat it after opening a new Cloud Shell session.</p>
+<h3 id="52-check-microsoftnetwork">5.2 Check <code>Microsoft.Network</code></h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az provider show --namespace Microsoft.Network \
+  --query registrationState -o tsv
+</code></pre></div>
+<p>If <strong><code>Registered</code></strong>, do nothing. If <strong><code>NotRegistered</code></strong> and you have the rights to register resource providers:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az provider register --namespace Microsoft.Network --wait --output none
+az provider show --namespace Microsoft.Network --query registrationState -o tsv
+</code></pre></div>
+<p>Resource Provider registration does <strong>not</strong> create a VNet, but it is a subscription-wide configuration change. If you receive <code>AuthorizationFailed</code>, ask your Azure administrator to register the provider; do not elevate permissions unnecessarily.</p>
+<h3 id="53-run-the-supplied-preflight">5.3 Run the supplied preflight</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">bash scripts/preflight.sh
+</code></pre></div>
+<p><strong>Expected:</strong> the script prints Terraform version, your current subscription (without full IDs), the <code>Microsoft.Network</code> registration state and a budget reminder.</p>
+<p>If you see <code>ARM_SUBSCRIPTION_ID is missing</code>, repeat 5.1. If you encounter an <code>AADSTS530035</code> device login block, restart Cloud Shell from the Azure Portal and avoid a new manual <code>az login</code>.</p>
+<hr />
+<h2 id="6-path-a-first-clean-terraform-plan-and-apply" data-section="true"><span class="sec-label">SECTION</span> 6. Path A — first clean Terraform plan and apply<button class="mark-btn" data-mark="6-path-a-first-clean-terraform-plan-and-apply" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<blockquote>
+<p>Follow this section only if <strong>no resources have been created by an earlier run</strong> and this new folder is your first state for the lab. If you already had a partial <code>apply</code>, follow Path B.</p>
+</blockquote>
+<h3 id="61-configure-your-selected-location">6.1 Configure your selected location</h3>
+<p>Start from the revised template:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">cp terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
+</code></pre></div>
+<p>Recommended example <strong>only if Azure accepts the region for your subscription</strong>:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl">prefix                  = &quot;cg360&quot;
+location                = &quot;northeurope&quot;
+resource_group_location = &quot;northeurope&quot;  # clean start ONLY
+
+tags = {
+  project     = &quot;CloudGuard360&quot;
+  environment = &quot;lab&quot;
+  managed_by  = &quot;terraform&quot;
+}
+</code></pre></div>
+<p>In <code>nano</code>: press <strong>Ctrl+O</strong>, press <strong>Enter</strong> to save, then <strong>Ctrl+X</strong> to quit. <code>northeurope</code> is a suggestion, <strong>not a guarantee</strong> that Azure will accept the deployment. <code>az account list-locations</code> is a discovery tool; a region can appear there while deployment remains restricted.</p>
+<p>Check:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">grep -E '^(prefix|location|resource_group_location) ' terraform.tfvars
+az account list-locations \
+  --query &quot;[?name=='northeurope' || name=='francecentral'].{Name:name,DisplayName:displayName}&quot; \
+  -o table
+</code></pre></div>
+<h3 id="62-initialize-and-validate">6.2 Initialize and validate</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform fmt -recursive
+terraform init
+terraform validate
+</code></pre></div>
+<p><strong>Expected:</strong> <code>Terraform has been successfully initialized!</code> and <code>Success! The configuration is valid.</code> For the existing starter, the selected AzureRM provider might be <code>4.81.0</code> based on your previous output. The lock file captures the actual installed version. Do not casually change the provider major version mid-lab.</p>
+<h3 id="63-create-a-saved-execution-plan">6.3 Create a saved execution plan</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform plan -out=step01-reviewed.tfplan
+python3 scripts/check_plan.py step01-reviewed.tfplan
+terraform show -no-color step01-reviewed.tfplan | grep -E '^  # |^Plan:'
+</code></pre></div>
+<p>For a <strong>fresh clean state</strong>, expect <strong>11 create actions, 0 changed, 0 destroyed</strong>. Stop if resource names, regions, or actions differ unexpectedly. The supplied <code>check_plan.py</code> flags Resource Group deletions/replacements.</p>
+<p>Review the full plan:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform show -no-color step01-reviewed.tfplan
+</code></pre></div>
+<p><strong>Do not run <code>apply</code> until you have inspected the plan, confirmed subscription ownership, and checked the cost/credit.</strong></p>
+<h3 id="64-apply-exactly-the-reviewed-plan">6.4 Apply exactly the reviewed plan</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform apply step01-reviewed.tfplan
+</code></pre></div>
+<p><strong>Expected in a successful clean deployment:</strong> <code>Apply complete! Resources: 11 added, 0 changed, 0 destroyed.</code></p>
+<p>Because this is a <strong>saved</strong> plan, Terraform will not show the usual interactive <code>yes</code> prompt. Never use an old <code>step01.tfplan</code> that still targets <code>westeurope</code>.</p>
+<p>If your <code>apply</code> fails with a region error, <strong>do not start again from Path A</strong>. Move to Path B, because some resources may have been successfully created already.</p>
+<hr />
+<h2 id="path-b-recover-an-existing-partially-failed-deployment" data-section="true"><span class="sec-label">SECTION</span> Path B — recover an existing partially failed deployment<button class="mark-btn" data-mark="path-b-recover-an-existing-partially-failed-deployment" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<blockquote>
+<p><strong>This is the recommended path for your current CloudGuard 360 situation.</strong> You previously ran a real <code>terraform apply</code> using <code>westeurope</code>, and Azure rejected the two VNets with <code>RequestDisallowedByAzure</code> (403).</p>
+</blockquote>
+<h3 id="b1-open-your-original-project-folder-not-the-newly-extracted-copy">B1. Open your original project folder — not the newly extracted copy</h3>
+<p>In Cloud Shell Bash:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/cloudguard360_terraform_starter&quot;
+pwd
+ls -lah
+</code></pre></div>
+<p><strong>Expected:</strong> original <code>.tf</code> files, <code>.terraform/</code> and (usually) <code>terraform.tfstate</code>. If state is missing, stop. Do <strong>not</strong> run an apply that assumes all resources are new.</p>
+<p>Reset the Azure environment variable for this session:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+</code></pre></div>
+<h3 id="b2-inventory-what-the-failed-apply-did-create">B2. Inventory what the failed apply DID create</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform state list
+</code></pre></div>
+<p>You might see:</p>
+<div class="code-card" data-lang="text"><div class="code-bar"><span class="terminal-dot"></span><span>TEXT · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-text">azurerm_resource_group.app
+azurerm_resource_group.network
+azurerm_network_security_group.workload
+</code></pre></div>
+<p>This is only an <strong>illustration</strong>: the exact list depends on which operations completed. The state may contain fewer or more resources. Never invent or overwrite its contents.</p>
+<p>Now inspect the actual Azure Resource Groups:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az group show -n rg-cg360-network \
+  --query '{Name:name,Location:location}' -o table
+
+az group show -n rg-cg360-app \
+  --query '{Name:name,Location:location}' -o table
+
+az resource list -g rg-cg360-network \
+  --query '[].{Name:name,Type:type,Region:location}' -o table
+
+az resource list -g rg-cg360-app \
+  --query '[].{Name:name,Type:type,Region:location}' -o table
+</code></pre></div>
+<p>If <code>az group show</code> returns <code>ResourceGroupNotFound</code>, that group was not created. If resources exist in Azure but are not in Terraform's state, investigate ownership and state recovery <strong>before</strong> applying. <code>terraform import</code> can be used later for verified out-of-state existing resources, but never import by guessing.</p>
+<h3 id="b3-make-a-protected-state-backup-before-changes">B3. Make a protected state backup — before changes</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">umask 077
+mkdir -p &quot;$HOME/clouddrive/cloudguard360/backups&quot;
+
+terraform state pull &gt; \
+  &quot;$HOME/clouddrive/cloudguard360/backups/terraform-before-region-fix.tfstate&quot;
+
+ls -lh &quot;$HOME/clouddrive/cloudguard360/backups/terraform-before-region-fix.tfstate&quot;
+</code></pre></div>
+<p>The backup must have a <strong>non-zero size</strong>. Do not upload it to public GitHub or the chat. It can contain sensitive state data. Save it in the private persistent storage accessible only to you. Keep the original state in place.</p>
+<h3 id="b4-why-editing-only-terraformtfvars-is-unsafe">B4. Why editing only <code>terraform.tfvars</code> is unsafe</h3>
+<p>Your old starter used this expression for Resource Group location:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl"># OLD main.tf (problematic for region changes after a partial apply)
+location = var.location
+</code></pre></div>
+<p>If you merely change <code>location = &quot;westeurope&quot;</code> to <code>location = &quot;northeurope&quot;</code>, Terraform may propose replacing Resource Groups already created in West Europe. The AzureRM Resource Group resource documents that changing its <code>location</code> <strong>forces replacement</strong>, which can delete all resources contained in that group.</p>
+<p>The <strong>revised</strong> code decouples these settings:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl"># Revised main.tf, both Resource Groups
+location = var.resource_group_location
+
+# Revised network.tf, both VNets and the NSG
+location = var.location
+</code></pre></div>
+<p>Keep the pre-existing Group's metadata in <code>westeurope</code>, while requesting network resources in a potentially available alternative region.</p>
+<h3 id="b5-use-the-supplied-safe-source-patch-script-recommended">B5. Use the supplied safe source patch script (recommended)</h3>
+<p><strong>First download/unzip the revised course as shown in section 4.</strong> While still in your <strong>original Terraform folder</strong>, run:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">bash &quot;$HOME/clouddrive/cloudguard360/course/CloudGuard360_Terraform_Course/cloudguard360_terraform_starter/scripts/repair_existing_lab.sh&quot; northeurope
+</code></pre></div>
+<p>The script:</p>
+<ul>
+<li>requires you to be inside persistent <code>~/clouddrive</code> and have an existing local Terraform state file;</li>
+<li>backs up the original <code>.tf</code> files, <code>terraform.tfvars</code> and state before editing;</li>
+<li>changes <code>main.tf</code> so existing Resource Groups <strong>remain in West Europe</strong>;</li>
+<li>changes <code>network.tf</code> so the VNets and NSG use <code>location</code> (the new target region);</li>
+<li>adds <code>resource_group_location</code> and sets <code>location = &quot;northeurope&quot;</code>;</li>
+<li>formats the source but <strong>does not run <code>terraform apply</code></strong>.</li>
+</ul>
+<p><strong>If this script reports an unexpected file structure or no state, stop</strong>. Do not force it. Instead use the manual editing method below and compare with your state before planning.</p>
+<h3 id="b6-manual-repair-option-if-the-script-cannot-be-used">B6. Manual repair option if the script cannot be used</h3>
+<p>Open each file and make only the described changes:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">nano main.tf
+</code></pre></div>
+<p>Replace the two Resource Group lines <code>location = var.location</code> with:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl">location = var.resource_group_location
+</code></pre></div>
+<p>Next:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">nano variables.tf
+</code></pre></div>
+<p>Add (once) at the bottom:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl">variable &quot;resource_group_location&quot; {
+  description = &quot;Keep original resource group metadata region for existing deployment.&quot;
+  type        = string
+  default     = &quot;westeurope&quot;
+}
+</code></pre></div>
+<p>Next:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">nano network.tf
+</code></pre></div>
+<p>Change <strong>only</strong> the regional <code>location</code> settings for the <strong>two VNets and the NSG</strong>, from the <code>azurerm_resource_group.*.location</code> references to:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl">location = var.location
+</code></pre></div>
+<p>Do not change <code>resource_group_name</code> references or subnet addresses.</p>
+<p>Finally:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">nano terraform.tfvars
+</code></pre></div>
+<p>Ensure it contains these values while preserving your original <code>prefix</code> and tags:</p>
+<div class="code-card" data-lang="hcl"><div class="code-bar"><span class="terminal-dot"></span><span>HCL · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-hcl">location                = &quot;northeurope&quot;
+resource_group_location = &quot;westeurope&quot;
+</code></pre></div>
+<p><strong>If your Resource Groups were actually created in another location</strong>, use the location returned by <code>az group show</code>, not a guessed value.</p>
+<h3 id="b7-validate-the-repaired-source-and-inspect-actions">B7. Validate the repaired source and inspect actions</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform fmt -recursive
+terraform validate
+terraform plan -out=step01-region-recovery.tfplan
+</code></pre></div>
+<p><strong>Important:</strong> the new plan should no longer be an unconditional <code>11 to add</code> if some resources already exist in state. A perfectly normal recovery plan could show, for example, new VNets/subnets/peerings and a <strong>replacement of an existing NSG</strong> to align it to the new network region. Do <strong>not</strong> assume these counts are fixed.</p>
+<p>Check the exact actions:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform show -no-color step01-region-recovery.tfplan \
+  | grep -E '^  # |^Plan:'
+</code></pre></div>
+<p>You can also run the revised safety checker directly by absolute path:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">python3 \
+  &quot;$HOME/clouddrive/cloudguard360/course/CloudGuard360_Terraform_Course/cloudguard360_terraform_starter/scripts/check_plan.py&quot; \
+  step01-region-recovery.tfplan
+</code></pre></div>
+<p><strong>STOP if either <code>azurerm_resource_group.app</code> or <code>azurerm_resource_group.network</code> is marked <code>destroy</code>, <code>delete</code>, <code>replace</code> or <code>-/+</code>.</strong> Correct the Resource Group location before going further.</p>
+<p>If <strong>an NSG</strong> is marked for replacement because its actual region is West Europe, this may be expected for our currently empty lab; inspect whether it is used or contains custom rules before approving. Never approve the replacement of a shared/production NSG.</p>
+<h3 id="b8-check-azure-eligibility-and-cost-before-applying">B8. Check Azure eligibility and cost before applying</h3>
+<p>List candidate regions:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az account list-locations \
+  --query &quot;[?name=='northeurope' || name=='francecentral' || name=='swedencentral'].{Region:name,DisplayName:displayName}&quot; \
+  -o table
+</code></pre></div>
+<p><strong>This output does NOT guarantee eligibility</strong>. A deployment can still be denied if your subscription lacks regional access. Microsoft's documented resolution for <code>locationineligible</code> is to choose another region or request support if you have a justified regional requirement.</p>
+<p>Confirm trial credit and subscriptions in the Azure Portal, and review any proposed replacement actions.</p>
+<h3 id="b9-apply-only-the-newly-approved-recovery-plan">B9. Apply only the newly approved recovery plan</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform apply step01-region-recovery.tfplan
+</code></pre></div>
+<p><strong>Never apply the old <code>step01.tfplan</code></strong>: it still specifies the original region. Because a saved plan is applied exactly, editing files after producing it does not update that plan.</p>
+<p>If this apply succeeds, proceed to section 8. If the new region also returns <code>RequestDisallowedByAzure</code>, keep the current state, pick another region <strong>after verifying restrictions</strong>, make a new plan and repeat only the controlled region-change procedure; do not wipe state or Resource Groups.</p>
+<hr />
+<h2 id="8-verify-the-deployment-with-terraform-azure-cli-and-azure-portal" data-section="true"><span class="sec-label">SECTION</span> 8. Verify the deployment with Terraform, Azure CLI and Azure Portal<button class="mark-btn" data-mark="8-verify-the-deployment-with-terraform-azure-cli-and-azure-portal" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="81-terraform-state-and-output">8.1 Terraform state and output</h3>
+<p>From the <strong>same working directory and same state</strong> used for apply:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform state list
+terraform state list | wc -l
+terraform output
+</code></pre></div>
+<p><strong>Expected after full success:</strong> 11 Terraform resource addresses. <code>terraform output</code> lists the configured resource-group names, VNet names/address spaces and resource IDs.</p>
+<p>If the count differs, do not immediately rerun apply; examine the state and the last error.</p>
+<h3 id="82-run-the-supplied-verification-script">8.2 Run the supplied verification script</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash"># Path A: script is in the current starter directory
+bash scripts/verify.sh
+
+# Path B: use your original script if it exists
+# bash scripts/verify.sh
+</code></pre></div>
+<p>Check that the script prints the two Resource Groups, both VNets and peerings.</p>
+<h3 id="83-independent-azure-cli-checks">8.3 Independent Azure CLI checks</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash"># Resource Groups (metadata region may be westeurope in a recovered lab)
+az group list \
+  --query &quot;[?starts_with(name,'rg-cg360-')].{Name:name,Location:location}&quot; \
+  -o table
+
+# Actual VNet regions and CIDRs
+az network vnet show \
+  -g rg-cg360-network -n vnet-cg360-hub \
+  --query '{Name:name,Region:location,CIDR:addressSpace.addressPrefixes}' -o json
+
+az network vnet show \
+  -g rg-cg360-app -n vnet-cg360-app \
+  --query '{Name:name,Region:location,CIDR:addressSpace.addressPrefixes}' -o json
+
+# All subnets in the application VNet
+az network vnet subnet list \
+  -g rg-cg360-app --vnet-name vnet-cg360-app \
+  --query '[].{Name:name,CIDR:addressPrefix}' -o table
+
+# NSG location
+az network nsg show -g rg-cg360-app -n nsg-cg360-workload \
+  --query '{Name:name,Location:location}' -o table
+
+# Hub -&gt; app
+az network vnet peering list -g rg-cg360-network \
+  --vnet-name vnet-cg360-hub \
+  --query '[].{Name:name,State:peeringState}' -o table
+
+# App -&gt; hub
+az network vnet peering list -g rg-cg360-app \
+  --vnet-name vnet-cg360-app \
+  --query '[].{Name:name,State:peeringState}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> two VNets in the selected network region, CIDRs <code>10.0.0.0/16</code> and <code>10.10.0.0/16</code>; three subnets overall; an NSG in the app VNet region; two peerings with <strong><code>Connected</code></strong> status.</p>
+<h3 id="84-verify-the-nsg-to-subnet-association">8.4 Verify the NSG-to-subnet association</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az network vnet subnet show \
+  -g rg-cg360-app \
+  --vnet-name vnet-cg360-app \
+  -n snet-workload \
+  --query '{Subnet:name,NSG:networkSecurityGroup.id}' -o json
+</code></pre></div>
+<p><strong>Expected:</strong> <code>NSG</code> points to <code>nsg-cg360-workload</code>. Its full Azure resource ID may be displayed locally; you do not need to paste it into the conversation.</p>
+<h3 id="85-verify-in-azure-portal-exact-clicks">8.5 Verify in Azure Portal — exact clicks</h3>
+<ol>
+<li>Open <strong><a href="https://portal.azure.com/">https://portal.azure.com/</a></strong>.</li>
+<li>Search for <strong>Resource groups</strong>.</li>
+<li>Open <strong>rg-cg360-network</strong> → <strong>Resources</strong> → click <strong>vnet-cg360-hub</strong>.</li>
+<li>Inside the VNet, choose <strong>Subnets</strong> and verify <code>snet-shared</code>, <code>10.0.1.0/24</code>.</li>
+<li>In the VNet left menu, choose <strong>Peerings</strong> → verify <code>peer-hub-to-app</code>, state <strong>Connected</strong>.</li>
+<li>Go back to <strong>Resource groups</strong> → <strong>rg-cg360-app</strong> → click <strong>vnet-cg360-app</strong>.</li>
+<li>Choose <strong>Subnets</strong> → verify <code>snet-workload</code> and <code>snet-private-endpoints</code>.</li>
+<li>Choose <strong>Peerings</strong> → verify <code>peer-app-to-hub</code>, <strong>Connected</strong>.</li>
+<li>In <code>rg-cg360-app</code> resources, open <strong>nsg-cg360-workload</strong> → <strong>Subnets</strong> → check <code>snet-workload</code> association.</li>
+<li>Open each resource's <strong>Overview</strong> and confirm the resource region. The Resource Group's metadata location can legitimately differ from the VNets' locations.</li>
+</ol>
+<p>Capture screenshots <strong>without exposing the full subscription ID, tenant ID or other private details</strong>.</p>
+<h3 id="86-final-idempotence-check">8.6 Final idempotence check</h3>
+<p>After a successful apply, rerun:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform plan
+</code></pre></div>
+<p>The expected ideal result is <strong><code>No changes. Your infrastructure matches the configuration.</code></strong> If it proposes changes, inspect them; do not automatically apply them.</p>
+<hr />
+<h2 id="9-inspect-nsgs-subnets-cidrs-and-network-behaviour" data-section="true"><span class="sec-label">SECTION</span> 9. Inspect NSGs, subnets, CIDRs and network behaviour<button class="mark-btn" data-mark="9-inspect-nsgs-subnets-cidrs-and-network-behaviour" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="91-cidr-basics">9.1 CIDR basics</h3>
+<p>The Hub uses <code>10.0.0.0/16</code>; the application Spoke uses <code>10.10.0.0/16</code>. These ranges do not overlap, which allows peering. <code>/16</code> is a larger network than <code>/24</code>. Within each VNet, subnet prefixes must be within the parent address range and must not overlap with each other.</p>
+<p>Azure reserves <strong>five IP addresses per subnet</strong> for platform use. For a <code>/24</code> subnet with 256 total addresses, 251 are available for Azure resource allocation, subject to additional service-specific requirements. This is a capacity-planning example, not a claim that 251 AKS nodes fit in that subnet.</p>
+<h3 id="92-nsg-defaults-do-not-equal-a-production-security-design">9.2 NSG defaults do not equal a production security design</h3>
+<p>An NSG created without custom rules uses platform default rules. Those default rules allow some traffic, including VNet traffic, and deny some other inbound traffic. <strong>Do not assume our Spoke is hardened simply because an NSG exists.</strong> Our next lab will define explicit allow/deny rules, inspect effective security rules and test traffic with controlled workloads.</p>
+<h3 id="93-peering-connects-network-address-spaces-it-does-not-test-application-reachability">9.3 Peering connects network address spaces; it does not test application reachability</h3>
+<p>Status <code>Connected</code> means the peering resource relationship is configured. It does not prove that a VM can authenticate to a service or that an application endpoint is healthy. We will test actual routing, DNS, NSG filtering and workload traffic after deploying suitable test workloads.</p>
+<hr />
+<h2 id="10-repeatability-source-control-and-evidence" data-section="true"><span class="sec-label">SECTION</span> 10. Repeatability, source control and evidence<button class="mark-btn" data-mark="10-repeatability-source-control-and-evidence" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="101-organize-evidence">10.1 Organize evidence</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">mkdir -p &quot;$HOME/clouddrive/cloudguard360/evidence/step01&quot;
+</code></pre></div>
+<p>Save only <strong>sanitized</strong> command summaries/screenshots. Never copy Terraform state or full plans into a public evidence repository.</p>
+<h3 id="102-useful-terraform-commands">10.2 Useful Terraform commands</h3>
+<table>
+<thead>
+<tr>
+  <th>Command</th>
+  <th>Meaning</th>
+  <th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>terraform fmt -recursive</code></td>
+  <td>Format the configuration</td>
+  <td>After editing <code>.tf</code> files</td>
+</tr>
+<tr>
+  <td><code>terraform init</code></td>
+  <td>Initialize backend/providers</td>
+  <td>New working directory or backend changes</td>
+</tr>
+<tr>
+  <td><code>terraform validate</code></td>
+  <td>Validate HCL structure</td>
+  <td>Before planning</td>
+</tr>
+<tr>
+  <td><code>terraform plan -out=FILE</code></td>
+  <td>Save reviewed actions</td>
+  <td>Before applying</td>
+</tr>
+<tr>
+  <td><code>terraform show FILE</code></td>
+  <td>Inspect a saved plan</td>
+  <td>Approval gate</td>
+</tr>
+<tr>
+  <td><code>terraform apply FILE</code></td>
+  <td>Execute reviewed plan</td>
+  <td>After approval</td>
+</tr>
+<tr>
+  <td><code>terraform state list</code></td>
+  <td>See Terraform-managed resources</td>
+  <td>Troubleshooting / audits</td>
+</tr>
+<tr>
+  <td><code>terraform output</code></td>
+  <td>Read declared outputs</td>
+  <td>Verify deployed infrastructure</td>
+</tr>
+<tr>
+  <td><code>terraform plan</code></td>
+  <td>Check drift</td>
+  <td>After successful apply</td>
+</tr>
+<tr>
+  <td><code>terraform plan -destroy -out=FILE</code></td>
+  <td>Preview teardown</td>
+  <td>Controlled cleanup only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-git-basics">10.3 Git basics</h3>
+<p>Use Git to version <strong>source</strong>: <code>.tf</code>, scripts, documentation and <code>.terraform.lock.hcl</code>. Your <code>.gitignore</code> already excludes plan files, state and <code>terraform.tfvars</code>. Before your first public push, inspect the repository with:</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">git status --short
+</code></pre></div>
+<p>Never add <code>-f</code> to force tracked secret or state files. Later, we'll create GitHub Actions workflows using <strong>OIDC federation</strong>, not long-lived Azure secrets.</p>
+<hr />
+<h2 id="11-controlled-deletion-and-cost-hygiene" data-section="true"><span class="sec-label">SECTION</span> 11. Controlled deletion and cost hygiene<button class="mark-btn" data-mark="11-controlled-deletion-and-cost-hygiene" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<p><strong>Optional — only for a disposable, verified laboratory.</strong> Do not destroy the lab until you have collected your learning evidence, and do not destroy a Resource Group that contains resources owned by another project.</p>
+<h3 id="111-check-terraform-scope-and-unmanaged-azure-resources">11.1 Check Terraform scope and unmanaged Azure resources</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform state list
+az resource list -g rg-cg360-network \
+  --query '[].{Name:name,Type:type}' -o table
+az resource list -g rg-cg360-app \
+  --query '[].{Name:name,Type:type}' -o table
+</code></pre></div>
+<p>Compare Terraform-managed resources with Azure's real inventory. If unrelated resources exist in these Resource Groups, <strong>stop</strong> and determine ownership.</p>
+<h3 id="112-preview-the-destroy-plan">11.2 Preview the destroy plan</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform plan -destroy -out=cleanup-reviewed.tfplan
+terraform show -no-color cleanup-reviewed.tfplan
+</code></pre></div>
+<p>Review every proposed deletion and the scope before proceeding.</p>
+<h3 id="113-apply-cleanup-only-if-authorised">11.3 Apply cleanup only if authorised</h3>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">terraform apply cleanup-reviewed.tfplan
+</code></pre></div>
+<p>This command permanently removes the resources in the destroy plan. Azure Resource Group deletion is destructive to contents; do <strong>not</strong> proceed if the group contains resources outside your isolated lab.</p>
+<p>Do not assume the Cloud Shell Azure Files share is cleaned up by this Terraform destroy — it was created separately. Check your cost management account for any separately provisioned storage and follow the appropriate owner-approved cleanup process.</p>
+<hr />
+<h2 id="12-troubleshooting-and-incident-playbooks" data-section="true"><span class="sec-label">SECTION</span> 12. Troubleshooting and incident playbooks<button class="mark-btn" data-mark="12-troubleshooting-and-incident-playbooks" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="e01-armsubscriptionid-is-missing">E01 — <code>ARM_SUBSCRIPTION_ID is missing</code></h3>
+<p><strong>Cause:</strong> the AzureRM 4.x provider needs a subscription ID, and Bash variables are lost when a shell session ends.</p>
+<p><strong>Fix:</strong></p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+test -n &quot;$ARM_SUBSCRIPTION_ID&quot; &amp;&amp; echo 'PASS: subscription set'
+bash scripts/preflight.sh
+</code></pre></div>
+<p>Do not hardcode your subscription ID into committed <code>.tf</code> source.</p>
+<h3 id="e02-microsoftnetwork-notregistered">E02 — <code>Microsoft.Network: NotRegistered</code></h3>
+<p><strong>Cause:</strong> the subscription hasn't registered the Network Resource Provider.</p>
+<div class="code-card" data-lang="bash"><div class="code-bar"><span class="terminal-dot"></span><span>BASH · command / configuration</span><button class="copy-btn" type="button" title="Copy code">Copy <span aria-hidden="true">⧉</span></button></div><pre><code class="language-bash">az provider register --namespace Microsoft.Network --wait --output none
+az provider show --namespace Microsoft.Network --query registrationState -o tsv
+</code></pre></div>
+<p>Requires proper subscription permissions. Expected: <code>Registered</code>.</p>
+<h3 id="e03-aadsts530035-after-az-login">E03 — <code>AADSTS530035</code> after <code>az login</code></h3>
+<p><strong>Cause:</strong> your device-code authentication method was blocked by Microsoft Entra security defaults. Cloud Shell normally inherits portal authentication; <strong>do not disable Security Defaults</strong>.</p>
+<p><strong>Fix:</strong> close/reopen Cloud Shell from Azure Portal and run <code>az account list -o table</code> without requesting manual login. Verify the right directory/subscription in the portal if needed.</p>
+<h3 id="e04-clouddrive-not-mounted">E04 — <code>clouddrive not mounted</code></h3>
+<p><strong>Cause:</strong> ephemeral Cloud Shell setup or missing storage mount.</p>
+<p><strong>Fix:</strong> Cloud Shell <strong>Settings → Reset User Settings</strong>, select a persistent storage mount in setup, confirm potential Azure Files charges, then rerun <code>mountpoint -q &quot;$HOME/clouddrive&quot;</code> and a persistence test.</p>
+<h3 id="e05-requestdisallowedbyazure-region-westeurope">E05 — <code>RequestDisallowedByAzure</code>, region <code>westeurope</code></h3>
+<p><strong>Cause:</strong> Microsoft regional admission policy, <strong>not</strong> a Terraform HCL syntax error.</p>
+<p><strong>Fix:</strong> Path B; inspect current Terraform state and Azure inventory; back up state; safely separate Resource Group metadata location from actual VNet/NSG region; use another region such as North Europe (subject to eligibility); plan and review all destroy/replace actions; apply only a newly approved plan.</p>
+<p><strong>Do not:</strong> delete <code>.tfstate</code>, repeatedly apply the original saved plan or blindly change the existing Resource Groups' location.</p>
+<h3 id="e06-plan-says-azurermresourcegroup">E06 — Plan says <code>-/+ azurerm_resource_group.*</code></h3>
+<p><strong>Cause:</strong> Terraform is planning to destroy and recreate a Resource Group. Changing its location forces replacement, and deleting a Resource Group can delete its contents.</p>
+<p><strong>Fix:</strong> STOP. Verify <code>resource_group_location</code> matches the <strong>existing metadata location</strong> returned by Azure CLI. Run <code>terraform plan</code> again. Do not apply until the unexpected Resource Group replacement disappears.</p>
+<h3 id="e07-plan-proposes-replacing-an-nsg">E07 — Plan proposes replacing an NSG</h3>
+<p><strong>Cause:</strong> it might already have been created in West Europe. An NSG must be in the correct region for the subnet association. Changing its region forces replacement.</p>
+<p><strong>Fix:</strong> inspect whether the NSG contains rules or is attached to production workloads. For this empty lab, replacement may be acceptable <strong>after explicit review</strong>. Never generalize this approval to shared environments.</p>
+<h3 id="e08-resource-already-exists-but-missing-from-state">E08 — <code>Resource already exists</code> but missing from state</h3>
+<p><strong>Cause:</strong> Azure contains an object that the current Terraform state does not manage (possible partial apply, manual changes or wrong working directory).</p>
+<p><strong>Fix:</strong> stop; confirm your original working directory and state; compare <code>terraform state list</code> with the Azure inventory. Use verified Terraform imports or state recovery only after establishing the object's ownership. Do not delete resources merely to eliminate the error.</p>
+<h3 id="e09-authorizationfailed-403-not-region-error">E09 — <code>AuthorizationFailed</code>, 403 (not region error)</h3>
+<p><strong>Cause:</strong> identity doesn't have sufficient Azure RBAC permissions to create/update a resource or register the necessary provider.</p>
+<p><strong>Fix:</strong> inspect the full Azure error code and required action; ask the subscription owner to grant appropriately scoped permissions. Do not use Owner by default for routine Terraform work.</p>
+<h3 id="e10-provider-initializationdownload-failure">E10 — Provider initialization/download failure</h3>
+<p><strong>Cause:</strong> connectivity to Terraform Registry, provider version constraint mismatch or corrupted local cache.</p>
+<p><strong>Fix:</strong> inspect the exact error, verify <code>versions.tf</code> and <code>terraform version</code>, then rerun <code>terraform init</code>. Avoid deleting the state file or casually upgrading to a new provider major version.</p>
+<h3 id="e11-terraform-plan-shows-unexpected-deletions">E11 — <code>terraform plan</code> shows unexpected deletions</h3>
+<p><strong>Cause:</strong> region changes, renamed resources, missing variables, wrong working directory, or drift.</p>
+<p><strong>Fix:</strong> <strong>do not apply</strong>. Check <code>pwd</code>, <code>terraform state list</code>, <code>terraform.tfvars</code>, and <code>terraform show -no-color PLAN</code>. Require a clean reason for each deletion. The course includes <code>scripts/check_plan.py</code> to block Resource Group deletions in a saved plan.</p>
+<h3 id="e12-terraform-apply-fails-halfway-through">E12 — <code>terraform apply</code> fails halfway through</h3>
+<p><strong>Cause:</strong> Azure operation failed after some independent resources were already created.</p>
+<p><strong>Fix:</strong> keep state, run <code>terraform state list</code>, inspect actual Azure resources, back up state, correct the cause, generate and review a <strong>new</strong> plan. HashiCorp documents that Terraform does not roll back partial apply automatically.</p>
+<hr />
+<h2 id="13-mastery-exercises-and-next-module" data-section="true"><span class="sec-label">SECTION</span> 13. Mastery exercises and next module<button class="mark-btn" data-mark="13-mastery-exercises-and-next-module" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<h3 id="131-five-questions-to-check-your-understanding">13.1 Five questions to check your understanding</h3>
+<ol>
+<li>Why can Terraform <code>validate</code> succeed even if Azure rejects your deployment?</li>
+<li>Why do two VNets need non-overlapping address spaces when peering?</li>
+<li>What is the difference between <code>terraform plan</code> and <code>terraform apply</code>?</li>
+<li>Why is changing the location of an existing Resource Group dangerous?</li>
+<li>Why do we keep Terraform state private and persistent?</li>
+</ol>
+<p><strong>Short model answers:</strong> (1) <code>validate</code> checks configuration, not Azure regional admission or permissions; (2) routing must unambiguously identify destination networks; (3) plan previews versus apply performs changes; (4) the Terraform AzureRM RG location change forces replacement and deletion can affect contents; (5) state identifies managed resources, supports safe reconciliation and may include sensitive values.</p>
+<h3 id="132-acceptance-checklist">13.2 Acceptance checklist</h3>
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>My correct Azure subscription is <code>Enabled</code> and its credits/budget were checked.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Cloud Shell's <code>~/clouddrive</code> mount is present and persistent.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><code>Microsoft.Network</code> is <code>Registered</code>.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><code>ARM_SUBSCRIPTION_ID</code> is configured in the current Bash session.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>I know whether I'm on Path A (fresh) or Path B (previous partial apply).</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>I have kept/backed up my original Terraform state (Path B).</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Terraform source uses the correct VNet/NSG region and safe Resource Group location.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><code>terraform init</code> and <code>terraform validate</code> succeed.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>I reviewed a newly generated plan; no unexpected RG deletion is present.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>The apply succeeded in an eligible region.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/><code>terraform state list</code> shows the expected 11 resource addresses.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>Both VNet peerings report <code>Connected</code>.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>The NSG is attached to the workload subnet.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled/>A fresh <code>terraform plan</code> reports no unexpected changes.</li>
+</ul>
+<h3 id="133-where-we-go-next">13.3 Where we go next</h3>
+<p>This completes <strong>only CloudGuard 360's Azure networking foundation</strong>. The next modules will address NSG rules and real connectivity testing, Terraform state migration to a secure Azure Blob backend, Entra ID and least-privilege Azure RBAC, PowerShell automation, the existing Azure Voting App, Docker, a cost-controlled temporary AKS cluster, GitHub Actions, Zabbix/Grafana monitoring and incident automation.</p>
+<hr />
+<h2 id="14-references" data-section="true"><span class="sec-label">SECTION</span> 14. References<button class="mark-btn" data-mark="14-references" title="Mark this section complete" aria-label="Mark section complete">Mark complete</button></h2>
+<p>Official sources used to verify this guide (links may evolve):</p>
+<ol>
+<li>Microsoft — <strong>Resolve location ineligible errors</strong>: <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-region-access-policy">https://learn.microsoft.com/en-us/azure/azure-resource-manager/troubleshooting/error-region-access-policy</a></li>
+<li>Microsoft — <strong>Persist files in Azure Cloud Shell</strong>: <a href="https://learn.microsoft.com/en-us/azure/cloud-shell/persisting-shell-storage">https://learn.microsoft.com/en-us/azure/cloud-shell/persisting-shell-storage</a></li>
+<li>HashiCorp — <strong>AzureRM Provider 4.0 upgrade guide</strong> (subscription ID and provider registration): <a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide">https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide</a></li>
+<li>HashiCorp — <strong>Terraform apply command / recovery after errors</strong>: <a href="https://developer.hashicorp.com/terraform/cli/commands/apply">https://developer.hashicorp.com/terraform/cli/commands/apply</a></li>
+<li>HashiCorp — <strong>Azure Resource Group</strong> (<code>location</code> replacement semantics): <a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group">https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group</a></li>
+<li>HashiCorp — <strong>Terraform azurerm backend</strong>: <a href="https://developer.hashicorp.com/terraform/language/backend/azurerm">https://developer.hashicorp.com/terraform/language/backend/azurerm</a></li>
+<li>Microsoft — <strong>Store Terraform state in Azure Storage</strong>: <a href="https://learn.microsoft.com/en-us/azure/terraform/terraform-backend">https://learn.microsoft.com/en-us/azure/terraform/terraform-backend</a></li>
+<li>Microsoft — <strong>Azure Virtual Network Peering</strong>: <a href="https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview">https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview</a></li>
+<li>Azure — <strong>Pricing Calculator</strong>: <a href="https://azure.microsoft.com/en-us/pricing/calculator/">https://azure.microsoft.com/en-us/pricing/calculator/</a></li>
+</ol>
+<p><strong>Revision note:</strong> All commands are designed for <strong>Azure Cloud Shell in Bash</strong>, except PowerShell scripts in the starter folder. Example results are illustrative until verified in your own subscription. Never treat an instructional screenshot, command or plan as proof of successful deployment unless your Azure environment actually produced it.</p>
+</article><div class="footer">CloudGuard 360 · Offline learning guide · No external dependencies or user-data transmission · Keep your Terraform state private.</div></main>
+</div><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){'use strict';
+const KEY='cg360-course-progress-v1';const sections=[...document.querySelectorAll('h2[data-section]')];let done={};try{done=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){done={}};
+const note=document.getElementById('toast');let noteTimer;
+function toast(msg){note.textContent=msg;note.classList.add('visible');clearTimeout(noteTimer);noteTimer=setTimeout(()=>note.classList.remove('visible'),2400)}
+function render(){const n=sections.filter(s=>done[s.id]).length,total=sections.length,pct=Math.round(100*n/total);document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressText').textContent=n+' / '+total+' sections';document.getElementById('progressPct').textContent=pct+'%';document.getElementById('statusTop').textContent=pct+'% complete';for(const s of sections){const b=s.querySelector('.mark-btn');if(!b)continue;let checked=!!done[s.id];b.classList.toggle('done',checked);b.textContent=checked?'✓ Completed':'Mark complete';const n=document.querySelector('.nav-item[href="#'+s.id+'"]');if(n)n.classList.toggle('done',checked)}}
+for(const b of document.querySelectorAll('[data-mark]')){b.addEventListener('click',()=>{const id=b.dataset.mark;done[id]=!done[id];try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}render();toast(done[id]?'Section completed!':'Section reopened')})}
+function activate(){const y=window.scrollY+150;let active=sections[0];for(const s of sections)if(s.offsetTop<=y)active=s;document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',active&&n.getAttribute('href')==='#'+active.id))}
+window.addEventListener('scroll',activate,{passive:true});render();activate();
+document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',async()=>{const code=b.closest('.code-card').querySelector('code').innerText;let ok=false;try{if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(code);ok=true}}catch(e){}if(!ok){const ta=document.createElement('textarea');ta.value=code;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();try{ok=document.execCommand('copy')}catch(e){}ta.remove()}toast(ok?'Code copied to clipboard':'Copy unavailable: select the code manually')}));
+document.getElementById('resetProgress').addEventListener('click',()=>{if(confirm('Reset completion for all sections?')){done={};try{localStorage.removeItem(KEY)}catch(e){}render();toast('Progress reset')}});
+document.getElementById('printGuide').addEventListener('click',()=>window.print());
+const search=document.getElementById('search');search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();const headings=[...document.querySelectorAll('.nav-item')];headings.forEach(n=>{n.classList.toggle('filter-dim',q&&!n.innerText.toLowerCase().includes(q))});if(q){const matched=sections.filter(s=>s.innerText.toLowerCase().includes(q));if(!headings.filter(n=>!n.classList.contains('filter-dim')).length){headings.forEach(n=>n.classList.toggle('filter-dim',!matched.some(s=>n.getAttribute('href')==='#'+s.id)))}}});
+})();
+</script></body></html>
