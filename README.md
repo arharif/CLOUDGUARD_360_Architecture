@@ -8,8 +8,8 @@
 | Phase | Title | Core Focus & Components | Status |
 | :--- | :--- | :--- | :--- |
 | **Phase 01** | Azure Infrastructure & Networking | Terraform, Resource Groups, VNets, subnets, NSG and VNet Peering | ✅ Completed |
-| **Phase 02** | Identity, Access & Cloud Security | Microsoft Entra ID, Azure RBAC, service identities and least privilege | 🔄 Next |
-| **Phase 03** | Application Containerization | Deploy the prebuilt application with Docker | ⏳ Planned |
+| **Phase 02** | Identity, Access & Cloud Security | Microsoft Entra ID, Azure RBAC, service identities and least privilege | ✅ Completed |
+| **Phase 03** | Application Containerization | Deploy the prebuilt application with Docker | 🔄 Next |
 | **Phase 04** | CI/CD & DevSecOps | GitHub Actions, CI/CD and DevSecOps scanning | ⏳ Planned |
 | **Phase 05** | Kubernetes & Orchestration | Kubernetes locally, then temporary Azure AKS | ⏳ Planned |
 | **Phase 06** | Monitoring & Observability | Zabbix, Grafana and Azure monitoring | ⏳ Planned |
