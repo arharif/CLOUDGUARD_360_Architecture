@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CloudGuard 360 | Phase 02 Masterclass</title>
+<meta name="description" content="Interactive offline guide to Microsoft Entra ID, Azure RBAC, Terraform, Azure Policy, verification and security evidence.">
+<style>
+:root{--bg:#f5f8fc;--panel:#fff;--panel2:#eef3fa;--line:#dce4ef;--ink:#182c48;--muted:#667d99;--blue:#246ce0;--blue2:#1b4eaa;--navy:#13294b;--green:#178766;--amber:#b77926;--code:#101f35;--shadow:0 16px 48px rgba(31,54,87,.08)}
+body.dark{--bg:#0e1726;--panel:#15233a;--panel2:#1e304c;--line:#304562;--ink:#ebf2fd;--muted:#a7b8d1;--blue:#84b7ff;--blue2:#93c0ff;--navy:#101b30;--green:#65d7ad;--amber:#ffc97c;--code:#091222;--shadow:0 14px 45px rgba(0,0,0,.18)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.68}a{color:var(--blue)}button,input{font:inherit}button{cursor:pointer}::selection{background:#9abffe70}
+.progress-top{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,#2d78e5,#43bda2);width:0;z-index:40;transition:width .12s linear}
+.shell{display:grid;grid-template-columns:284px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow:auto;background:var(--panel);border-right:1px solid var(--line);padding:27px 18px 30px;z-index:10;scrollbar-width:thin}
+.brand{display:flex;gap:12px;align-items:center;padding:8px 10px 23px}.brandmark{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:#236ce8;color:white;font-weight:800;box-shadow:0 7px 22px #246ce033}.brand strong{font-size:14px;letter-spacing:.02em}.brand span{display:block;color:var(--muted);font-size:12px;margin-top:-2px}.navtitle{padding:15px 12px 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:800}.navlink{display:block;padding:10px 12px;margin:2px 0;text-decoration:none;color:var(--muted);font-size:12.5px;line-height:1.4;border-radius:9px;transition:background .18s,color .18s,transform .18s}.navlink:hover{background:var(--panel2);transform:translateX(2px)}.navlink.active{background:var(--panel2);color:var(--blue);font-weight:750}.navlink.done::after{content:' ✓';color:var(--green);font-weight:800}
+.sideprogress{margin-top:24px;padding:17px 15px;border:1px solid var(--line);border-radius:15px;background:var(--panel2)}.sideprogress h3{margin:0 0 2px;font-size:13px}.sideprogress p{font-size:11px;color:var(--muted);margin:3px 0 10px}.meter{height:8px;border-radius:12px;overflow:hidden;background:#b6c6d650}.meter>b{display:block;height:100%;width:0;background:linear-gradient(90deg,#2a70e4,#3cc2a4);transition:width .35s}
+main{max-width:1350px;padding:0 54px 110px;width:100%;min-width:0}.topnav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:12px}.topnav .trail{font-size:12px;color:var(--muted)}.actions{display:flex;align-items:center;gap:9px}.btn{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:650;font-size:12px}.btn:hover{border-color:var(--blue)}.search{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 13px;width:196px;outline:none;font-size:12px}.search:focus{border-color:var(--blue)}
+.hero{background:linear-gradient(130deg,#122849 0%,#1c4977 60%,#2672a4 100%);border-radius:25px;color:#fff;min-height:315px;padding:36px 40px;box-shadow:var(--shadow);overflow:hidden;position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(275px,.9fr);gap:8px}.hero h1{font-size:clamp(26px,3vw,38px);line-height:1.16;color:white;margin:15px 0 15px;letter-spacing:-.035em}.eyebrow{font-size:11px;font-weight:750;letter-spacing:.15em;color:#9cc8ff}.hero p{font-size:14px;line-height:1.7;color:#d5e6fb;max-width:570px}.herochips{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}.herochips span{padding:7px 11px;border:1px solid #ffffff38;background:#ffffff0d;border-radius:20px;font-size:11px;color:#eff7ff}.hero svg{width:100%;max-height:270px;align-self:center;filter:drop-shadow(0 12px 17px #0002)}.streamline{stroke-dasharray:9 12;animation:dash 4s linear infinite}.pulse{animation:pulse 2.5s ease-in-out infinite;transform-origin:center}.pulse2{animation:pulse 2.5s ease-in-out 1s infinite;transform-origin:center}@keyframes dash{to{stroke-dashoffset:-100}}@keyframes pulse{50%{opacity:.48;transform:scale(.94)}}
+.banner{margin:24px 0 30px;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:12px;font-size:13px;color:var(--muted)}.banner strong{color:var(--ink)}
+.article{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:36px 42px;min-width:0}.article h1{display:none}.article h2{scroll-margin-top:25px;font-size:24px;line-height:1.3;letter-spacing:-.025em;margin:58px 0 22px;border-top:1px solid var(--line);padding-top:34px}.article h2:first-of-type{border-top:0;margin-top:23px;padding-top:0}.article h3{scroll-margin-top:25px;font-size:17px;margin:33px 0 12px;color:var(--ink)}.article h4{font-size:14px;margin:24px 0 10px}.article p,.article li{font-size:14px}.article p{margin:12px 0}.article li{margin-bottom:6px}.article ol,.article ul{padding-left:22px}.article img{max-width:100%;max-height:530px;height:auto;object-fit:contain;display:block;margin:21px auto;border:1px solid var(--line);border-radius:13px}.article blockquote{border-left:4px solid var(--amber);padding:12px 17px;background:var(--panel2);margin:20px 0;color:var(--ink)}.article blockquote p{margin:0}.article hr{border:0;border-top:1px solid var(--line);margin:37px 0 14px}.article table{border-collapse:collapse;width:100%;display:block;overflow:auto;margin:20px 0 25px;font-size:12px}.article th{background:var(--panel2);color:var(--ink);text-align:left;font-size:12px}.article td,.article th{border:1px solid var(--line);padding:10px 13px;vertical-align:top;min-width:100px}.article code:not(pre code){font-family:ui-monospace,Consolas,monospace;padding:2px 5px;border-radius:5px;background:var(--panel2);font-size:.91em;overflow-wrap:anywhere}
+.codepanel{background:var(--code);border:1px solid #2b4363;border-radius:14px;overflow:hidden;margin:16px 0 25px;box-shadow:0 8px 22px #14233719}.codetop{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff1d;color:#a8bdd8;background:#ffffff08;padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.08em}.copycode{color:#d9e9ff;background:#ffffff12;border:1px solid #ffffff33;border-radius:8px;font-size:11px;padding:6px 10px;min-width:85px}.copycode:hover{background:#ffffff23}.article pre{margin:0;padding:19px 18px 21px;color:#e4efff;font:12px/1.7 ui-monospace,Consolas,monospace;overflow-x:auto;white-space:pre;tab-size:2}
+.complete-step{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;transition:background .2s;margin:3px 0 17px}.complete-step:hover{border-color:var(--blue)}.complete-step.isdone{background:#168a6540;color:var(--green);border-color:var(--green)}
+footer{padding:30px 0 0;font-size:12px;color:var(--muted);text-align:center}.mobile-menu{display:none}.search-note{display:none;background:var(--panel2);padding:10px 14px;border-radius:9px;font-size:12px;margin-bottom:12px;color:var(--muted)}
+@media(max-width:1100px){main{padding:0 24px 70px}.article{padding:30px 26px}.hero{padding:30px}}@media(max-width:820px){.shell{display:block}aside{position:fixed;left:0;transform:translateX(-101%);transition:transform .25s;width:min(320px,90vw);box-shadow:var(--shadow)}aside.open{transform:translateX(0)}.mobile-menu{display:inline-block}main{padding:0 15px 55px}.hero{grid-template-columns:1fr;padding:27px;min-height:auto}.hero svg{max-height:185px}.topnav{height:65px}.topnav .trail{display:none}.search{width:min(45vw,190px)}.article{padding:23px 17px}.article h2{font-size:20px}.article p,.article li{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{aside,.topnav,.progress-top,.complete-step,.copycode{display:none!important}.shell{display:block}main{max-width:100%;padding:0}.hero{break-inside:avoid}.article{box-shadow:none;border:none}h2{break-after:avoid}.codepanel{break-inside:avoid}a{color:#163a69}}
+</style></head>
+<body><div class="progress-top" id="readProgress"></div>
+<div class="shell"><aside id="sidebar">
+  <div class="brand"><div class="brandmark">CG</div><div><strong>CLOUDGUARD 360</strong><span>Phase 02 Masterclass</span></div></div>
+  <div class="navtitle">Course navigation</div><nav><a class="navlink" href="#project-overview-your-current-situation-and-target" data-section="project-overview-your-current-situation-and-target">Project overview — Your current situation and target</a>
+<a class="navlink" href="#subphase-00-workspace-tools-and-safe-start" data-section="subphase-00-workspace-tools-and-safe-start">SUBPHASE 00 — Workspace, tools and safe start</a>
+<a class="navlink" href="#subphase-01-validate-the-existing-azure-network" data-section="subphase-01-validate-the-existing-azure-network">SUBPHASE 01 — Validate the existing Azure network</a>
+<a class="navlink" href="#subphase-02-entra-id-and-azure-rbac-discovery" data-section="subphase-02-entra-id-and-azure-rbac-discovery">SUBPHASE 02 — Entra ID and Azure RBAC discovery</a>
+<a class="navlink" href="#subphase-03-create-or-verify-four-microsoft-entra-groups-with-terraform" data-section="subphase-03-create-or-verify-four-microsoft-entra-groups-with-terraform">SUBPHASE 03 — Create or verify four Microsoft Entra…</a>
+<a class="navlink" href="#subphase-04-apply-or-audit-seven-least-privilege-azure-rbac-assignments" data-section="subphase-04-apply-or-audit-seven-least-privilege-azure-rbac-assignments">SUBPHASE 04 — Apply or audit seven least-privilege …</a>
+<a class="navlink" href="#subphase-05-inheritance-effective-access-and-optional-test-user-exercise" data-section="subphase-05-inheritance-effective-access-and-optional-test-user-exercise">SUBPHASE 05 — Inheritance, effective access and opt…</a>
+<a class="navlink" href="#subphase-06-azure-policy-governance-one-new-audit-only-assignment" data-section="subphase-06-azure-policy-governance-one-new-audit-only-assignment">SUBPHASE 06 — Azure Policy governance (one new audi…</a>
+<a class="navlink" href="#subphase-07-security-assurance-and-evidence-collection" data-section="subphase-07-security-assurance-and-evidence-collection">SUBPHASE 07 — Security assurance and evidence colle…</a>
+<a class="navlink" href="#subphase-08-final-qa-closure-and-phase-03-handover" data-section="subphase-08-final-qa-closure-and-phase-03-handover">SUBPHASE 08 — Final QA, closure and Phase 03 handover</a>
+<a class="navlink" href="#troubleshooting-known-cloudguard-360-incidents" data-section="troubleshooting-known-cloudguard-360-incidents">Troubleshooting — Known CloudGuard 360 incidents</a>
+<a class="navlink" href="#final-learning-check-three-professional-questions" data-section="final-learning-check-three-professional-questions">Final learning check — Three professional questions</a>
+<a class="navlink" href="#official-references-and-implementation-notes" data-section="official-references-and-implementation-notes">Official references and implementation notes</a></nav>
+  <div class="sideprogress"><h3>Phase 02 progress</h3><p id="progressText">0 of 9 subphases completed</p><div class="meter"><b id="progressFill"></b></div><p>Progress is saved in this browser when permitted.</p></div>
+</aside><main><div class="topnav"><div class="trail">Home / CloudGuard 360 / <strong>Identity & Azure RBAC</strong></div>
+<div class="actions"><button class="btn mobile-menu" id="menu" type="button">☰ Menu</button><input class="search" id="q" placeholder="Search in guide…" aria-label="Search guide"/><button class="btn" id="theme" type="button">◐ Theme</button></div></div>
+<section class="hero"><div><span class="eyebrow">COMPLETE HANDS-ON COURSE · 00–08</span><h1>Enterprise Identity,<br>Azure RBAC &<br>Security Governance</h1><p>An end-to-end, deeply guided learning experience: exact portal clicks, verified commands, Terraform, least privilege and audit-ready evidence.</p><div class="herochips"><span>Microsoft Entra ID</span><span>Terraform</span><span>Azure Policy</span><span>Cloud Shell</span><span>Free-trial-aware</span></div></div>
+<svg viewBox="0 0 490 290" role="img" aria-label="Animated infrastructure diagram showing Azure identity connected to roles and Resource Groups"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#5eabff"/><stop offset="1" stop-color="#65e6c1"/></linearGradient></defs>
+<rect x="160" y="8" width="170" height="55" rx="12" fill="#ffffff12" stroke="#82caff"/><text x="245" y="29" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Microsoft Entra ID</text><text x="245" y="46" text-anchor="middle" fill="#b9dcff" font-size="10">Users · Security Groups</text>
+<path class="streamline" d="M245 64 V102" stroke="url(#g)" fill="none" stroke-width="3"/><circle class="pulse" cx="245" cy="83" r="5" fill="#7ce8ce"/>
+<rect x="163" y="103" width="164" height="54" rx="12" fill="#ffffff15" stroke="#91edda"/><text x="245" y="125" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Azure RBAC</text><text x="245" y="143" text-anchor="middle" fill="#c3f7ee" font-size="10">Role + principal + scope</text>
+<path class="streamline" d="M245 158 V189 H116 V210 M245 189 H374 V210" stroke="url(#g)" fill="none" stroke-width="3"/><circle class="pulse2" cx="116" cy="190" r="5" fill="#7ce8ce"/><circle class="pulse" cx="374" cy="190" r="5" fill="#7ce8ce"/>
+<rect x="24" y="210" width="184" height="63" rx="12" fill="#ffffff13" stroke="#78b7ff"/><text x="116" y="234" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">rg-cg360-network</text><text x="116" y="252" text-anchor="middle" fill="#bfdcff" font-size="10">Hub VNet · Read-only</text>
+<rect x="281" y="210" width="185" height="63" rx="12" fill="#ffffff13" stroke="#78b7ff"/><text x="373" y="234" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">rg-cg360-app</text><text x="373" y="252" text-anchor="middle" fill="#bfdcff" font-size="10">App Spoke · Monitoring</text>
+</svg></section>
+<div class="banner"><strong>Safe continuation:</strong> If you already created the four Entra groups and seven Azure RBAC assignments, preserve the existing Terraform state and use the verification paths. This package adds an optional, separate Azure Policy audit root—never overwrites your networking or identity state.</div>
+<div id="searchNote" class="search-note"></div><article class="article" id="article"><h1 id="course-title">CloudGuard 360 — PHASE 02 MASTERCLASS</h1>
+<p><strong>Enterprise Identity, Azure RBAC &amp; Security Governance with Terraform</strong><br/>
+<strong>Complete hands-on handbook · English · Azure Cloud Shell (Bash) · Microsoft Entra ID · Free-trial-aware</strong></p>
+<blockquote>
+<p><strong>Start here.</strong> This guide covers <strong>Subphases 00–08</strong>, from opening the Azure Portal to final sign-off. It supports both a <strong>fresh Phase 02 installation</strong> and <strong>your existing environment, where the four groups and seven RBAC assignments may already have been created</strong>. Never overwrite an existing Terraform state. Do not run Terraform from a new copy of the identity template if the groups are already managed by the earlier project.</p>
+</blockquote>
+<p><img alt="Identity architecture" src="assets/01-identity-architecture.png"/></p>
+<h2 id="project-overview-your-current-situation-and-target">Project overview — Your current situation and target</h2>
+<p>Your <strong>Phase 01 networking</strong> has been completed with Terraform: two Resource Groups (<code>rg-cg360-network</code>, <code>rg-cg360-app</code>), a Hub-and-Spoke VNet pair, three subnets, a network security group and two VNet peerings. Phase 02 provides the <em>identity and governance layer</em> on top of this existing environment. <strong>Nothing here should recreate the VNets.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Responsibility</th>
+<th>Scope in this lab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Entra ID</td>
+<td>Identity objects and groups</td>
+<td>Four <code>CG360-*</code> security groups</td>
+</tr>
+<tr>
+<td>Azure RBAC</td>
+<td>Permissions on Azure resources</td>
+<td>Seven initial read-only assignments</td>
+</tr>
+<tr>
+<td>Terraform (AzureAD provider)</td>
+<td>Manage Entra groups</td>
+<td>Isolated identity Terraform root</td>
+</tr>
+<tr>
+<td>Terraform (AzureRM provider)</td>
+<td>RBAC, audit-only Azure Policy</td>
+<td>Existing RGs referenced as read-only data</td>
+</tr>
+<tr>
+<td>Azure Policy</td>
+<td>Audit governance rules</td>
+<td>One optional assignment at <code>rg-cg360-app</code></td>
+</tr>
+<tr>
+<td>Azure CLI / Cloud Shell</td>
+<td>Inspection and verification</td>
+<td>Read-only commands where possible</td>
+</tr>
+<tr>
+<td>Azure Files (<code>~/clouddrive</code>)</td>
+<td>Persist Cloud Shell files</td>
+<td>Training workspace; use Azure Blob remote state later</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Target role matrix (7 assignments):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Entra security group</th>
+<th><code>rg-cg360-app</code></th>
+<th><code>rg-cg360-network</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CG360-Cloud-Engineers</code></td>
+<td>Reader</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td><code>CG360-Developers</code></td>
+<td>Reader</td>
+<td>No additional assignment</td>
+</tr>
+<tr>
+<td><code>CG360-Security-Auditors</code></td>
+<td>Reader</td>
+<td>Reader</td>
+</tr>
+<tr>
+<td><code>CG360-Operations</code></td>
+<td>Monitoring Reader</td>
+<td>Monitoring Reader</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key distinction:</strong> An empty group grants <em>nobody</em> access. Being in one of these groups does not cancel more permissive roles inherited from a subscription or another group.</p>
+<h3 id="nine-subphases-and-acceptance-gates">Nine subphases and acceptance gates</h3>
+<table>
+<thead>
+<tr>
+<th>Subphase</th>
+<th>Hands-on outcome</th>
+<th>Gate before moving on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>00 — Prepare</strong></td>
+<td>Azure CLI, storage, folder and correct subscription</td>
+<td>Preflight successful</td>
+</tr>
+<tr>
+<td><strong>01 — Inventory</strong></td>
+<td>Identify existing network resources and costs</td>
+<td>Resource Groups and VNet peering verified</td>
+</tr>
+<tr>
+<td><strong>02 — Discover IAM</strong></td>
+<td>Explore Entra users, groups, directory roles and Azure IAM</td>
+<td>Understand role + identity + scope</td>
+</tr>
+<tr>
+<td><strong>03 — Entra groups</strong></td>
+<td>Four security groups created or verified in existing Terraform state</td>
+<td>Exactly 4 managed groups; no unexpected changes</td>
+</tr>
+<tr>
+<td><strong>04 — Azure RBAC</strong></td>
+<td>Seven read-only assignments created or verified</td>
+<td>Exactly 7 expected assignments at intended RG scopes</td>
+</tr>
+<tr>
+<td><strong>05 — Least privilege</strong></td>
+<td>Evaluate inherited access; optional authorised user test</td>
+<td>Demonstrate limits without destructive operations</td>
+</tr>
+<tr>
+<td><strong>06 — Azure Policy</strong></td>
+<td>Optional audit-only location policy via <em>separate</em> Terraform root</td>
+<td>A single audit policy; zero unexpected changes</td>
+</tr>
+<tr>
+<td><strong>07 — Evidence</strong></td>
+<td>Reproducible evidence archive, findings and risk notes</td>
+<td>Evidence reviewed, missing checks marked OPEN</td>
+</tr>
+<tr>
+<td><strong>08 — Closure</strong></td>
+<td>Read-only final validation and Phase 03 handover</td>
+<td>Sign off only what is verified</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rules-for-every-step">Rules for every step</h3>
+<ol>
+<li>Use <strong>Bash</strong> in Azure Cloud Shell. Do not run <code>az login</code> inside an already authenticated Cloud Shell unless genuinely switching identity; your earlier device-code attempt was blocked by Security Defaults.</li>
+<li>Keep <code>~/clouddrive</code> mounted. Terraform state files and saved plans may contain sensitive information; do not upload them to a public repository.</li>
+<li>Verify your <strong>actual subscription name</strong> and remaining Azure trial credit before deploying anything. <strong>Azure Policy Audit creates no VM/AKS and normally requires no new compute, but Cloud Shell storage can have charges.</strong></li>
+<li>Use <strong>separate Terraform roots</strong> for Phase 01 networking, Phase 02 identity, and Phase 02 governance policy. Each maintains its own state.</li>
+<li><strong>Never run <code>terraform apply</code> if the plan changes/deletes an existing VNet, Resource Group, identity group, or role unexpectedly.</strong> A saved <code>.tfplan</code> is specific to the plan you reviewed.</li>
+<li>Group creation permissions in Entra and role-assignment permissions in Azure are different. Do not grant yourself extra rights to work around a failure.</li>
+<li>Screenshots and outputs should be redacted before sharing. Do not publish credentials, full state files, subscription/tenant IDs, personal UPNs, or user object IDs.</li>
+</ol>
+<hr/>
+<h2 id="subphase-00-workspace-tools-and-safe-start">SUBPHASE 00 — Workspace, tools and safe start</h2><button aria-pressed="false" class="complete-step" data-step="00" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> find the already-deployed lab, ensure that Cloud Shell is persistent, and identify the right working folders. <strong>No Azure changes</strong>.</p>
+<h3 id="00-1-open-azure-portal">00.1 — Open Azure Portal</h3>
+<ol>
+<li>Visit <strong>https://portal.azure.com/</strong> and sign in with the account used for the earlier networking deployment.</li>
+<li>In the top bar, select the terminal icon <strong>Cloud Shell</strong> (<code>&gt;_</code>).</li>
+<li>Choose <strong>Bash</strong>. If Cloud Shell asks you to configure storage, choose the persistent storage / <em>Mount storage account</em> option, review any associated Azure Files cost, and complete the wizard.</li>
+<li>If you previously chose an ephemeral session, open Cloud Shell <strong>Settings → Reset User Settings</strong>, then relaunch with persistent storage; first download any transient files you need to preserve.</li>
+<li>Keep this Cloud Shell tab open while executing the instructions below.</li>
+</ol>
+<p><img alt="Portal navigation diagram" src="assets/04-portal-navigation.png"/></p>
+<h3 id="00-2-confirm-that-you-have-a-persistent-mount-and-working-tools">00.2 — Confirm that you have a persistent mount and working tools</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># Run in Azure Cloud Shell - Bash
+mountpoint -q "$HOME/clouddrive" &amp;&amp; echo 'PASS: persistent mount' || echo 'STOP: no persistent mount'
+terraform version
+az version
+az account show --query '{Name:name,State:state}' --output table
+</code></pre></div>
+<p><strong>Expected:</strong> <code>PASS: persistent mount</code>, Terraform/Azure CLI version information, and a subscription in the <code>Enabled</code> state. If not, <strong>stop here</strong>.</p>
+<p><strong>Why:</strong> the machine behind Cloud Shell is temporary. Your <code>clouddrive</code> Azure Files mount persists project files. For a production-grade Terraform collaboration workflow you will ultimately use a secured Azure Blob Storage backend with state locking; Cloud Shell Files persistence by itself is not that backend.</p>
+<h3 id="00-3-set-azure-provider-context-without-printing-ids">00.3 — Set Azure provider context without printing IDs</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+export ARM_TENANT_ID="$(az account show --query tenantId -o tsv)"
+[ -n "$ARM_SUBSCRIPTION_ID" ] &amp;&amp; echo 'PASS: subscription configured'
+</code></pre></div>
+<p><strong>Expected:</strong> <code>PASS: subscription configured</code>. The exports must be repeated after starting a new Bash session. The AzureRM 4.x provider needs the subscription ID; neither value should be committed as source code.</p>
+<h3 id="00-4-download-this-zip-and-upload-it-to-cloud-shell">00.4 — Download this ZIP and upload it to Cloud Shell</h3>
+<ol>
+<li>In the ChatGPT response, click <strong>CloudGuard 360 — Phase 02 Masterclass ZIP</strong> and save it on your PC.</li>
+<li>Return to Cloud Shell and select <strong>Manage files → Upload</strong>.</li>
+<li>Choose the downloaded <code>CloudGuard360_Phase02_Masterclass.zip</code>.</li>
+<li>In Bash, run <code>ls -lh ~/CloudGuard360_Phase02_Masterclass.zip</code>. If the file is not present, check the destination reported by Cloud Shell's upload feature.</li>
+<li>Extract to <code>clouddrive</code> without overwriting your earlier Phase 02 directory:</li>
+</ol>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">mkdir -p "$HOME/clouddrive/cloudguard360"
+unzip -n "$HOME/CloudGuard360_Phase02_Masterclass.zip" -d "$HOME/clouddrive/cloudguard360"
+cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass"
+pwd
+ls -la
+</code></pre></div>
+<p><strong>Expected:</strong> you see <code>index.html</code>, <code>terraform.md</code>, <code>policy-audit/</code>, <code>templates/</code>, <code>scripts/</code> and <code>assets/</code>. The ZIP contains <strong>one top-level folder</strong> named <code>CloudGuard360_Phase02_Masterclass</code>.</p>
+<p><strong>Download failure?</strong> If ChatGPT displays <em>This action couldn't be completed</em>, try the individual Markdown/HTML links, or create the Terraform files using the documented snippets. Do not depend on an unverified public download URL.</p>
+<h3 id="00-5-detect-whether-your-original-phase-02-deployment-already-exists">00.5 — Detect whether your original Phase 02 deployment already exists</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">bash scripts/00-detect-workspace.sh
+</code></pre></div>
+<p><strong>Expected for your ongoing lab:</strong> the existing root is detected at <code>~/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform</code>. If it contains an existing state, use <strong>that original Terraform root</strong> for Subphases 03–05. <strong>Do not copy over or replace its state with the template inside this package.</strong></p>
+<p>If you genuinely have no Phase 02 root yet, the template is in <code>templates/identity-rbac</code>. Copy it into a <em>new persistent</em> folder and then follow Subphase 03. Never do this if the groups already exist and are managed by your previous Terraform configuration.</p>
+<p><strong>Checkpoint 00:</strong> Cloud Shell mounted, correct subscription selected, no duplicate Phase 02 deployment attempted.</p>
+<hr/>
+<h2 id="subphase-01-validate-the-existing-azure-network">SUBPHASE 01 — Validate the existing Azure network</h2><button aria-pressed="false" class="complete-step" data-step="01" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> verify Phase 01 is real and in the expected subscription. These commands only read Azure resources.</p>
+<h3 id="01-1-inspect-the-two-resource-groups">01.1 — Inspect the two Resource Groups</h3>
+<p>In <strong>Azure Portal → search “Resource groups”</strong>, open <code>rg-cg360-network</code> and <code>rg-cg360-app</code>. In both, confirm the resource names and labels. Then use the terminal:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az group show --name rg-cg360-network --query '{Name:name,Location:location}' -o table
+az group show --name rg-cg360-app --query '{Name:name,Location:location}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> both Resource Groups exist. The Resource Group metadata location does not necessarily match its VNets' region.</p>
+<h3 id="01-2-read-the-deployed-vnet-address-spaces-and-actual-region">01.2 — Read the deployed VNet address spaces and actual region</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az network vnet show -g rg-cg360-network -n vnet-cg360-hub \
+  --query '{Name:name,Region:location,Prefixes:addressSpace.addressPrefixes}' -o json
+az network vnet show -g rg-cg360-app -n vnet-cg360-app \
+  --query '{Name:name,Region:location,Prefixes:addressSpace.addressPrefixes}' -o json
+</code></pre></div>
+<p><strong>Expected:</strong> Hub <code>10.0.0.0/16</code>; Application <code>10.10.0.0/16</code>. Your original attempt in <code>westeurope</code> received <code>RequestDisallowedByAzure</code>; the working region must be read from the actual VNet rather than guessed. <strong>Do not recreate the network</strong>.</p>
+<h3 id="01-3-verify-the-peering-relationships">01.3 — Verify the peering relationships</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az network vnet peering list -g rg-cg360-network --vnet-name vnet-cg360-hub \
+  --query '[].{Name:name,State:peeringState}' -o table
+az network vnet peering list -g rg-cg360-app --vnet-name vnet-cg360-app \
+  --query '[].{Name:name,State:peeringState}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> two peerings in <code>Connected</code> state. This proves the control-plane peering was established; it does <strong>not</strong> prove an application-level packet flow, because no test workloads have been deployed.</p>
+<h3 id="01-4-inspect-cost-controls">01.4 — Inspect cost controls</h3>
+<p>In Azure Portal, navigate to <strong>Cost Management + Billing → Cost Management → Budgets</strong> at the correct scope. Check remaining Free Trial credit, expiry date, current charges, and budget alerts if available. Budgets do <strong>not</strong> automatically prevent charges. The Phase 02 exercises do not require AKS, Windows VMs, Azure Firewall or public IP addresses.</p>
+<p><strong>Checkpoint 01:</strong> both Resource Groups accessible, VNets and CIDRs correct, peerings <code>Connected</code>, credit/charges reviewed.</p>
+<hr/>
+<h2 id="subphase-02-entra-id-and-azure-rbac-discovery">SUBPHASE 02 — Entra ID and Azure RBAC discovery</h2><button aria-pressed="false" class="complete-step" data-step="02" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> understand identity, authorisation, groups and role scope before creating anything. <strong>Read-only</strong>.</p>
+<p><img alt="RBAC scope hierarchy" src="assets/02-rbac-scopes.png"/></p>
+<h3 id="02-1-identify-the-correct-microsoft-entra-tenant">02.1 — Identify the correct Microsoft Entra tenant</h3>
+<ol>
+<li>Open <strong>https://entra.microsoft.com/</strong> with the account associated with your Azure subscription.</li>
+<li>Navigate to <strong>Entra ID → Overview</strong>.</li>
+<li>Inspect the directory name and tenant information. Compare the directory shown in Azure Portal's <strong>Subscriptions</strong> overview.</li>
+<li>Do not copy the Tenant ID into public screenshots or GitHub documentation.</li>
+</ol>
+<h3 id="02-2-browse-user-accounts">02.2 — Browse user accounts</h3>
+<p>In Entra Admin Center select <strong>Entra ID → Users → All users</strong>. Open your own account in read-only mode and locate its user principal name, Object ID, Group memberships and (where available) Directory roles. <strong>Object ID</strong> uniquely identifies an Entra object; it is not your Azure subscription ID.</p>
+<h3 id="02-3-inspect-existing-groups">02.3 — Inspect existing groups</h3>
+<p>Select <strong>Entra ID → Groups → All groups</strong> and search for <code>CG360-</code>. Initially there may be <strong>zero groups</strong>. If your earlier Terraform work succeeded, you should see four. <strong>Do not create duplicates manually.</strong></p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az ad group list --filter "startswith(displayName,'CG360-')" \
+  --query '[].{Name:displayName,SecurityEnabled:securityEnabled}' -o table
+</code></pre></div>
+<p>If a Microsoft Graph permission error appears, record it. Do not disable Security Defaults to bypass access control.</p>
+<h3 id="02-4-compare-entra-directory-roles-with-azure-rbac-roles">02.4 — Compare Entra directory roles with Azure RBAC roles</h3>
+<p>In <strong>Entra ID → Roles &amp; admins</strong>, inspect <em>Groups Administrator</em> and related roles. In the Azure Portal open <strong>Resource groups → rg-cg360-app → Access control (IAM) → Role assignments</strong>. Directory roles manage directory objects; Azure RBAC roles manage Azure resource operations. An Azure subscription Contributor does <strong>not</strong> automatically become a Groups Administrator.</p>
+<h3 id="02-5-inspect-rbac-and-inheritance-without-changing-anything">02.5 — Inspect RBAC and inheritance without changing anything</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az role assignment list --resource-group rg-cg360-app --include-inherited \
+  --query '[].{Role:roleDefinitionName,Type:principalType,Scope:scope}' -o table
+az role assignment list --resource-group rg-cg360-network --include-inherited \
+  --query '[].{Role:roleDefinitionName,Type:principalType,Scope:scope}' -o table
+</code></pre></div>
+<p><strong>Meaning:</strong> a role at Subscription scope can be inherited by both RGs. Roles created on <code>rg-cg360-app</code> don't automatically affect <code>rg-cg360-network</code>. <em>Effective access</em> is the combination of all applicable role assignments, including group memberships and inherited roles.</p>
+<p><strong>Checkpoint 02:</strong> find the Entra tenant, users, <code>CG360-*</code> groups, directory roles, and role assignments in both RGs.</p>
+<hr/>
+<h2 id="subphase-03-create-or-verify-four-microsoft-entra-groups-with-terraform">SUBPHASE 03 — Create or verify four Microsoft Entra groups with Terraform</h2><button aria-pressed="false" class="complete-step" data-step="03" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> bring the four groups under Terraform management, without adding members or granting Azure RBAC yet.</p>
+<h3 id="03-1-choose-the-correct-terraform-root-critical">03.1 — Choose the correct Terraform root (critical)</h3>
+<p><strong>If you already completed Subphase 03:</strong> stay in your <strong>existing</strong> root. Do not copy the template files onto it, do not delete state, and do not run another fresh apply from this ZIP.</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">IDENTITY_ROOT="$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform"
+cd "$IDENTITY_ROOT"
+export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+export ARM_TENANT_ID="$(az account show --query tenantId -o tsv)"
+terraform state list
+</code></pre></div>
+<p>If the state shows four <code>azuread_group.lab[...]</code> entries, skip to <strong>03.6</strong>. If the project does not exist and you have <strong>not</strong> created the groups, you can initialise the fresh template:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># ONLY FOR A FRESH LAB WITH NO EXISTING MANAGED GROUPS
+mkdir -p "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform"
+cp -n "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/templates/identity-rbac/"* \
+  "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform/"
+# Include hidden .gitignore (not matched by *).
+cp -n "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/templates/identity-rbac/.gitignore" \
+  "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform/.gitignore"
+cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform"
+</code></pre></div>
+<p>The template has <code>.gitignore</code>, <code>main.tf</code>, <code>providers.tf</code>, <code>rbac.tf</code>, <code>variables.tf</code>, <code>outputs.tf</code>, <code>versions.tf</code> and <code>terraform.tfvars.example</code>. It <strong>does not include your existing Terraform state</strong>.</p>
+<h3 id="03-2-verify-permissions-to-create-groups">03.2 — Verify permissions to create groups</h3>
+<p>In Entra Admin Center, inspect <strong>Roles &amp; admins</strong> and any tenant restriction on creating security groups. A directory administrator role may be required depending on settings; in some tenants, default users can create groups. Group creation depends on <strong>Entra directory permissions</strong>, not merely an Azure subscription role. Do not elevate privileges without authorisation.</p>
+<h3 id="03-3-configure-variables-for-release-a-groups-only">03.3 — Configure variables for Release A (groups only)</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cp -n terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
+</code></pre></div>
+<p>Ensure the important values are:</p>
+<div class="codepanel" data-language="HCL"><div class="codetop"><span>HCL</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-hcl">prefix                   = "CG360"
+app_resource_group       = "rg-cg360-app"
+network_resource_group   = "rg-cg360-network"
+enable_role_assignments  = false
+enable_app_contributor    = false
+demo_member_object_id    = ""
+</code></pre></div>
+<p>Do not add your personal account as a demo member at this stage.</p>
+<h3 id="03-4-initialise-validate-and-prepare-a-saved-plan">03.4 — Initialise, validate and prepare a saved plan</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=phase02-groups.tfplan
+terraform show -no-color phase02-groups.tfplan | grep -E 'will be created|Plan:'
+terraform show -json phase02-groups.tfplan | python3 \
+  "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/scripts/check_plan.py"
+</code></pre></div>
+<p><strong>Expected (fresh only):</strong> <code>Plan: 4 to add, 0 to change, 0 to destroy</code>, all resources <code>azuread_group.lab[...]</code>, guard returns <code>PLAN PASS</code>.</p>
+<p><strong>If you already manage the groups:</strong> <code>terraform plan</code> should instead show <strong>no changes</strong> when the identity/RBAC configuration is unchanged. Never apply a four-group plan from a new state while the same groups already exist.</p>
+<h3 id="03-5-apply-only-after-reviewing-the-four-group-plan">03.5 — Apply only after reviewing the four-group plan</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># ONLY if a reviewed plan creates exactly the four intended groups
+terraform apply phase02-groups.tfplan
+</code></pre></div>
+<p><strong>Expected:</strong> <code>Apply complete! Resources: 4 added, 0 changed, 0 destroyed.</code> If you see <code>Authorization_RequestDenied</code> or <code>duplicate name</code>, stop. Do not manually create matching groups and then rerun this apply.</p>
+<h3 id="03-6-verify-group-inventory-in-terraform-and-entra">03.6 — Verify group inventory in Terraform and Entra</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">terraform state list | grep '^azuread_group\.lab\['
+terraform output security_group_names
+az ad group list --filter "startswith(displayName,'CG360-')" \
+  --query '[].{Name:displayName,Security:securityEnabled}' -o table
+</code></pre></div>
+<p>Open <strong>Entra ID → Groups → All groups</strong> and confirm four <code>CG360-*</code> Security groups. They should be empty until you intentionally manage membership.</p>
+<p><strong>Checkpoint 03:</strong> exactly four expected managed groups, no existing group duplicated, no unreviewed elevated privileges.</p>
+<hr/>
+<h2 id="subphase-04-apply-or-audit-seven-least-privilege-azure-rbac-assignments">SUBPHASE 04 — Apply or audit seven least-privilege Azure RBAC assignments</h2><button aria-pressed="false" class="complete-step" data-step="04" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> connect the four groups to Reader / Monitoring Reader on the correct RGs. No changes to VNets.</p>
+<h3 id="04-1-confirm-the-prerequisite-for-role-assignments">04.1 — Confirm the prerequisite for role assignments</h3>
+<p>Your signed-in identity needs <code>Microsoft.Authorization/roleAssignments/write</code> on each relevant Resource Group or an inherited ancestor scope. This may be included in Owner or Role Based Access Control Administrator; Contributor is normally insufficient. Check your account in <strong>Resource groups → ... → Access control (IAM) → Check access</strong>.</p>
+<h3 id="04-2-if-seven-assignments-are-already-created-audit-them">04.2 — If seven assignments are already created, audit them</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform"
+terraform output rbac_assignment_count
+terraform state list | grep '^azurerm_role_assignment\.lab\['
+</code></pre></div>
+<p><strong>Expected for your later-stage environment:</strong> <code>7</code> and seven role-assignment entries. If already present, <strong>do not re-apply a fresh seven-role plan</strong>. Continue to 04.5.</p>
+<h3 id="04-3-if-not-created-enable-read-only-roles">04.3 — If not created, enable read-only roles</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">nano terraform.tfvars
+</code></pre></div>
+<p>Use these values:</p>
+<div class="codepanel" data-language="HCL"><div class="codetop"><span>HCL</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-hcl">enable_role_assignments = true
+enable_app_contributor   = false
+demo_member_object_id    = ""
+</code></pre></div>
+<p>The assignments are defined in <code>rbac.tf</code>. Review them; the intended roles are <strong>Reader</strong> and <strong>Monitoring Reader</strong>, not Contributor.</p>
+<h3 id="04-4-review-the-seven-role-plan-then-apply-if-authorised">04.4 — Review the seven-role plan, then apply if authorised</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">terraform validate
+terraform plan -out=phase02-rbac.tfplan
+terraform show -no-color phase02-rbac.tfplan | grep -E 'will be created|Plan:'
+terraform show -json phase02-rbac.tfplan | python3 \
+  "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/scripts/check_plan.py"
+</code></pre></div>
+<p><strong>Expected when groups already exist and RBAC is not deployed:</strong> <code>Plan: 7 to add, 0 to change, 0 to destroy</code> with seven <code>azurerm_role_assignment.lab[...]</code> addresses; safety guard <code>PLAN PASS</code>. Check each role and scope manually before applying.</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># ONLY after you reviewed the exact seven changes and have permission
+terraform apply phase02-rbac.tfplan
+</code></pre></div>
+<p><strong>Expected:</strong> seven assignments created. An authorization error means your account does not have the required authority; do not self-escalate.</p>
+<h3 id="04-5-verify-role-assignments-in-azure">04.5 — Verify role assignments in Azure</h3>
+<ol>
+<li>Azure Portal → <strong>Resource groups → rg-cg360-app → Access control (IAM) → Role assignments</strong>.</li>
+<li>Search for <code>CG360-</code> and inspect group names, role names and scopes.</li>
+<li>Repeat in <code>rg-cg360-network</code>.</li>
+<li>If you already have the original <code>scripts/verify_rbac.sh</code>, run it; otherwise the copy in this ZIP can be called by its full path:</li>
+</ol>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">bash "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/scripts/verify_rbac.sh"
+</code></pre></div>
+<p><strong>Checkpoint 04:</strong> seven intended assignments confirmed, no Contributor access, and no unexpected network changes.</p>
+<hr/>
+<h2 id="subphase-05-inheritance-effective-access-and-optional-test-user-exercise">SUBPHASE 05 — Inheritance, effective access and optional test-user exercise</h2><button aria-pressed="false" class="complete-step" data-step="05" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> distinguish <em>assigned</em> rights from <em>effective</em> rights. Do not test permissions with destructive Azure operations.</p>
+<p><img alt="Identity permissions flow" src="assets/03-terraform-process.png"/></p>
+<h3 id="05-1-understand-inheritance">05.1 — Understand inheritance</h3>
+<p>A Reader assignment on <code>rg-cg360-app</code> allows appropriate Azure control-plane reads within that RG. A role at subscription scope can grant <strong>additional access</strong> across both RGs. Azure RBAC <strong>does not remove</strong> an inherited Owner role simply because the user also belongs to a Reader group. Empty groups grant no new permissions to people.</p>
+<h3 id="05-2-inspect-real-assignments-in-the-portal">05.2 — Inspect real assignments in the portal</h3>
+<ol>
+<li>Open <strong>Azure Portal → Resource groups → rg-cg360-app → Access control (IAM)</strong>.</li>
+<li>Choose <strong>Role assignments</strong>. Inspect direct vs inherited role scopes.</li>
+<li>Choose <strong>Check access</strong> and look up a group (<code>CG360-Developers</code>) or a user you are authorised to inspect.</li>
+<li>Repeat in <code>rg-cg360-network</code>.</li>
+<li>Record the observations in <code>evidence/</code> without exposing object IDs publicly.</li>
+</ol>
+<h3 id="05-3-run-read-only-azure-cli-checks">05.3 — Run read-only Azure CLI checks</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az role assignment list --resource-group rg-cg360-app --include-inherited \
+  --query '[].{Role:roleDefinitionName,Type:principalType,Scope:scope}' -o table
+az role assignment list --resource-group rg-cg360-network --include-inherited \
+  --query '[].{Role:roleDefinitionName,Type:principalType,Scope:scope}' -o table
+</code></pre></div>
+<p>For a permitted dedicated lab user only, use their Entra object ID to examine inherited and group-derived assignments; <strong>do not share that ID in a screenshot</strong>:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># OPTIONAL; only if you have a separate authorised test identity
+TEST_USER_ID='REPLACE-WITH-LAB-USER-OBJECT-ID'
+az role assignment list --assignee "$TEST_USER_ID" --all \
+  --include-groups --include-inherited \
+  --query '[].{Role:roleDefinitionName,Scope:scope}' -o table
+</code></pre></div>
+<h3 id="05-4-optional-add-and-remove-membership-with-terraform">05.4 — Optional add-and-remove membership with Terraform</h3>
+<p>Only if a <strong>non-privileged test identity</strong> exists and you have permission to manage membership:</p>
+<ol>
+<li>Open your <strong>existing</strong> identity root's <code>terraform.tfvars</code>.</li>
+<li>Set <code>demo_member_object_id</code> to the <em>test user's Object ID</em>, not the subscription ID.</li>
+<li><code>terraform plan -out=member-add.tfplan</code>; expect only <code>azuread_group_member.demo_developer[0]</code> creation and no other changes.</li>
+<li>Review, then <code>terraform apply member-add.tfplan</code> only if all checks pass.</li>
+<li>Sign in privately as the test user and confirm App RG read access. Do not press Delete to check denial.</li>
+<li>Clear the variable back to <code>""</code>; review the new plan carefully: it should <strong>destroy only the temporary group membership</strong>, not a group or role.</li>
+<li>Apply only the reviewed membership cleanup.</li>
+</ol>
+<p><strong>Skip this exercise if you do not have an approved second account.</strong> A portal IAM audit is still a valid conceptual verification; simply record the functional test as <em>Not Tested</em> rather than claiming it passed.</p>
+<p><strong>Checkpoint 05:</strong> explain why group-based Reader doesn't override subscription Owner. Test evidence is labelled actual, simulated, or not performed.</p>
+<hr/>
+<h2 id="subphase-06-azure-policy-governance-one-new-audit-only-assignment">SUBPHASE 06 — Azure Policy governance (one new audit-only assignment)</h2><button aria-pressed="false" class="complete-step" data-step="06" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> configure a simple location-governance audit using a separate, nonblocking Terraform project. Do not deploy resources into a forbidden region. The policy reads the actual existing App VNet region to avoid the earlier <code>westeurope</code> 403 mistake.</p>
+<h3 id="06-1-why-a-separate-policy-project">06.1 — Why a separate policy project?</h3>
+<p>The completed Phase 02 identity state already manages <strong>four security groups and seven RBAC assignments</strong>. Our optional governance root lives in <code>CloudGuard360_Phase02_Masterclass/policy-audit</code> and has its <strong>own state</strong>. It references the existing App RG and VNet as read-only data sources; it cannot recreate your Phase 01 network or take over your identity state.</p>
+<p><strong>Azure RBAC vs Azure Policy:</strong> RBAC answers <em>who may act</em>; Policy tests <em>whether resource configuration follows a rule</em>. The built-in <strong>Allowed locations</strong> policy (<code>e56962a6-4747-49cd-b67b-bf8b01975c4c</code>) supports the <code>Audit</code> effect. With <code>Audit</code> it reports noncompliance; it does not block deployments. Because it is scoped to the App RG, it doesn't directly govern the Network RG.</p>
+<h3 id="06-2-verify-policy-availability-and-your-permissions">06.2 — Verify policy availability and your permissions</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az policy definition show --name e56962a6-4747-49cd-b67b-bf8b01975c4c \
+  --query '{Name:displayName,AllowedEffects:parameters.effect.allowedValues}' -o json
+az provider show --namespace Microsoft.PolicyInsights --query registrationState -o tsv
+</code></pre></div>
+<p><strong>Expected:</strong> <code>Allowed locations</code> and effects including <code>Audit</code>. Provider registration or Policy Insights permissions may be needed for compliance querying. Assigning a policy requires <code>Microsoft.Authorization/policyAssignments/write</code> at the RG scope (or a parent). Ask an authorised admin if missing.</p>
+<h3 id="06-3-open-the-isolated-policy-terraform-project">06.3 — Open the isolated policy Terraform project</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/policy-audit"
+export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+cp -n terraform.tfvars.example terraform.tfvars
+cat terraform.tfvars
+terraform init
+terraform validate
+</code></pre></div>
+<p>The file initially sets <code>enable_policy_audit = false</code>; therefore the first plan should not create the policy. Verify the existing VNet is still readable.</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az network vnet show -g rg-cg360-app -n vnet-cg360-app \
+  --query '{Name:name,ActualRegion:location}' -o table
+terraform plan
+</code></pre></div>
+<h3 id="06-4-activate-the-policy-audit">06.4 — Activate the policy audit</h3>
+<p>Only when your roles and scope are verified:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">nano terraform.tfvars
+</code></pre></div>
+<p>Change <strong>only</strong>:</p>
+<div class="codepanel" data-language="HCL"><div class="codetop"><span>HCL</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-hcl">enable_policy_audit = true
+</code></pre></div>
+<p>Now generate a saved plan:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">terraform fmt -check
+terraform validate
+terraform plan -out=policy.tfplan
+terraform show -no-color policy.tfplan | grep -E 'will be created|Plan:'
+terraform show -json policy.tfplan | python3 ../scripts/06-policy-plan-guard.py
+</code></pre></div>
+<p><strong>Expected for a new policy state:</strong> exactly <strong>one</strong> <code>azurerm_resource_group_policy_assignment.locations_audit[0]</code> creation; safety checker prints <code>PLAN PASS</code>. The <code>terraform show</code> output must confirm <code>Audit</code>, the actual App VNet region, and scope <code>rg-cg360-app</code>.</p>
+<p><strong>If the built-in policy is already assigned outside Terraform, stop.</strong> Do not create a duplicate. Decide with an administrator whether to leave it untouched or import it into this state; never import without explicitly reviewing the destination state.</p>
+<h3 id="06-5-apply-the-policy-only-after-the-guard-passes">06.5 — Apply the policy only after the guard passes</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash"># ONLY after reviewing exactly one policy creation
+terraform apply policy.tfplan
+terraform output policy_assignment_count
+</code></pre></div>
+<p><strong>Expected:</strong> <code>Apply complete! Resources: 1 added, 0 changed, 0 destroyed.</code>; assignment count <code>1</code>. The policy won't require an AKS cluster, VM or Premium Entra licence.</p>
+<h3 id="06-6-verify-in-azure-policy-and-interpret-evaluation-delay">06.6 — Verify in Azure Policy and interpret evaluation delay</h3>
+<ol>
+<li>Azure Portal → search <strong>Policy</strong>.</li>
+<li>Select <strong>Assignments</strong>; set the scope to <code>rg-cg360-app</code>.</li>
+<li>Find <strong>CloudGuard 360 - Allowed Locations (Audit)</strong>.</li>
+<li>Open <strong>Compliance</strong> and review evaluation status. Results are asynchronous; <em>Not evaluated</em> or empty results immediately after assignment are not success or failure of compliance.</li>
+</ol>
+<p>Read-only CLI queries:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az policy assignment list --resource-group rg-cg360-app \
+  --query '[].{Name:name,DisplayName:displayName}' -o table
+az policy state list --resource-group rg-cg360-app --top 25 \
+  --query '[].{Policy:policyAssignmentName,State:complianceState}' -o table
+</code></pre></div>
+<p><strong>Optional</strong> when authorised: <code>az policy state trigger-scan --resource-group rg-cg360-app</code> triggers evaluation; it is not strictly read-only, and processing may take time. Don't infer that all resources are compliant simply because the state list is initially empty.</p>
+<p><strong>Checkpoint 06:</strong> policy assigned with <code>Audit</code>, scoped to App RG, original region dynamically discovered, no VNets modified, compliance observations recorded accurately.</p>
+<hr/>
+<h2 id="subphase-07-security-assurance-and-evidence-collection">SUBPHASE 07 — Security assurance and evidence collection</h2><button aria-pressed="false" class="complete-step" data-step="07" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> create a reproducible private evidence package showing what was deployed, audited, skipped or blocked. A pass must reflect real output, not an assumed success.</p>
+<h3 id="07-1-define-evidence-standards">07.1 — Define evidence standards</h3>
+<p>For each security control, record: <strong>Control ID, Objective, Test Procedure, Expected Result, Actual Result, Status, Evidence File, Date/Time, Reviewer, Finding/Remediation</strong>.</p>
+<p>Suggested checks:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Control</th>
+<th>Objective</th>
+<th>PASS only if...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID-01</td>
+<td>Four security groups</td>
+<td>Identity inventory</td>
+<td>Four distinct groups visible and managed in state</td>
+</tr>
+<tr>
+<td>ID-02</td>
+<td>Membership</td>
+<td>Least privilege</td>
+<td>No unapproved members; optional lab membership cleaned up</td>
+</tr>
+<tr>
+<td>RBAC-01</td>
+<td>Seven role assignments</td>
+<td>Scope correctness</td>
+<td>Seven assignments match role/scope matrix</td>
+</tr>
+<tr>
+<td>RBAC-02</td>
+<td>No broad write permissions</td>
+<td>Read-only starting position</td>
+<td>No extra Contributor roles introduced by this project</td>
+</tr>
+<tr>
+<td>RBAC-03</td>
+<td>Effective permissions</td>
+<td>Inheritance reviewed</td>
+<td>User/group and inherited scope results actually inspected</td>
+</tr>
+<tr>
+<td>GOV-01</td>
+<td>Policy audit</td>
+<td>Allowed location</td>
+<td>Exactly one optional audit assignment at App RG</td>
+</tr>
+<tr>
+<td>GOV-02</td>
+<td>Compliance evaluation</td>
+<td>Monitoring evidence</td>
+<td>Actual Policy Insights statuses or recorded NOT YET EVALUATED</td>
+</tr>
+<tr>
+<td>IAC-01</td>
+<td>Terraform validation</td>
+<td>IaC correctness</td>
+<td><code>terraform validate</code> passes in relevant roots</td>
+</tr>
+<tr>
+<td>IAC-02</td>
+<td>Drift detection</td>
+<td>Operational consistency</td>
+<td>Final <code>terraform plan</code> reports no unexpected changes</td>
+</tr>
+<tr>
+<td>NET-01</td>
+<td>Network unchanged</td>
+<td>Boundary protection</td>
+<td>Original VNets and peerings still intact</td>
+</tr>
+</tbody>
+</table>
+<h3 id="07-2-collect-evidence-automatically-no-azure-changes">07.2 — Collect evidence automatically (no Azure changes)</h3>
+<p>From your course root:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass"
+bash scripts/07-collect-evidence.sh
+</code></pre></div>
+<p>The script records directory and RBAC summaries, Azure Policy assignments/compliance, and Terraform validation/state <strong>resource addresses</strong> in a timestamped <strong>private</strong> folder under <code>~/clouddrive/cloudguard360/phase02-evidence/</code>.</p>
+<p><strong>Important:</strong> a command failure is logged as REVIEW, not silently counted as PASS. Evidence output may still contain infrastructure metadata. Before publishing anything, sanitise UPNs, object IDs, subscription/tenant IDs, raw state and credentials.</p>
+<h3 id="07-3-create-a-findings-log">07.3 — Create a findings log</h3>
+<p>Copy the template from <code>docs/EVIDENCE_REGISTER_TEMPLATE.md</code> and fill it in using your actual observations. If you lack a non-privileged user or Policy Insights is empty, set <strong>Not Tested</strong> or <strong>Pending</strong> rather than claiming a verified pass.</p>
+<p><strong>Checkpoint 07:</strong> private evidence directory exists, findings are traceable, and every claim is grounded in a real test or marked unresolved.</p>
+<hr/>
+<h2 id="subphase-08-final-qa-closure-and-phase-03-handover">SUBPHASE 08 — Final QA, closure and Phase 03 handover</h2><button aria-pressed="false" class="complete-step" data-step="08" type="button">Mark this subphase complete</button>
+<p><strong>Goal:</strong> confirm Phase 02 is stable without changing the infrastructure. This is a gate, not an automatic success declaration.</p>
+<h3 id="08-1-final-terraform-state-inventory">08.1 — Final Terraform state inventory</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass"
+bash scripts/08-final-review.sh
+</code></pre></div>
+<p><strong>Expected, if all deployment exercises were completed:</strong> 4 Terraform-managed groups; 7 Terraform-managed RBAC role assignments; 1 policy assignment if you chose to deploy the optional governance stage. State counts alone cannot prove effective permissions or policy compliance.</p>
+<h3 id="08-2-run-a-no-change-terraform-plan-in-each-root">08.2 — Run a no-change Terraform plan in each root</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Identity_RBAC/terraform"
+terraform plan -detailed-exitcode -no-color &gt; plan-final-identity.txt 2&gt;&amp;1
+code=$?; echo "IDENTITY_PLAN_EXIT=$code"
+# Expected exit code: 0 = no changes, 2 = changes, 1 = error
+</code></pre></div>
+<p>If governance was deployed:</p>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">cd "$HOME/clouddrive/cloudguard360/CloudGuard360_Phase02_Masterclass/policy-audit"
+terraform plan -detailed-exitcode -no-color &gt; plan-final-policy.txt 2&gt;&amp;1
+code=$?; echo "POLICY_PLAN_EXIT=$code"
+</code></pre></div>
+<p><strong>Expected:</strong> exit code <code>0</code> for both configured environments. If <code>2</code>, inspect the full plan and do not apply automatically. If <code>1</code>, diagnose the error. Keep these outputs private because plans may include metadata.</p>
+<h3 id="08-3-confirm-original-networks-remain-operational">08.3 — Confirm original networks remain operational</h3>
+<div class="codepanel" data-language="BASH"><div class="codetop"><span>BASH</span><button aria-label="Copy code snippet" class="copycode" type="button">Copy code</button></div><pre><code class="language-bash">az network vnet peering list -g rg-cg360-network --vnet-name vnet-cg360-hub \
+  --query '[].{Name:name,State:peeringState}' -o table
+az network vnet peering list -g rg-cg360-app --vnet-name vnet-cg360-app \
+  --query '[].{Name:name,State:peeringState}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> both <code>Connected</code>.</p>
+<h3 id="08-4-sign-off-criteria">08.4 — Sign-off criteria</h3>
+<p>Phase 02 can be marked <strong>complete for the selected scope</strong> if four groups and seven role assignments are verified, no unintended privilege grants were made, drift plans are clear, and the original network is intact. The optional Policy stage may be labelled <strong>Deferred</strong> if permission is missing; avoid presenting deferred work as completed. Functional least-privilege testing with a separate user is <strong>Not Tested</strong> if no authorised account was available.</p>
+<h3 id="08-5-what-happens-in-phase-03">08.5 — What happens in Phase 03?</h3>
+<p>Next, CloudGuard 360 will deploy an <strong>existing Azure Voting App (Flask + Redis)</strong> locally via Docker, then add GitHub Actions, image scanning and eventually a temporary AKS lab. The security groups from Phase 02 will become the foundation for controlled engineering access, while identity-to-application SSO remains a separate later exercise.</p>
+<hr/>
+<h2 id="troubleshooting-known-cloudguard-360-incidents">Troubleshooting — Known CloudGuard 360 incidents</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Safe correction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AADSTS530035</code> on <code>az login</code></td>
+<td>Device-code login blocked by Security Defaults</td>
+<td>Reopen Cloud Shell from authenticated Azure Portal; don't disable defaults</td>
+</tr>
+<tr>
+<td><code>No subscriptions found</code></td>
+<td>Failed login or wrong tenant</td>
+<td>Recheck <strong>Subscriptions</strong> in Azure Portal and Cloud Shell context</td>
+</tr>
+<tr>
+<td><code>ARM_SUBSCRIPTION_ID is absent</code></td>
+<td>New Bash session lost the export</td>
+<td><code>export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"</code></td>
+</tr>
+<tr>
+<td><code>~/clouddrive not mounted</code></td>
+<td>Ephemeral Cloud Shell selected</td>
+<td>Reset user settings and mount Azure Files before using state</td>
+</tr>
+<tr>
+<td><code>RequestDisallowedByAzure</code> West Europe</td>
+<td>Region disallows new subscriptions</td>
+<td>Use the actual permitted region, not an assumed location; don't redeploy Phase 01</td>
+</tr>
+<tr>
+<td><code>Authorization_RequestDenied</code> groups</td>
+<td>Insufficient Entra permissions</td>
+<td>Inspect group settings and admin roles; get authorised permissions</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed</code> roles</td>
+<td>Missing <code>roleAssignments/write</code></td>
+<td>Request appropriate scoped RBAC authority</td>
+</tr>
+<tr>
+<td><code>AuthorizationFailed</code> Azure Policy</td>
+<td>Missing <code>policyAssignments/write</code></td>
+<td>Defer optional stage or request authorised scoped access</td>
+</tr>
+<tr>
+<td><code>PrincipalNotFound</code> shortly after group creation</td>
+<td>Identity propagation delay</td>
+<td>Re-evaluate with the provider; avoid duplicate manual grants</td>
+</tr>
+<tr>
+<td>Four existing groups, new Terraform state shows <code>4 to add</code></td>
+<td>Running a fresh copy of the root</td>
+<td><strong>STOP.</strong> Return to original state; do not create duplicates</td>
+</tr>
+<tr>
+<td><code>terraform plan</code> proposes deleting groups or network</td>
+<td>Wrong root, vars or config drift</td>
+<td>Stop and inspect state/plan; never use <code>-auto-approve</code></td>
+</tr>
+<tr>
+<td><code>az policy state list</code> returns no rows</td>
+<td>Evaluation not complete, inaccessible or no applicable records</td>
+<td>Record pending; inspect Policy → Compliance later</td>
+</tr>
+<tr>
+<td>Saved <code>.tfplan</code> fails or is stale</td>
+<td>Configuration/state changed after plan</td>
+<td>Regenerate, review and reapprove the new plan</td>
+</tr>
+<tr>
+<td>Cannot apply policy despite valid HCL</td>
+<td>Tenant permissions or Azure provider access</td>
+<td>Use read-only governance design and mark stage Deferred</td>
+</tr>
+<tr>
+<td>A Reader user can modify a resource</td>
+<td>Other inherited / group roles</td>
+<td>Check effective permissions across direct, inherited and transitive assignments</td>
+</tr>
+</tbody>
+</table>
+<h3 id="operational-recovery-rules">Operational recovery rules</h3>
+<ul>
+<li><strong>Never delete <code>terraform.tfstate</code></strong> to fix a group name conflict.</li>
+<li><strong>Never use <code>terraform destroy</code></strong> as generic troubleshooting; it may remove real identity groups, memberships and role grants.</li>
+<li><strong>Never copy a stale <code>.tfplan</code></strong> between directories or states.</li>
+<li>When reviewing a failure, gather the exact error and Terraform resource address; mask tokens, object IDs and other private identifiers before sharing.</li>
+<li>If a policy was created manually or under another Terraform state, <strong>do not recreate it</strong>. Decide whether it should remain separate or be imported with a carefully reviewed plan.</li>
+</ul>
+<hr/>
+<h2 id="final-learning-check-three-professional-questions">Final learning check — Three professional questions</h2>
+<p><strong>Q1 (Theory):</strong> What is the difference between Microsoft Entra ID directory roles and Azure RBAC resource roles?<br/>
+<strong>Model answer:</strong> Entra directory roles govern administration of identity objects such as users and groups. Azure RBAC controls resource-management operations at subscription, RG or resource scopes. These are distinct permission systems.</p>
+<p><strong>Q2 (Architecture):</strong> Why are there separate Terraform roots for networking, identity and Azure Policy?<br/>
+<strong>Model answer:</strong> Separation prevents a new lab from accidentally taking ownership of existing resources, gives each component an independent state and lifecycle, and makes plan review and troubleshooting safer.</p>
+<p><strong>Q3 (Incident):</strong> A test Developer can edit the network despite receiving only Reader on the App RG. What should you check?<br/>
+<strong>Model answer:</strong> Look for other role assignments inherited from subscription/management group or through other Entra groups. Verify actual effective permissions before changing RBAC or assuming the Reader assignment was wrong.</p>
+<h2 id="official-references-and-implementation-notes">Official references and implementation notes</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/cloud-shell/persisting-shell-storage" rel="noopener noreferrer" target="_blank">Microsoft — Azure Cloud Shell persistence</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-cli" rel="noopener noreferrer" target="_blank">Microsoft — Azure RBAC role assignments</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-list-cli" rel="noopener noreferrer" target="_blank">Microsoft — List role assignments and inherited access</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-audit" rel="noopener noreferrer" target="_blank">Microsoft — Azure Policy audit effect</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/governance/policy/how-to/get-compliance-data" rel="noopener noreferrer" target="_blank">Microsoft — Azure Policy compliance lifecycle</a></li>
+<li><a href="https://github.com/Azure/azure-policy/blob/master/built-in-policies/policyDefinitions/General/AllowedLocations_Deny.json" rel="noopener noreferrer" target="_blank">Microsoft/Azure — Built-in Allowed locations JSON</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/language/backend/azurerm" rel="noopener noreferrer" target="_blank">HashiCorp — azurerm remote backend</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs" rel="noopener noreferrer" target="_blank">Terraform Registry — AzureRM provider</a></li>
+<li><a href="https://registry.terraform.io/providers/hashicorp/azuread/latest/docs" rel="noopener noreferrer" target="_blank">Terraform Registry — AzureAD provider</a></li>
+</ul>
+<p><strong>Limitations:</strong> Portal labels may change; if the UI differs, use the search bar with the named Azure service. All success outputs in this guide are <strong>expected examples</strong>, not claimed observations of your subscription. Actual success must be checked in your own Cloud Shell and Azure Portal.</p>
+</article><footer>CloudGuard 360 · Phase 02 · Offline learning edition · Review all actual plans before any apply</footer></main></div>
+<script>
+(()=>{'use strict';
+const qs=s=>document.querySelector(s),qsa=s=>Array.from(document.querySelectorAll(s));
+const steps=['00','01','02','03','04','05','06','07','08'];let completed=[];
+try{completed=JSON.parse(localStorage.getItem('cg360phase02steps')||'[]');if(!Array.isArray(completed))completed=[];}catch(e){completed=[];}
+const save=()=>{try{localStorage.setItem('cg360phase02steps',JSON.stringify(completed))}catch(e){}};
+function update(){qsa('.complete-step').forEach(b=>{const done=completed.includes(b.dataset.step);b.classList.toggle('isdone',done);b.setAttribute('aria-pressed',String(done));b.textContent=done?'✓ Completed — click to undo':'Mark this subphase complete';});
+qsa('.navlink').forEach(a=>{let match=a.textContent.match(/SUBPHASE (\d\d)/i);a.classList.toggle('done',!!match&&completed.includes(match[1]));});qs('#progressText').textContent=`${completed.length} of 9 subphases completed`;qs('#progressFill').style.width=(completed.length/9*100)+'%'}
+qsa('.complete-step').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.step;completed=completed.includes(id)?completed.filter(x=>x!==id):[...completed,id];save();update()}));update();
+qsa('.copycode').forEach(btn=>btn.addEventListener('click',async()=>{let block=btn.closest('.codepanel').querySelector('pre code');const str=block?block.innerText:'';let ok=false;try{await navigator.clipboard.writeText(str);ok=true;}catch(e){try{let ta=document.createElement('textarea');ta.value=str;ta.style.position='fixed';ta.style.opacity=0;document.body.appendChild(ta);ta.focus();ta.select();ok=document.execCommand('copy');ta.remove();}catch(x){}}
+btn.textContent=ok?'✓ Copied':'Select manually';setTimeout(()=>btn.textContent='Copy code',1700)}));
+const prog=()=>{let y=scrollY, max=document.documentElement.scrollHeight-innerHeight;qs('#readProgress').style.width=(max>0?100*y/max:0)+'%';};window.addEventListener('scroll',prog,{passive:true});prog();
+const links=qsa('.navlink');function navUpdate(){let active='';qsa('.article h2[id]').forEach(h=>{if(h.getBoundingClientRect().top<170)active=h.id});links.forEach(a=>a.classList.toggle('active',a.dataset.section===active))};window.addEventListener('scroll',navUpdate,{passive:true});navUpdate();
+const search=qs('#q');search.addEventListener('input',()=>{const query=search.value.toLowerCase().trim();const article=qs('#article');qsa('[data-search-hidden]').forEach(el=>{el.style.display='';el.removeAttribute('data-search-hidden')});if(!query){qs('#searchNote').style.display='none';return;}
+let first=null;const h2=qsa('.article h2');h2.forEach((h,i)=>{const nodes=[];let el=h;while(el && (el===h||el.tagName!=='H2')){nodes.push(el);el=el.nextElementSibling;}const all=nodes.map(x=>x.innerText||'').join(' ').toLowerCase(),yes=all.includes(query);nodes.forEach(n=>{if(!yes){n.style.display='none';n.setAttribute('data-search-hidden','1')}});if(yes&&!first)first=h;});const note=qs('#searchNote');note.style.display='block';note.textContent=first?'Showing course sections matching your search. Clear the search field to restore all sections.':'No matching section. Try a shorter phrase.';});
+let dark=false;try{dark=localStorage.getItem('cg360theme')==='dark'}catch(e){}if(dark)document.body.classList.add('dark');qs('#theme').addEventListener('click',()=>{document.body.classList.toggle('dark');try{localStorage.setItem('cg360theme',document.body.classList.contains('dark')?'dark':'light')}catch(e){}});
+qs('#menu').addEventListener('click',()=>qs('#sidebar').classList.toggle('open'));links.forEach(l=>l.addEventListener('click',()=>qs('#sidebar').classList.remove('open')));
+})();
+</script></body></html>

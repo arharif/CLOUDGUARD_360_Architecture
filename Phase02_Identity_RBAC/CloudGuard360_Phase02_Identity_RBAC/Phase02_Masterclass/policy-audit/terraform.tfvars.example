@@ -1,0 +1,5 @@
+# COPY to terraform.tfvars; do NOT copy the original Phase 02 identity state.
+resource_group_name = "rg-cg360-app"
+vnet_name          = "vnet-cg360-app"
+# Initially false. Set true only at Subphase 06 after preflight and plan review.
+enable_policy_audit = false
