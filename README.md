@@ -1,8 +1,6 @@
 # CLOUDGUARD_360_Architecture
 
 
-# CLOUDGUARD_360_Architecture
-
 ## 🚀 Project Roadmap
 
 | Phase | Title | Core Focus & Components | Status |
