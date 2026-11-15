@@ -1,0 +1,651 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>CloudGuard 360 — Phase 04 Practical DevSecOps Masterclass</title><style>
+:root{--bg:#f7f9fc;--panel:#fff;--ink:#17243a;--muted:#62738b;--border:#dde6f1;--accent:#2458bb;--teal:#168675;--shadow:0 10px 32px rgba(26,54,99,.06);--code:#111a2a;--code-ink:#d5eaff;--pill:#e7f3ff;--hover:#f1f6ff;--sidebar:#f9fbff}
+[data-theme=dark]{--bg:#0e1522;--panel:#151f2e;--ink:#edf3fb;--muted:#a2b1c5;--border:#2b3a50;--accent:#8fb9ff;--teal:#55d2ac;--shadow:0 12px 32px rgba(0,0,0,.22);--code:#0b101b;--code-ink:#d6eaff;--pill:#23354f;--hover:#1d3047;--sidebar:#111c2d}
+*[hidden]{display:none!important}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;line-height:1.65}button,input{font:inherit}a{color:var(--accent)}a:focus,button:focus,input:focus{outline:3px solid #78b0ff88;outline-offset:2px}
+.app{display:grid;grid-template-columns:286px minmax(0,1fr);min-height:100vh}.sidebar{background:var(--sidebar);border-right:1px solid var(--border);height:100vh;position:sticky;top:0;padding:24px 16px;display:flex;flex-direction:column;gap:16px;overflow:auto;z-index:5}.brand{display:flex;align-items:center;gap:10px;padding:4px 10px}.brand-logo{border-radius:12px;background:#193866;width:42px;height:42px;display:grid;place-items:center;color:white;font-weight:900;letter-spacing:-2px}.brand b{font-size:14px;letter-spacing:.06em}.brand small{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em}.subtle{color:var(--muted);font-size:12px}.progress-box{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:14px}.progress-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}.progress-track{height:8px;border-radius:10px;background:var(--border);overflow:hidden;margin:12px 0 5px}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#2a66c7,#21ae98);transition:width .4s ease}.sidebar input{width:100%;border:1px solid var(--border);background:var(--panel);padding:11px 12px;border-radius:12px;color:var(--ink);font-size:13px}.nav-caption{text-transform:uppercase;letter-spacing:.14em;font-weight:700;font-size:10px;color:var(--muted);padding-left:10px}.navigation{display:flex;flex-direction:column;gap:3px}.nav-link{border-radius:11px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--muted);font-size:12px;line-height:1.35;padding:11px 9px}.nav-link:hover,.nav-link.active{background:var(--hover);color:var(--ink)}.nav-number{background:var(--pill);border-radius:8px;color:var(--accent);min-width:30px;text-align:center;font-size:10px;padding:5px 4px;font-weight:750}.nav-link>span:nth-child(2){flex:1}.nav-state{font-weight:800;color:var(--teal)}.bottom-sidebar{margin-top:auto;display:flex;gap:8px}.mini-btn{background:var(--panel);border:1px solid var(--border);color:var(--ink);border-radius:10px;padding:9px 11px;cursor:pointer;font-size:12px;flex:1}.main{min-width:0}.topbar{position:sticky;top:0;z-index:3;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:11px 4.5%;gap:12px}.topbar small{color:var(--muted);font-size:12px}.topbar .pill{display:inline-block;color:var(--teal);background:var(--pill);border-radius:99px;padding:5px 10px;font-size:11px;font-weight:700}.page{max-width:1110px;padding:0 4.5% 80px;margin:auto}.hero{margin:26px auto 22px;border-radius:24px;padding:34px 38px 29px;background:linear-gradient(125deg,#0f2340,#1a457e 67%,#126d77);color:white;box-shadow:0 14px 32px #163e692c;position:relative;overflow:hidden;animation:fadeSlide .6s both}.hero:after{content:"";position:absolute;border:1px solid #ffffff44;border-radius:100%;width:550px;height:550px;right:-275px;top:-390px;box-shadow:0 0 0 95px #ffffff07,0 0 0 185px #ffffff05;animation:orb 12s ease-in-out infinite alternate}.top-eyebrow{font-size:11px;letter-spacing:.18em;color:#9be6e6;font-weight:750}.hero h1{font-size:clamp(35px,5vw,55px);margin:7px 0 0;line-height:1.1;letter-spacing:-.06em}.gradient{color:#7de4ce}.headline{font-weight:600;letter-spacing:.02em;margin-top:9px;font-size:14px}.lead{font-size:14px;color:#d7e6f7;max-width:780px;line-height:1.8}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:22px;position:relative;z-index:1}.kpis>div{border:1px solid #ffffff38;background:#ffffff0d;border-radius:14px;padding:13px 16px}.kpis .n{font-size:26px;font-weight:800;display:block;line-height:1.3}.kpis span:last-child{font-size:11px;color:#e0ebf6}.lesson{background:var(--panel);border:1px solid var(--border);border-radius:20px;margin:20px 0;padding:30px 34px;box-shadow:var(--shadow);scroll-margin-top:85px;animation:fadeSlide .5s ease both}.section-heading{display:flex;align-items:flex-start;gap:18px;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:13px;margin-bottom:20px}.section-kicker{color:var(--teal);font-weight:800;letter-spacing:.14em;font-size:10px}.section-heading h2{font-size:20px;line-height:1.35;letter-spacing:-.025em;margin:5px 0}.section-index{font-size:11px;color:var(--muted);background:var(--pill);border-radius:99px;padding:5px 10px;white-space:nowrap}.architecture-card{border:1px solid var(--border);background:var(--bg);border-radius:18px;padding:14px 18px;margin:18px 0;overflow:hidden}.viz-header{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:750;font-size:12px}.v-dot{height:9px;width:9px;background:#22b7a4;border-radius:99px;box-shadow:0 0 0 5px #22b7a417;animation:ping 1.8s infinite}.viz-caption{margin-left:auto;color:var(--muted);font-size:10px;font-weight:400}.arch-svg{display:block;width:100%;height:auto;max-height:550px;margin:8px auto}.arch-svg g.node{animation:fadeSlide .55s both}.arch-svg g.edge path{stroke-dasharray:7 5;animation:flowdash 4s linear infinite}.md-prose{font-size:13.5px;max-width:100%;overflow-wrap:anywhere}.md-prose h1{font-size:22px;margin-top:20px}.md-prose h2{font-size:20px;margin-top:27px}.md-prose h3{font-size:16px;margin-top:22px}.md-prose p{margin:12px 0;line-height:1.82}.md-prose blockquote{margin:16px 0;border-left:4px solid var(--accent);background:var(--hover);padding:10px 17px;border-radius:6px}.md-prose table{border-collapse:collapse;width:100%;margin:15px 0;display:block;overflow:auto;font-size:12px}.md-prose th{text-align:left;background:var(--pill);color:var(--ink);white-space:nowrap}.md-prose th,.md-prose td{border:1px solid var(--border);padding:10px 12px;vertical-align:top}.md-prose code:not(pre code){color:var(--teal);padding:1px 4px;background:var(--hover);border:1px solid var(--border);border-radius:5px;font-size:11.5px}.md-prose pre{background:var(--code);border:1px solid #334155;color:var(--code-ink);border-radius:12px;padding:19px 20px 17px;overflow:auto;max-height:460px;font-size:12px;line-height:1.65;margin:0}.md-prose pre code{color:inherit;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.code-wrap{position:relative;margin:17px 0}.code-top{display:flex;justify-content:space-between;align-items:center;background:#18263c;color:#b4cee9;font-size:10px;border-radius:12px 12px 0 0;padding:8px 13px;margin-bottom:-6px;position:relative;z-index:1}.code-wrap pre{border-radius:0 0 12px 12px;padding-top:18px}.copy-btn{border:1px solid #55738e;background:#253d58;color:#e8f6ff;padding:4px 10px;border-radius:7px;cursor:pointer;font-size:10px}.copy-btn:hover{background:#366187}.lesson-footer{border-top:1px solid var(--border);margin-top:26px;padding-top:17px;display:flex;align-items:center;gap:14px;justify-content:space-between}.complete-btn{background:linear-gradient(95deg,#174d9c,#0e9180);border:0;border-radius:10px;color:#fff;padding:11px 17px;cursor:pointer;font-weight:700;font-size:12px}.complete-btn.is-done{background:var(--pill);color:var(--teal);border:1px solid var(--teal)}.completion-caption{color:var(--muted);font-size:11px}.footer{padding:28px 8px;color:var(--muted);font-size:11px;text-align:center}.mobile-toggle{display:none} .sr-only{position:absolute;left:-9999px}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes orb{to{transform:translate(-45px,45px)}}@keyframes ping{50%{box-shadow:0 0 0 10px #22b7a411}}@keyframes flowdash{to{stroke-dashoffset:-80}}
+@media(max-width:1050px){.app{grid-template-columns:235px minmax(0,1fr)}.sidebar{padding:20px 10px}.lesson{padding:25px 24px}}@media(max-width:800px){.app{display:block}.sidebar{position:fixed;left:-300px;width:290px;transition:left .25s;box-shadow:0 10px 30px #0004}.sidebar.open{left:0}.mobile-toggle{display:inline-block}.topbar{padding:10px 4%}.page{padding:0 3.5% 55px}.hero{padding:27px 23px}.kpis{grid-template-columns:repeat(2,1fr)}.lesson{padding:20px 18px}.section-heading h2{font-size:18px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style></head><body><div class="app"><aside class="sidebar"><div class="brand"><div class="brand-logo">CG</div><div><b>CLOUDGUARD 360</b><small>PHASE 04 / MASTERCLASS</small></div></div><div class="progress-box"><div class="progress-head"><span>Course completion</span><span id="count">0/9</span></div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><div class="subtle">Progress saved on this device</div></div><input id="search" aria-label="Search lessons" placeholder="Search steps, commands, concepts …"><div class="nav-caption">ONE PRACTICAL PHASE · 8 STEPS</div><nav class="navigation"><a href="#overview" class="nav-link" data-nav="overview"><span class="nav-number">00</span><span>Introduction</span><span class="nav-state" data-done="0">○</span></a>
+<a href="#step-1" class="nav-link" data-nav="step-1"><span class="nav-number">01</span><span>Step 1: Audit your Phase 03 application and Azure costs</span><span class="nav-state" data-done="1">○</span></a>
+<a href="#step-2" class="nav-link" data-nav="step-2"><span class="nav-number">02</span><span>Step 2: Download the Phase 04 ZIP and prepare the folder</span><span class="nav-state" data-done="2">○</span></a>
+<a href="#step-3" class="nav-link" data-nav="step-3"><span class="nav-number">03</span><span>Step 3: Create your GitHub repository and upload the pipeline</span><span class="nav-state" data-done="3">○</span></a>
+<a href="#step-4" class="nav-link" data-nav="step-4"><span class="nav-number">04</span><span>Step 4: Execute CI and read the DevSecOps results</span><span class="nav-state" data-done="4">○</span></a>
+<a href="#step-5" class="nav-link" data-nav="step-5"><span class="nav-number">05</span><span>Step 5: Publish a versioned image to GHCR (no Azure deployment yet)</span><span class="nav-state" data-done="5">○</span></a>
+<a href="#step-6" class="nav-link" data-nav="step-6"><span class="nav-number">06</span><span>Step 6: Configure passwordless GitHub → Azure access with Terraform (optional but recommended)</span><span class="nav-state" data-done="6">○</span></a>
+<a href="#step-7" class="nav-link" data-nav="step-7"><span class="nav-number">07</span><span>Step 7: Controlled Azure release and verification</span><span class="nav-state" data-done="7">○</span></a>
+<a href="#step-8" class="nav-link" data-nav="step-8"><span class="nav-number">08</span><span>Step 8: Security evidence, negative test, cost control and final sign-off</span><span class="nav-state" data-done="8">○</span></a></nav><div class="bottom-sidebar"><button class="mini-btn" id="theme-toggle" aria-label="Toggle light and dark mode">◐ Theme</button><button class="mini-btn" id="reset">↻ Reset</button></div><div class="subtle" style="padding:0 10px">Offline HTML · No tracking · No network calls</div></aside><main class="main"><div class="topbar"><div><button id="menu-btn" class="mini-btn mobile-toggle">☰ Menu</button> <small>Azure · GitHub Actions · Docker · GHCR · Entra OIDC</small></div><span class="pill">COST-CONSCIOUS LAB</span></div><div class="page"><header class="hero"><div class="top-eyebrow">AZURE ENGINEERING LAB / DEVSECOPS</div>
+<h1>CloudGuard <span class="gradient">360</span></h1>
+<div class="headline">PHASE 04 — CI/CD & Secure Software Delivery</div>
+<p class="lead">An end-to-end, practical learning lab. Build a GitHub Actions pipeline, scan an existing Docker image, publish to GHCR, and deliver to your existing Azure Container App with OIDC approval.</p>
+<div class="kpis"><div><span class="n">08</span><span>Practical steps</span></div><div><span class="n">02</span><span>GitHub workflows</span></div><div><span class="n">01</span><span>Existing Azure App</span></div><div><span class="n">0</span><span>New AKS clusters</span></div></div></header><section class="lesson" id="overview" data-step="0" aria-labelledby="title-0">
+    <div class="section-heading"><div><div class="section-kicker">FOUNDATIONS</div><h2 id="title-0">Programme orientation</h2></div><span class="section-index">00/08</span></div>
+    <div class="architecture-card"><div class="viz-header"><span class="v-dot"></span> Live architecture map <span class="viz-caption">CI → Supply chain → Registry → Azure</span></div>
+
+
+
+<svg class="arch-svg" role="img" aria-label="CloudGuard 360 Phase 04 CI CD architecture" width="425pt" height="687pt"
+ viewBox="0.00 0.00 424.70 687.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 665.6)">
+<title>G</title>
+
+<g id="node1" class="node">
+<title>developer</title>
+<path fill="#e8f2ff" stroke="#5d9ddb" stroke-width="1.3" d="M168.5,-644C168.5,-644 53.5,-644 53.5,-644 47.5,-644 41.5,-638 41.5,-632 41.5,-632 41.5,-606 41.5,-606 41.5,-600 47.5,-594 53.5,-594 53.5,-594 168.5,-594 168.5,-594 174.5,-594 180.5,-600 180.5,-606 180.5,-606 180.5,-632 180.5,-632 180.5,-638 174.5,-644 168.5,-644"/>
+<text text-anchor="middle" x="111" y="-622.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">Developer</text>
+<text text-anchor="middle" x="111" y="-609.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">GitHub repository</text>
+</g>
+
+<g id="node2" class="node">
+<title>ci</title>
+<path fill="#e8f2ff" stroke="#5d9ddb" stroke-width="1.3" d="M170,-545C170,-545 52,-545 52,-545 46,-545 40,-539 40,-533 40,-533 40,-507 40,-507 40,-501 46,-495 52,-495 52,-495 170,-495 170,-495 176,-495 182,-501 182,-507 182,-507 182,-533 182,-533 182,-539 176,-545 170,-545"/>
+<text text-anchor="middle" x="111" y="-523.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">GitHub Actions CI</text>
+<text text-anchor="middle" x="111" y="-510.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">Tests • Trivy gates</text>
+</g>
+
+<g id="edge1" class="edge">
+<title>developer&#45;&gt;ci</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-593.76C111,-593.76 111,-551.69 111,-551.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-551.69 111,-545.19 108.73,-551.69 113.28,-551.69"/>
+</g>
+
+<g id="node3" class="node">
+<title>docker</title>
+<path fill="#e8f2ff" stroke="#5d9ddb" stroke-width="1.3" d="M193,-446C193,-446 29,-446 29,-446 23,-446 17,-440 17,-434 17,-434 17,-408 17,-408 17,-402 23,-396 29,-396 29,-396 193,-396 193,-396 199,-396 205,-402 205,-408 205,-408 205,-434 205,-434 205,-440 199,-446 193,-446"/>
+<text text-anchor="middle" x="111" y="-424.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">Docker Build</text>
+<text text-anchor="middle" x="111" y="-411.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">Prebuilt Azure Vote image</text>
+</g>
+
+<g id="edge2" class="edge">
+<title>ci&#45;&gt;docker</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-494.76C111,-494.76 111,-452.69 111,-452.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-452.69 111,-446.19 108.73,-452.69 113.28,-452.69"/>
+</g>
+
+<g id="node4" class="node">
+<title>sbom</title>
+<path fill="#fff3df" stroke="#d7a04a" stroke-width="1.3" d="M369.5,-446C369.5,-446 244.5,-446 244.5,-446 238.5,-446 232.5,-440 232.5,-434 232.5,-434 232.5,-408 232.5,-408 232.5,-402 238.5,-396 244.5,-396 244.5,-396 369.5,-396 369.5,-396 375.5,-396 381.5,-402 381.5,-408 381.5,-408 381.5,-434 381.5,-434 381.5,-440 375.5,-446 369.5,-446"/>
+<text text-anchor="middle" x="307" y="-424.4" font-family="DejaVu Sans" font-size="12.00" fill="#674717">Vulnerability report</text>
+<text text-anchor="middle" x="307" y="-411.4" font-family="DejaVu Sans" font-size="12.00" fill="#674717">CycloneDX SBOM</text>
+</g>
+
+<g id="edge7" class="edge">
+<title>docker&#45;&gt;sbom</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M205.27,-421C205.27,-421 225.94,-421 225.94,-421"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="225.94,-423.28 232.44,-421 225.94,-418.73 225.94,-423.28"/>
+</g>
+
+<g id="node5" class="node">
+<title>ghcr</title>
+<path fill="#e4f5ef" stroke="#4a9b79" stroke-width="1.3" d="M191.5,-347C191.5,-347 30.5,-347 30.5,-347 24.5,-347 18.5,-341 18.5,-335 18.5,-335 18.5,-309 18.5,-309 18.5,-303 24.5,-297 30.5,-297 30.5,-297 191.5,-297 191.5,-297 197.5,-297 203.5,-303 203.5,-309 203.5,-309 203.5,-335 203.5,-335 203.5,-341 197.5,-347 191.5,-347"/>
+<text text-anchor="middle" x="111" y="-325.4" font-family="DejaVu Sans" font-size="12.00" fill="#174b39">GHCR Registry</text>
+<text text-anchor="middle" x="111" y="-312.4" font-family="DejaVu Sans" font-size="12.00" fill="#174b39">Image tagged by Git SHA</text>
+</g>
+
+<g id="edge3" class="edge">
+<title>docker&#45;&gt;ghcr</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-395.76C111,-395.76 111,-353.69 111,-353.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-353.69 111,-347.19 108.73,-353.69 113.28,-353.69"/>
+</g>
+
+<g id="node6" class="node">
+<title>manual</title>
+<path fill="#fff3df" stroke="#d7a04a" stroke-width="1.3" d="M182,-248C182,-248 40,-248 40,-248 34,-248 28,-242 28,-236 28,-236 28,-210 28,-210 28,-204 34,-198 40,-198 40,-198 182,-198 182,-198 188,-198 194,-204 194,-210 194,-210 194,-236 194,-236 194,-242 188,-248 182,-248"/>
+<text text-anchor="middle" x="111" y="-226.4" font-family="DejaVu Sans" font-size="12.00" fill="#674717">Manual release</text>
+<text text-anchor="middle" x="111" y="-213.4" font-family="DejaVu Sans" font-size="12.00" fill="#674717">Environment approval</text>
+</g>
+
+<g id="edge4" class="edge">
+<title>ghcr&#45;&gt;manual</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-296.76C111,-296.76 111,-254.69 111,-254.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-254.69 111,-248.19 108.73,-254.69 113.28,-254.69"/>
+</g>
+
+<g id="node7" class="node">
+<title>oidc</title>
+<path fill="#e9e9ff" stroke="#8f86d6" stroke-width="1.3" d="M362.5,-248C362.5,-248 233.5,-248 233.5,-248 227.5,-248 221.5,-242 221.5,-236 221.5,-236 221.5,-210 221.5,-210 221.5,-204 227.5,-198 233.5,-198 233.5,-198 362.5,-198 362.5,-198 368.5,-198 374.5,-204 374.5,-210 374.5,-210 374.5,-236 374.5,-236 374.5,-242 368.5,-248 362.5,-248"/>
+<text text-anchor="middle" x="298" y="-226.4" font-family="DejaVu Sans" font-size="12.00" fill="#3c3675">Entra OIDC identity</text>
+<text text-anchor="middle" x="298" y="-213.4" font-family="DejaVu Sans" font-size="12.00" fill="#3c3675">Scoped Azure RBAC</text>
+</g>
+
+<g id="edge8" class="edge">
+<title>manual&#45;&gt;oidc</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" stroke-dasharray="5,2" d="M194.11,-231C194.11,-231 214.87,-231 214.87,-231"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="214.87,-233.28 221.37,-231 214.87,-228.73 214.87,-233.28"/>
+</g>
+
+<g id="node8" class="node">
+<title>azure</title>
+<path fill="#e4f5ef" stroke="#4a9b79" stroke-width="1.3" d="M202.5,-149C202.5,-149 19.5,-149 19.5,-149 13.5,-149 7.5,-143 7.5,-137 7.5,-137 7.5,-111 7.5,-111 7.5,-105 13.5,-99 19.5,-99 19.5,-99 202.5,-99 202.5,-99 208.5,-99 214.5,-105 214.5,-111 214.5,-111 214.5,-137 214.5,-137 214.5,-143 208.5,-149 202.5,-149"/>
+<text text-anchor="middle" x="111" y="-127.4" font-family="DejaVu Sans" font-size="12.00" fill="#174b39">Existing Azure Container App</text>
+<text text-anchor="middle" x="111" y="-114.4" font-family="DejaVu Sans" font-size="12.00" fill="#174b39">Frontend container only</text>
+</g>
+
+<g id="edge5" class="edge">
+<title>manual&#45;&gt;azure</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-197.76C111,-197.76 111,-155.69 111,-155.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-155.69 111,-149.19 108.73,-155.69 113.28,-155.69"/>
+</g>
+
+<g id="edge9" class="edge">
+<title>oidc&#45;&gt;azure</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" stroke-dasharray="5,2" d="M221.29,-214C214.28,-214 209.75,-214 209.75,-214 209.75,-214 209.75,-155.57 209.75,-155.57"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="212.03,-155.57 209.75,-149.07 207.48,-155.57 212.03,-155.57"/>
+</g>
+
+<g id="node9" class="node">
+<title>test</title>
+<path fill="#e8f2ff" stroke="#5d9ddb" stroke-width="1.3" d="M210,-50C210,-50 12,-50 12,-50 6,-50 0,-44 0,-38 0,-38 0,-12 0,-12 0,-6 6,0 12,0 12,0 210,0 210,0 216,0 222,-6 222,-12 222,-12 222,-38 222,-38 222,-44 216,-50 210,-50"/>
+<text text-anchor="middle" x="111" y="-28.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">HTTPS verification</text>
+<text text-anchor="middle" x="111" y="-15.4" font-family="DejaVu Sans" font-size="12.00" fill="#14375a">Evidence + Terraform reconcile</text>
+</g>
+
+<g id="edge6" class="edge">
+<title>azure&#45;&gt;test</title>
+<path fill="none" stroke="#7893b2" stroke-width="2" d="M111,-98.76C111,-98.76 111,-56.69 111,-56.69"/>
+<polygon fill="#7893b2" stroke="#7893b2" stroke-width="2" points="113.28,-56.69 111,-50.19 108.73,-56.69 113.28,-56.69"/>
+</g>
+</g>
+</svg>
+</div>
+    <div class="md-prose"><h1>CLOUDGUARD 360 — PHASE 04</h1>
+<h2>One complete practical lab: GitHub Actions, CI/CD, Docker, DevSecOps, GHCR and Azure Container Apps</h2>
+<blockquote>
+<p><strong>Audience:</strong> Azure/Terraform beginner who completed CloudGuard 360 Phases 01–03. <strong>Language:</strong> English. <strong>Duration:</strong> complete at your own pace. <strong>Method:</strong> one continuous, end-to-end phase with eight numbered steps. <strong>Cost principle:</strong> reuse Azure resources, deploy only if required, and never create AKS/ACR/VMs in this phase.</p>
+</blockquote>
+<p><strong>Start:</strong> open <code>index.html</code> locally for the animated, interactive course. This README and <code>terraform.md</code> give you all commands and explanations without the HTML interface.</p>
+<p><strong>Important safety facts</strong></p>
+<ul>
+<li>Phase 01 owns two Resource Groups, VNets, subnets, NSG and peerings. DO NOT import, recreate or destroy them from this phase.</li>
+<li>Phase 02 owns Entra groups and RBAC role assignments. DO NOT duplicate them.</li>
+<li>Phase 03 owns <code>ca-cg360-voting</code> (containers <code>vote-frontend</code> and <code>redis</code>) in <code>rg-cg360-app</code>. Phase 04 deploys a new <strong>frontend image</strong> to that EXISTING resource; it does not provision the Container App again.</li>
+<li>The optional OIDC identity Terraform root provisions only <strong>one managed identity, one federated credential, and an optional scoped role assignment</strong>. It has its own state.</li>
+<li>The sample base image is legacy: Phase 04 <strong>wraps a prebuilt Microsoft example image rather than compiling its source</strong>. The vulnerability report is <strong>informational</strong>; secret and IaC checks are gating. This is a portfolio lab, <strong>not a production security certification</strong>.</li>
+<li>GitHub Container Registry packages are initially private in many accounts. For this public demo route, set the specific package public before Azure deployment. Never publish secrets, production code or real customer data.</li>
+<li>Your subscription may be geographically restricted; Phase 04 reuses the Phase 03 app's actual location and requires no new regional compute.</li>
+</ul>
+<hr />
+<h1>0. What you are building</h1>
+<pre><code class="language-text">Developer / GitHub repository
+        |
+        | Push / pull request
+        v
+  GitHub Actions (CI)
+        |-- repository validation
+        |-- Trivy secrets and IaC scan (blocking)
+        |-- Docker build from existing Phase 03 demo image
+        |-- Trivy image scan (REPORT ONLY for legacy base)
+        |-- CycloneDX Software Bill of Materials
+        v
+ GitHub Actions (manual release)
+        |-- controlled publish to GHCR (git SHA tag)
+        |-- optional approval via GitHub Environment
+        |-- GitHub OIDC -&gt; Azure managed identity
+        v
+Existing Azure Container App ca-cg360-voting
+        |-- vote-frontend image -&gt; GHCR version
+        |-- redis sidecar remains unchanged
+        v
+HTTPS smoke test -&gt; incident/evidence -&gt; Terraform reconciliation
+</code></pre>
+<p><strong>Separation of duties:</strong> GitHub packages/builds the image; Microsoft Entra authenticates the release workload; Azure RBAC authorises a specific container app operation; Terraform remains the source of truth for infrastructure.</p>
+<p><strong>Definition of done:</strong> CI is green, vulnerabilities are documented, a CycloneDX SBOM is stored as a GitHub Actions artifact, a GHCR image is tagged with the Git commit SHA, optional OIDC identity is validated, a reviewed release changes only the frontend image, HTTP succeeds, the Phase 03 Terraform plan is reconciled, and evidence is captured.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="0">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-1" data-step="1" aria-labelledby="title-1">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-1">Step 01 / 08 — Audit your Phase 03 application and Azure costs</h2></div><span class="section-index">01/08</span></div>
+    
+    <div class="md-prose"><h1>Step 1 — Audit your Phase 03 application and Azure costs</h1>
+<h2>1.1 Navigate through the Azure Portal</h2>
+<ol>
+<li>Open <a href="https://portal.azure.com">https://portal.azure.com</a> and sign in with the account that deployed Phases 01–03.</li>
+<li>Select <strong>Subscriptions → Azure subscription 1</strong> and verify state <code>Enabled</code>.</li>
+<li>Navigate to <strong>Cost Management + Billing → Cost Management → Cost analysis</strong>, inspect usage and remaining Free Trial credit. A budget alert does not cap spending.</li>
+<li>Select <strong>Resource groups → rg-cg360-app → Overview</strong>.</li>
+<li>Select the <strong>Container App</strong> named <code>ca-cg360-voting</code> and open <strong>Containers / Revisions</strong>. Confirm the <code>vote-frontend</code> and <code>redis</code> container names.</li>
+<li>Review its application URL, but do not change the configuration in the portal.</li>
+</ol>
+<h2>1.2 Azure Cloud Shell commands (Bash)</h2>
+<pre><code class="language-bash">mountpoint -q &quot;$HOME/clouddrive&quot; &amp;&amp; echo 'PASS: persistent storage' || echo 'STOP: Cloud Shell is ephemeral'
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+export ARM_TENANT_ID=&quot;$(az account show --query tenantId -o tsv)&quot;
+az account show --query '{Name:name,State:state}' --output table
+az containerapp show -g rg-cg360-app -n ca-cg360-voting --query 'properties.template.containers[].{Name:name,Image:image}' --output table
+az containerapp show -g rg-cg360-app -n ca-cg360-voting --query properties.configuration.ingress.fqdn --output tsv
+</code></pre>
+<p><strong>Expected:</strong> the application exists and has <strong>two containers</strong>. If it does not exist, complete Phase 03 first; you can still run CI-only in Step 4 without Azure.</p>
+<p><strong>Why this matters:</strong> the application belongs to Phase 03 Terraform. We may update its frontend in Phase 04, but we must reconcile drift afterwards; otherwise a subsequent Phase 03 apply can revert the new image.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="1">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-2" data-step="2" aria-labelledby="title-2">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-2">Step 02 / 08 — Download the Phase 04 ZIP and prepare the folder</h2></div><span class="section-index">02/08</span></div>
+    
+    <div class="md-prose"><h1>Step 2 — Download the Phase 04 ZIP and prepare the folder</h1>
+<h2>2.1 Download and upload</h2>
+<ol>
+<li>Download <code>CloudGuard360_Phase04.zip</code> from this chat to your computer.</li>
+<li>In <strong>Azure Portal</strong>, click the terminal <strong>Cloud Shell</strong> icon, choose <strong>Bash</strong>.</li>
+<li>Select <strong>Manage files → Upload</strong> and upload <code>CloudGuard360_Phase04.zip</code>.</li>
+<li>Run the following commands:</li>
+</ol>
+<pre><code class="language-bash">mkdir -p &quot;$HOME/clouddrive/cloudguard360&quot;
+ls -lh &quot;$HOME/CloudGuard360_Phase04.zip&quot;
+unzip -n &quot;$HOME/CloudGuard360_Phase04.zip&quot; -d &quot;$HOME/clouddrive/cloudguard360&quot;
+cd &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase04_DevSecOps_Masterclass&quot;
+ls -la
+bash scripts/00-preflight.sh
+python3 scripts/validate_repo.py
+</code></pre>
+<p>If you downloaded the ZIP under another name, rename it before uploading or modify the file path. <code>unzip -n</code> prevents overwriting existing files on a rerun. <strong>Never unzip over the Phase 01/02/03 Terraform root directories.</strong></p>
+<h2>2.2 Folder map</h2>
+<pre><code class="language-text">CloudGuard360_Phase04_DevSecOps_Masterclass/
+├── README.md                     ← This full lab
+├── terraform.md                  ← GitHub-ready implementation manual
+├── index.html                    ← Offline, animated UI
+├── Dockerfile                    ← Wraps Phase 03 prebuilt demo image
+├── .dockerignore, .gitignore
+├── .github/workflows/
+│   ├── 01-ci.yml                 ← On push/pull request
+│   └── 02-release.yml            ← Manual publish / optional Azure deploy
+├── terraform/oidc-identity/      ← SEPARATE Terraform state
+├── scripts/                      ← Verification and evidence
+├── docs/                         ← Architecture, release/rollback
+├── assets/                       ← Architecture diagrams PNG/SVG
+└── evidence/                     ← Local evidence, keep private
+</code></pre>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="2">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-3" data-step="3" aria-labelledby="title-3">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-3">Step 03 / 08 — Create your GitHub repository and upload the pipeline</h2></div><span class="section-index">03/08</span></div>
+    
+    <div class="md-prose"><h1>Step 3 — Create your GitHub repository and upload the pipeline</h1>
+<h2>3.1 Using the GitHub website</h2>
+<ol>
+<li>Open <a href="https://github.com/new">https://github.com/new</a> and sign in.</li>
+<li>Repository name: <code>cloudguard360-phase04</code>. Choose <strong>Public</strong> ONLY if the source contains no secrets or private company data; a public repository allows standard GitHub-hosted Actions usage without runner minutes charges. A private repository can also work, subject to your account usage allowances.</li>
+<li>Optionally initialise with README and click <strong>Create repository</strong>.</li>
+<li>Copy the new repository URL, e.g. <code>https://github.com/YOUR_USERNAME/cloudguard360-phase04</code>.</li>
+<li>Go to <strong>Settings → Actions → General</strong> and verify Actions are allowed (do not enable unsafe third-party workflows in untrusted repositories).</li>
+</ol>
+<p><strong>Important:</strong> this package contains no app source code. It wraps the <strong>prebuilt</strong> Voting App from Phase 03. You do not have to fork or rebuild the original Python Flask application for this learning phase.</p>
+<h2>3.2 Recommended Cloud Shell Git method</h2>
+<pre><code class="language-bash"># Check whether GitHub CLI is available; installation is NOT mandatory.
+command -v gh || echo 'gh unavailable: GitHub web upload remains an option'
+
+# Replace the placeholder with the actual HTTPS address of your repository.
+GITHUB_REPO_URL=&quot;https://github.com/YOUR_USERNAME/cloudguard360-phase04.git&quot;
+cd &quot;$HOME/clouddrive/cloudguard360&quot;
+git clone &quot;$GITHUB_REPO_URL&quot; cloudguard360-phase04-repo
+
+# Copy only the files required by GitHub Actions from this package.
+bash &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase04_DevSecOps_Masterclass/scripts/04-copy-to-repo.sh&quot; \
+  &quot;$HOME/clouddrive/cloudguard360/cloudguard360-phase04-repo&quot;
+cd &quot;$HOME/clouddrive/cloudguard360/cloudguard360-phase04-repo&quot;
+git status --short
+python3 scripts/validate_repo.py
+</code></pre>
+<p>For a new empty repository, <code>git clone</code> may warn about an empty repository; this is normal.</p>
+<h2>3.3 Push to GitHub</h2>
+<pre><code class="language-bash">git add Dockerfile .dockerignore .gitignore .github/workflows scripts/validate_repo.py docs/release-runbook.md
+git commit -m &quot;Add CloudGuard 360 Phase 04 CI and DevSecOps pipelines&quot;
+git branch -M main
+git push -u origin main
+</code></pre>
+<p>GitHub no longer accepts account passwords for HTTPS pushes. If Git reports authentication failure, sign in using Git Credential Manager or <code>gh auth login</code> (if installed); follow the official browser flow, and never paste a Personal Access Token into this conversation or into your repository. If Git CLI authentication is blocked, use GitHub's web <strong>Add file → Upload files</strong> for ordinary files and <strong>Add file → Create new file</strong> with paths <code>.github/workflows/01-ci.yml</code> and <code>.github/workflows/02-release.yml</code>, copying content from the supplied package.</p>
+<p><strong>Expected:</strong> GitHub displays the <code>Dockerfile</code>, <code>.github/workflows/01-ci.yml</code> and <code>.github/workflows/02-release.yml</code> under the <code>main</code> branch.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="3">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-4" data-step="4" aria-labelledby="title-4">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-4">Step 04 / 08 — Execute CI and read the DevSecOps results</h2></div><span class="section-index">04/08</span></div>
+    
+    <div class="md-prose"><h1>Step 4 — Execute CI and read the DevSecOps results</h1>
+<h2>4.1 Navigate in GitHub</h2>
+<ol>
+<li>Open the repository → <strong>Actions</strong>.</li>
+<li>Select <code>01 | Continuous Integration and DevSecOps</code>.</li>
+<li>If the workflow did not start on push, select <strong>Run workflow → main → Run workflow</strong>.</li>
+<li>Open the run and expand each step.</li>
+</ol>
+<h2>4.2 Understand the gates</h2>
+<table>
+<thead>
+<tr>
+  <th>Check</th>
+  <th>Implementation</th>
+  <th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Folder layout</td>
+  <td><code>python3 scripts/validate_repo.py</code></td>
+  <td><strong>Blocking</strong></td>
+</tr>
+<tr>
+  <td>Shell script syntax</td>
+  <td><code>bash -n scripts/*.sh</code></td>
+  <td><strong>Blocking</strong></td>
+</tr>
+<tr>
+  <td>Secret and IaC scan</td>
+  <td>Trivy filesystem scan (<code>secret,misconfig</code>)</td>
+  <td><strong>Blocking on high/critical findings</strong></td>
+</tr>
+<tr>
+  <td>Docker build</td>
+  <td>Buildx wraps legacy voting frontend</td>
+  <td><strong>Blocking if build fails</strong></td>
+</tr>
+<tr>
+  <td>Container vulnerability scan</td>
+  <td>Trivy image (<code>vuln</code>)</td>
+  <td><strong>Report-only; no vulnerability gate</strong></td>
+</tr>
+<tr>
+  <td>Software Bill of Materials</td>
+  <td>Trivy CycloneDX JSON</td>
+  <td>Artifact uploaded for inspection</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical realism:</strong> The older Microsoft sample image may contain known vulnerabilities or may be unavailable on MCR. If the base image cannot be pulled, the Docker build will fail: do not describe CI as completed. Verify base-image availability and select an approved replacement that is compatible with the deployed application, then update the <code>Dockerfile</code> and document the change. The example is not production-hardened.</p>
+<h2>4.3 Verify CI success and SBOM</h2>
+<ul>
+<li>A successful run shows green checks on validation/build/artifact steps.</li>
+<li>Click the run summary → <strong>Artifacts</strong> → download <code>phase04-sbom-&lt;run-number&gt;</code>.</li>
+<li>Open the JSON and note the components. <strong>An SBOM is an inventory, not a guarantee of security.</strong></li>
+<li>Review high/critical vulnerability logs. Document findings rather than hiding them.</li>
+</ul>
+<p><strong>Cost:</strong> Standard GitHub-hosted runners for public repositories are generally free; private repositories consume plan-based included usage and may incur charges beyond it. See GitHub Billing documentation.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="4">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-5" data-step="5" aria-labelledby="title-5">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-5">Step 05 / 08 — Publish a versioned image to GHCR (no Azure deployment yet)</h2></div><span class="section-index">05/08</span></div>
+    
+    <div class="md-prose"><h1>Step 5 — Publish a versioned image to GHCR (no Azure deployment yet)</h1>
+<ol>
+<li>GitHub → <strong>Actions → 02 | Manual Release to Azure Container Apps</strong>.</li>
+<li>Select <strong>Run workflow</strong> and choose <code>main</code>.</li>
+<li>Set <code>deploy_to_azure</code> = <strong>false</strong> for the first run.</li>
+<li>Click <strong>Run workflow</strong>.</li>
+<li>Watch the <code>publish</code> job: repository scan → GHCR login → Docker build/push.</li>
+<li>The log prints a path similar to <code>ghcr.io/YOUR_USERNAME/cloudguard360-vote:FULL_GIT_SHA</code>.</li>
+</ol>
+<p>GitHub supplies a repository-scoped <code>GITHUB_TOKEN</code> to the workflow. No Personal Access Token or Azure service principal password is required for publishing this repo's GHCR package.</p>
+<h2>5.1 Make only your demo package public</h2>
+<p>By default a new GHCR container package is often private. For the credential-free Azure demo deployment:</p>
+<ol>
+<li>Open your GitHub profile → <strong>Packages</strong> → select <code>cloudguard360-vote</code>.</li>
+<li>Select <strong>Package settings → Change visibility → Public</strong> (the exact layout can vary).</li>
+<li>Confirm public visibility and verify the image reference used in the publish log.</li>
+<li>DO NOT make unrelated packages public. A public image exposes its contents.</li>
+</ol>
+<p>Azure Container Apps must be configured for registry <code>ghcr.io</code> even for the public-image route in current Microsoft guidance; the release workflow handles <code>az containerapp registry set</code>.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="5">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-6" data-step="6" aria-labelledby="title-6">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-6">Step 06 / 08 — Configure passwordless GitHub → Azure access with Terraform (optional but recommended)</h2></div><span class="section-index">06/08</span></div>
+    
+    <div class="md-prose"><h1>Step 6 — Configure passwordless GitHub → Azure access with Terraform (optional but recommended)</h1>
+<p>This step changes Azure access control. It requires the necessary Azure permissions. If you cannot grant roles, continue with CI + GHCR publishing and stop before Azure deployment.</p>
+<h2>6.1 Register the identity provider if needed</h2>
+<pre><code class="language-bash">az provider show --namespace Microsoft.ManagedIdentity --query registrationState -o tsv
+# Only if NotRegistered and you are authorised:
+# az provider register --namespace Microsoft.ManagedIdentity --wait --output none
+</code></pre>
+<h2>6.2 Open the independent Terraform identity root</h2>
+<pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase04_DevSecOps_Masterclass/terraform/oidc-identity&quot;
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+cp -n terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
+</code></pre>
+<p>Change:</p>
+<pre><code class="language-hcl">github_repository       = &quot;YOUR_USERNAME/cloudguard360-phase04&quot;
+github_environment      = &quot;cloudguard360-lab&quot;
+resource_group_name     = &quot;rg-cg360-app&quot;
+container_app_name      = &quot;ca-cg360-voting&quot;
+enable_deployment_role  = false
+</code></pre>
+<p><strong>Do not write tokens or secrets in <code>terraform.tfvars</code>.</strong> The GitHub repo must be named exactly as in the federated subject; case and environment matter. The identity will be created in the same region as your existing Container App, avoiding Phase 01's restricted <code>westeurope</code> region issue.</p>
+<h2>6.3 First Terraform plan: identity + federation only</h2>
+<pre><code class="language-bash">terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=phase04-oidc.tfplan
+terraform show -no-color phase04-oidc.tfplan | grep -E 'will be created|Plan:'
+terraform show -json phase04-oidc.tfplan | python3 ../../scripts/05-check-oidc-plan.py
+</code></pre>
+<p><strong>Expected:</strong> 2 to add, 0 to change, 0 to destroy: user-assigned identity and federated identity credential. Apply only after reviewing the plan and verifying resource names and OIDC trust subject:</p>
+<pre><code class="language-bash">terraform apply phase04-oidc.tfplan
+terraform output -raw github_azure_client_id
+terraform output federated_subject
+</code></pre>
+<p>The Azure Client ID is not itself a password, but still treat identity configuration carefully.</p>
+<h2>6.4 Restrict the deployment role to the existing Container App</h2>
+<p>In <code>terraform.tfvars</code>, change only:</p>
+<pre><code class="language-hcl">enable_deployment_role = true
+</code></pre>
+<p>Prepare a new plan:</p>
+<pre><code class="language-bash">terraform plan -out=phase04-access.tfplan
+terraform show -no-color phase04-access.tfplan | grep -E 'will be created|Plan:'
+terraform show -json phase04-access.tfplan | python3 ../../scripts/05-check-oidc-plan.py
+</code></pre>
+<p><strong>Expected:</strong> 1 role assignment created, at the exact Container App resource scope, using built-in <code>Container Apps Contributor</code>. This role <strong>can update and delete Container Apps</strong>, so it is not a read-only role; restrict it to the existing app and use approval gates. Role creation requires <code>Microsoft.Authorization/roleAssignments/write</code> at the appropriate scope. If you do not have those rights, request authorised help; do not escalate privileges yourself.</p>
+<p>After review:</p>
+<pre><code class="language-bash">terraform apply phase04-access.tfplan
+</code></pre>
+<h2>6.5 Configure GitHub Environment and OIDC secrets</h2>
+<ol>
+<li>GitHub repo → <strong>Settings → Environments → New environment</strong> → name <strong><code>cloudguard360-lab</code></strong>.</li>
+<li>Configure required reviewers if supported by your GitHub plan. Environment protection availability varies with repository visibility and plan.</li>
+<li>Inside this environment → <strong>Environment secrets</strong> → add exactly:<ul>
+<li><code>AZURE_CLIENT_ID</code>: Terraform output <code>github_azure_client_id</code></li>
+<li><code>AZURE_TENANT_ID</code>: <code>az account show --query tenantId -o tsv</code></li>
+<li><code>AZURE_SUBSCRIPTION_ID</code>: <code>az account show --query id -o tsv</code></li>
+</ul>
+</li>
+<li>Never create <code>AZURE_CLIENT_SECRET</code> for this workflow; <code>azure/login@v2</code> uses OIDC trust.</li>
+<li>Confirm the federated subject corresponds to <code>repo:YOUR_USERNAME/cloudguard360-phase04:environment:cloudguard360-lab</code>.</li>
+</ol>
+<p><strong>Note:</strong> If the repo name or environment is different, OIDC sign-in will fail even if the Client ID is correct.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="6">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-7" data-step="7" aria-labelledby="title-7">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-7">Step 07 / 08 — Controlled Azure release and verification</h2></div><span class="section-index">07/08</span></div>
+    
+    <div class="md-prose"><h1>Step 7 — Controlled Azure release and verification</h1>
+<h2>7.1 Deploy the published GHCR image</h2>
+<ol>
+<li>Ensure the GHCR image is public (Step 5).</li>
+<li>Ensure the managed identity, federation, scoped role and Environment secrets are configured (Step 6).</li>
+<li>GitHub → <strong>Actions → 02 | Manual Release to Azure Container Apps → Run workflow</strong>.</li>
+<li>Choose <code>main</code> and select <code>deploy_to_azure = true</code>.</li>
+<li>Click <strong>Run workflow</strong>, then approve the Environment deployment if a reviewer gate is configured.</li>
+<li>The workflow publishes a commit-SHA image, signs in using Azure OIDC, configures <code>ghcr.io</code> registry access and updates the <strong><code>vote-frontend</code> container only</strong>.</li>
+<li>It runs an HTTPS health check on the Container App URL.</li>
+</ol>
+<p>If Azure login fails with <code>AADSTS70021</code> or similar, check issuer, subject, audience, repo, environment, tenant and deployment permissions. <strong>Do not disable Microsoft Entra security defaults.</strong></p>
+<h2>7.2 Verify from Cloud Shell</h2>
+<pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase04_DevSecOps_Masterclass&quot;
+bash scripts/01-check-deployment.sh
+</code></pre>
+<p>You should see the updated <code>vote-frontend</code> image with a <code>ghcr.io/...:&lt;commit-sha&gt;</code> tag and Redis still on <code>redis:7-alpine</code>. HTTP result should be 200. Zero minimum replicas can introduce a cold start.</p>
+<h2>7.3 Reconcile Terraform ownership (mandatory governance)</h2>
+<p><strong>The Phase 03 Terraform root still owns the Container App.</strong> An external <code>az containerapp update</code> changes its template and can cause Terraform drift. Never run the old Phase 03 <code>terraform apply</code> without reviewing the plan.</p>
+<pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform&quot;
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+terraform plan -detailed-exitcode -no-color &gt; phase03-drift-review.txt 2&gt;&amp;1
+RESULT=$?
+echo &quot;Terraform detailed exit code: $RESULT (0=no change, 2=change, 1=error)&quot;
+grep -E 'frontend_image|image|registry|Plan:' phase03-drift-review.txt || true
+</code></pre>
+<p>If the result shows that Terraform wants to revert the frontend image to MCR, edit <code>terraform.tfvars</code> (the Phase 03 config) and set:</p>
+<pre><code class="language-hcl">frontend_image = &quot;ghcr.io/YOUR_USERNAME/cloudguard360-vote:FULL_GIT_SHA&quot;
+</code></pre>
+<p>Review a new <code>terraform plan</code> <strong>carefully</strong>. The GHCR registry configuration added during release may also appear as drift. Do not approve unexpected replacement, deletion or networking changes. Keep the Phase 03 Terraform code/state aligned with actual Azure resources before another infrastructure deployment. In an advanced architecture, Terraform manages the application deployment model end-to-end, rather than letting a separate tool make unmanaged changes; the reconciliation exercise teaches the limitation explicitly.</p>
+<h2>7.4 Rollback if your deployment fails</h2>
+<p>Before each release, write down the previous known-working frontend image. A controlled rollback is:</p>
+<pre><code class="language-bash"># EDIT to a real, previously working image; do not run with the placeholder.
+PREVIOUS_IMAGE=&quot;REPLACE_WITH_PREVIOUS_KNOWN_GOOD_IMAGE&quot;
+# az containerapp update -g rg-cg360-app -n ca-cg360-voting \
+#   --container-name vote-frontend --image &quot;$PREVIOUS_IMAGE&quot;
+</code></pre>
+<p>The rollback command is intentionally commented out to prevent accidental changes. <strong>Never</strong> delete/recreate the Phase 03 Resource Group. Redis data is temporary; do not use this approach for production stateful data.</p>
+<hr />
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="7">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><section class="lesson" id="step-8" data-step="8" aria-labelledby="title-8">
+    <div class="section-heading"><div><div class="section-kicker">PRACTICAL WORKFLOW</div><h2 id="title-8">Step 08 / 08 — Security evidence, negative test, cost control and final sign-off</h2></div><span class="section-index">08/08</span></div>
+    
+    <div class="md-prose"><h1>Step 8 — Security evidence, negative test, cost control and final sign-off</h1>
+<h2>8.1 Security evidence</h2>
+<pre><code class="language-bash">cd &quot;$HOME/clouddrive/cloudguard360/CloudGuard360_Phase04_DevSecOps_Masterclass&quot;
+bash scripts/02-report-evidence.sh
+</code></pre>
+<p>Record in the evidence checklist: GitHub Actions run URL, CI status, Trivy findings, SBOM artifact, GHCR image tag, OIDC subject, reviewer approval, Azure revision name and HTTP smoke result. Keep this folder private or redact identifiers before publication.</p>
+<h2>8.2 Demonstrate a security gate safely</h2>
+<p>In a temporary Git branch or pull request <strong>only</strong>, intentionally introduce a benign IaC misconfiguration or harmless invalid project layout (e.g. temporarily rename the <code>Dockerfile</code> in a branch). Confirm that CI refuses to pass, then revert the change. <strong>Do not commit passwords or real-looking secrets into Git</strong>, even for a demo.</p>
+<h2>8.3 Final checks</h2>
+<ul>
+<li>✅ CI passes when the repository is valid.</li>
+<li>✅ Trivy secret/misconfiguration gate has been exercised.</li>
+<li>✅ Vulnerability findings are <strong>reported</strong>, and high-risk legacy dependencies are acknowledged.</li>
+<li>✅ CycloneDX SBOM exists.</li>
+<li>✅ GHCR image is accessible as intended.</li>
+<li>✅ Optional OIDC login works without client secret.</li>
+<li>✅ Deployment changes <strong>only</strong> <code>vote-frontend</code>, not Redis or the network.</li>
+<li>✅ HTTP response is successful.</li>
+<li>✅ Terraform image drift is reviewed and reconciled.</li>
+<li>✅ Budget is checked; unused Azure resources are removed <strong>from their owning Terraform roots only</strong>.</li>
+</ul>
+<p><strong>Conclusion:</strong> This phase teaches an audited, human-controlled delivery chain for a prebuilt application, not a production-ready software supply chain. Phase 05 will use Kubernetes/AKS after a cost and quota check.</p>
+<hr />
+<h1>Quick troubleshooting matrix</h1>
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Likely cause</th>
+  <th>Safe next action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>No such file or directory</code> in Cloud Shell</td>
+  <td>ZIP or project folder path differs</td>
+  <td><code>pwd</code>, <code>ls -la</code>, check uploaded ZIP name</td>
+</tr>
+<tr>
+  <td><code>terraform init</code> cannot authenticate</td>
+  <td>Subscription env variable absent</td>
+  <td><code>export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;</code></td>
+</tr>
+<tr>
+  <td><code>docker: command not found</code></td>
+  <td>Cloud Shell is not a Docker host</td>
+  <td>Use GitHub Actions Docker runner or local Docker Desktop</td>
+</tr>
+<tr>
+  <td>GitHub push asks for a password</td>
+  <td>GitHub does not support password authentication for Git HTTPS</td>
+  <td>Use supported browser-based credential flow or web editor</td>
+</tr>
+<tr>
+  <td><code>docker build</code> cannot pull MCR base</td>
+  <td>Prebuilt sample unavailable or network issue</td>
+  <td>Verify base, document replacement; don't pretend release succeeded</td>
+</tr>
+<tr>
+  <td>Trivy CI blocked</td>
+  <td>Real secret or HIGH/CRITICAL IaC finding</td>
+  <td>Inspect and fix; don't disable gate just to obtain green check</td>
+</tr>
+<tr>
+  <td>Image scan reports vulnerabilities</td>
+  <td>Legacy sample base</td>
+  <td>Document as known risk; use a modern supported base for real production</td>
+</tr>
+<tr>
+  <td>GHCR push permission denied</td>
+  <td>Packages write permission or package not linked to repo</td>
+  <td>Check Actions token permissions and package Actions access</td>
+</tr>
+<tr>
+  <td>GHCR image pull returns 401</td>
+  <td>Package private or wrong path; registry config missing</td>
+  <td>Set intended demo package public, verify URL, configure registry</td>
+</tr>
+<tr>
+  <td>Azure OIDC <code>AADSTS70021</code></td>
+  <td>Federated credential mismatch</td>
+  <td>Verify exact repo/environment/issuer/audience/client ID</td>
+</tr>
+<tr>
+  <td>Role assignment <code>AuthorizationFailed</code></td>
+  <td>No roleAssignments/write</td>
+  <td>Request authorised scope-limited grant; never self-escalate</td>
+</tr>
+<tr>
+  <td>Azure 403 region unavailable</td>
+  <td>Subscription location restriction</td>
+  <td>Reuse Phase 03 Container App; identity region is derived from existing app</td>
+</tr>
+<tr>
+  <td>Azure deployment updates the wrong container</td>
+  <td>Wrong container name or CLI extension</td>
+  <td>Use <code>--container-name vote-frontend</code>, inspect two-container list beforehand</td>
+</tr>
+<tr>
+  <td>New image appears then disappears</td>
+  <td>Phase 03 Terraform applied old frontend image</td>
+  <td>Reconcile Phase 03 config and state; inspect plans before apply</td>
+</tr>
+<tr>
+  <td>HTTP 503 after release</td>
+  <td>Revision startup/image pull or cold-start</td>
+  <td>Inspect revision state and container logs; rollback to known-good image if needed</td>
+</tr>
+<tr>
+  <td>Cost concern</td>
+  <td>Persistent ACA workload or network data usage</td>
+  <td>Review Cost Analysis, min replicas and optional release; do not provision AKS</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1>Authoritative references (verified November 2026)</h1>
+<ul>
+<li>GitHub sample: <a href="https://github.com/Azure-Samples/azure-voting-app-redis">https://github.com/Azure-Samples/azure-voting-app-redis</a></li>
+<li>Azure CLI Container App update: <a href="https://learn.microsoft.com/en-us/cli/azure/containerapp?view=azure-cli-latest">https://learn.microsoft.com/en-us/cli/azure/containerapp?view=azure-cli-latest</a></li>
+<li>Azure Container Apps GitHub Actions, GHCR: <a href="https://learn.microsoft.com/en-us/azure/container-apps/github-actions">https://learn.microsoft.com/en-us/azure/container-apps/github-actions</a></li>
+<li>Azure OIDC: <a href="https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect">https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect</a></li>
+<li>Container Apps Contributor role: <a href="https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/containers">https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/containers</a></li>
+<li>GitHub Container Registry: <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry">https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry</a></li>
+<li>GitHub Actions billing: <a href="https://docs.github.com/en/actions/concepts/billing-and-usage">https://docs.github.com/en/actions/concepts/billing-and-usage</a></li>
+<li>Terraform drift: <a href="https://learn.microsoft.com/en-us/azure/developer/terraform/prevent-terraform-drift-stateful-resources">https://learn.microsoft.com/en-us/azure/developer/terraform/prevent-terraform-drift-stateful-resources</a></li>
+</ul>
+<p><strong>Privacy:</strong> Never paste GitHub tokens, subscription/tenant full IDs, Azure access tokens, service account credentials or Terraform state files into chats or GitHub issues.</p>
+</div>
+    <div class="lesson-footer"><button class="complete-btn" data-complete="8">✓ Mark step complete</button><span class="completion-caption">Your progress is saved in this browser</span></div>
+  </section><div class="footer">CloudGuard 360 / Phase 04 · Technical lab material. Verify every planned cloud change before deployment. No secrets in repositories.</div></div></main></div><script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const storeKey='cg360-phase04-done-v1';
+let done={}; try{done=JSON.parse(localStorage.getItem(storeKey)||'{}')}catch(_){done={}}
+const lessons=$$('.lesson');
+function paint(){const finished=lessons.filter(s=>done[s.dataset.step]).length; $('#count').textContent=`${finished}/${lessons.length}`; $('#progress-fill').style.width=`${finished/lessons.length*100}%`; $$('[data-complete]').forEach(b=>{const d=!!done[b.dataset.complete];b.textContent=d?'✓ Completed — click to undo':'✓ Mark step complete';b.classList.toggle('is-done',d)});$$('[data-done]').forEach(el=>{el.textContent=done[el.dataset.done]?'✓':'○'})}
+$$('[data-complete]').forEach(b=>b.addEventListener('click',()=>{done[b.dataset.complete]=!done[b.dataset.complete];try{localStorage.setItem(storeKey,JSON.stringify(done))}catch(_){}paint()}));
+const htmlEscape=s=>s.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+$$('pre').forEach(pre=>{let code=pre.querySelector('code');if(!code)return;const cls=code.className||'';const lang=(cls.match(/language-([^\s]+)/)||[])[1]||'text';let wrap=document.createElement('div');wrap.className='code-wrap';pre.parentNode.insertBefore(wrap,pre);const bar=document.createElement('div');bar.className='code-top';const label=document.createElement('span');label.textContent=lang.toUpperCase();const btn=document.createElement('button');btn.type='button';btn.className='copy-btn';btn.textContent='Copy code';btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code.textContent);btn.textContent='Copied ✓'}catch(_){const ta=document.createElement('textarea');ta.value=code.textContent;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();btn.textContent='Copied ✓'}setTimeout(()=>btn.textContent='Copy code',1600)});bar.append(label,btn);wrap.append(bar,pre)});
+const navLinks=$$('.nav-link'); const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id))}})},{rootMargin:'-20% 0px -62% 0px'});lessons.forEach(l=>observer.observe(l));
+$('#search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();lessons.forEach(s=>s.hidden=q&&!s.textContent.toLowerCase().includes(q));navLinks.forEach(a=>{const target=document.querySelector(a.getAttribute('href'));a.hidden=!!q&&!a.textContent.toLowerCase().includes(q)&&!(target&&target.textContent.toLowerCase().includes(q))})});
+const themeKey='cg360-phase04-theme';let initial='';try{initial=localStorage.getItem(themeKey)||''}catch(_){};if(initial)document.documentElement.setAttribute('data-theme',initial);$('#theme-toggle').addEventListener('click',()=>{const n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem(themeKey,n)}catch(_){}});
+$('#menu-btn').addEventListener('click',()=>$('.sidebar').classList.toggle('open'));navLinks.forEach(a=>a.addEventListener('click',()=>$('.sidebar').classList.remove('open')));
+$('#reset').addEventListener('click',()=>{if(confirm('Reset your Phase 04 progress?')){done={};try{localStorage.removeItem(storeKey)}catch(_){}paint()}});
+paint();
+</script></body></html>

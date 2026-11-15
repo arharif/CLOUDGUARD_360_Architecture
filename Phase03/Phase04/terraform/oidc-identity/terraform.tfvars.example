@@ -1,0 +1,6 @@
+# EDIT to your own GitHub repository. Use no https:// prefix.
+github_repository       = "YOUR_ACCOUNT/cloudguard360-phase04"
+github_environment      = "cloudguard360-lab"
+resource_group_name     = "rg-cg360-app"
+container_app_name      = "ca-cg360-voting"
+enable_deployment_role  = false
