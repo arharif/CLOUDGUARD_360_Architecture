@@ -1,0 +1,21 @@
+# Run on your own computer with Docker Engine / Docker Desktop.
+# Azure Cloud Shell cannot run docker compose: there is no Docker daemon.
+services:
+  azure-vote-back:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    # No public 6379 port. Redis is reachable only inside the Compose network.
+
+  azure-vote-front:
+    image: mcr.microsoft.com/azuredocs/azure-vote-front:v1
+    depends_on:
+      azure-vote-back:
+        condition: service_healthy
+    environment:
+      REDIS: azure-vote-back
+    ports:
+      - "127.0.0.1:8080:80"

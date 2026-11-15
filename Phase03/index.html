@@ -1,0 +1,303 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CloudGuard 360 — Phase 03 Docker & Application Deployment</title><style>
+:root{--navy:#0b1220;--nav2:#15243a;--blue:#3186ed;--teal:#2dbdb3;--bg:#f5f7fb;--text:#132238;--muted:#62748a;--stroke:#dde6f0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Arial,sans-serif;line-height:1.75}
+.layout{display:grid;grid-template-columns:265px 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--navy);color:#e7f0ff;padding:28px 18px}.brand{font-size:13px;letter-spacing:.15em;color:#7ce7d5;font-weight:800}.sidebar h2{font-size:21px;line-height:1.25;margin:12px 0 6px}.sidebar p{font-size:12px;color:#a9bad3}.side-link{display:block;color:#c3d2ea;text-decoration:none;padding:9px 12px;border-radius:10px;font-size:13px;margin:4px 0}.side-link:hover{background:#263854;color:white}.sidebar .foot{border-top:1px solid #284059;font-size:12px;color:#b7c7dc;padding-top:18px;margin-top:20px}
+.content{max-width:1100px;width:100%;padding:30px 45px 120px;margin:0 auto}.hero{padding:28px 34px;background:linear-gradient(126deg,#142940,#19517c 65%,#116e78);color:white;border-radius:20px;box-shadow:0 15px 40px #132c5022;margin-bottom:30px;position:relative;overflow:hidden}.hero:before{content:'';position:absolute;width:260px;height:260px;border:1px solid #ffffff55;border-radius:50%;right:-68px;top:-100px;animation:breath 5s infinite alternate}.hero small{color:#b6e5fa;letter-spacing:.15em;font-weight:700}.hero h1{margin:12px 0;font-size:31px;line-height:1.15}.hero p{max-width:670px;color:#d0eaff}.status{display:flex;gap:12px;flex-wrap:wrap}.chip{padding:5px 12px;border:1px solid #9ccfdf8c;border-radius:50px;font-size:12px;background:#ffffff16}
+.article{background:white;border-radius:18px;border:1px solid var(--stroke);padding:28px 34px;box-shadow:0 12px 35px #162f5010}.article h1{font-size:27px;line-height:1.25;margin-top:0}.article h2{font-size:23px;scroll-margin-top:20px;color:#174673;border-bottom:1px solid #dae8f5;padding-bottom:9px;margin-top:42px}.article h3{font-size:18px;color:#174673;margin-top:26px}.article p,.article li{font-size:14px}.article ul,.article ol{padding-left:25px}.article a{color:#135ea8}.article blockquote{border-left:4px solid #1e9ba7;background:#f0faf9;padding:14px 20px;margin:20px 0;color:#22575f}.article table{width:100%;border-collapse:collapse;margin:20px 0;display:block;overflow:auto;font-size:13px}.article th{background:#ecf4fc;text-align:left}.article th,.article td{border:1px solid #dde7f1;padding:8px 12px;vertical-align:top}.article code:not(pre code){background:#e9f1f9;padding:2px 5px;border-radius:4px;font-size:.88em}.codebox{position:relative;margin:16px 0}.codebox pre{overflow:auto;background:#0b1729;color:#e2f4ff;border-radius:12px;padding:42px 18px 17px;margin:0;line-height:1.55;font-size:12px}.copy{position:absolute;right:9px;top:8px;border:1px solid #4c6680;background:#23364f;color:white;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:700}.copy:hover{background:#0e769d}.progress{height:9px;background:#294057;border-radius:100px;overflow:hidden;margin:10px 0}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#38c3b5,#71e0fc);transition:width .25s}.checks{margin:22px 0;background:#eff7ff;border:1px solid #d0e4f8;border-radius:14px;padding:20px 25px}.checks label{display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;cursor:pointer}.checks input{accent-color:#1675c0;width:17px;height:17px}.arch{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;margin:24px 0;padding:20px 10px;background:#f5faff;border-radius:12px;border:1px solid #d8eaf9}.node{background:#e4f2ff;color:#1b4973;padding:12px 15px;border-radius:9px;border:1px solid #beddf6;text-align:center;font-weight:700;font-size:13px;min-width:110px;animation:rise .65s both}.node:nth-child(3){animation-delay:.15s}.node:nth-child(5){animation-delay:.3s}.arr{font-size:20px;color:#4c87b3}@keyframes rise{from{opacity:.3;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes breath{to{transform:scale(1.3);opacity:.25}}
+@media(max-width:860px){.layout{grid-template-columns:1fr}.sidebar{height:auto;position:static}.sidebar nav{display:flex;overflow:auto;gap:5px}.side-link{white-space:nowrap}.sidebar .foot{display:none}.content{padding:20px 14px 60px}.article{padding:18px}.hero{padding:24px}.hero h1{font-size:25px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}}
+</style></head><body>
+<div class="layout"><aside class="sidebar"><div class="brand">CLOUDGUARD 360 / MASTERY</div><h2>Phase 03</h2><p>One complete practical lab, from Azure prerequisites to live demo and evidence.</p><div class="progress"><div id="progress-bar"></div></div><p id="progress-label">0/8 milestones</p><nav><a class="side-link" href="#step-1">Step 01 — Prerequisites & cost</a><a class="side-link" href="#step-2">Step 02 — Download & upload</a><a class="side-link" href="#step-3">Step 03 — Terraform configuration</a><a class="side-link" href="#step-4">Step 04 — Validate & plan</a><a class="side-link" href="#step-5">Step 05 — Deploy to Azure</a><a class="side-link" href="#step-6">Step 06 — Test the application</a><a class="side-link" href="#step-7">Step 07 — Troubleshoot & evidence</a><a class="side-link" href="#step-8">Step 08 — Cleanup & handover</a><a class="side-link" href="#checklist">Completion checklist</a></nav><div class="foot">OFFLINE · self-contained HTML<br>All buttons copy exact text from their code block.</div></aside>
+<main class="content"><div class="hero"><small>AZURE · TERRAFORM · DOCKER · CONTAINER APPS</small><h1>Deploy a prebuilt application<br>without building it from scratch</h1><p>Control costs, reuse your Phase 01 resource group, deploy two containers with Terraform, verify HTTPS, learn container networking and clean up safely.</p><div class="status"><span class="chip">8 steps, one phase</span><span class="chip">No AKS yet</span><span class="chip">Two managed resources</span><span class="chip">Azure Free Trial aware</span></div></div>
+<div class="arch"><div class="node">Browser<br>HTTPS</div><span class="arr">→</span><div class="node">Flask frontend<br>port 80</div><span class="arr">→</span><div class="node">Redis sidecar<br>localhost:6379</div></div>
+<section class="article"><h1>CloudGuard 360 — PHASE 03: Docker &amp; Application Deployment</h1>
+<p><strong>One practical phase, start to finish | Azure Cloud Shell (Bash) + Terraform + Azure Container Apps | Cost-controlled lab</strong></p>
+<blockquote>
+<p><strong>Scope:</strong> This is a deliberately small, public, anonymous, demonstration web application. It is <strong>not production-hardened</strong> and does <strong>not</strong> integrate its Container Apps environment with the Phase 01 Spoke VNet. Neither this package nor Terraform will recreate or destroy the existing Phase 01/02 infrastructure.</p>
+</blockquote>
+<h2>Executive summary</h2>
+<p>You already created Azure networking in Phase 01 and Microsoft Entra/RBAC in Phase 02. In this phase you will run a <strong>prebuilt Microsoft Azure Voting App (Flask web frontend)</strong> and a <strong>Redis sidecar</strong> inside <strong>one Azure Container App</strong> in the <strong>Consumption</strong> plan, created with <strong>Terraform</strong>. You will inspect the live HTTPS endpoint, learn container networking, test the application, document evidence, troubleshoot and optionally remove <strong>only Phase 03</strong> resources.</p>
+<p><strong>Why not run Docker inside Azure Cloud Shell?</strong> Cloud Shell does not have a running Docker daemon. It is suitable for Terraform/Azure CLI commands, <strong>not</strong> for <code>docker build</code>, <code>docker run</code> or <code>docker compose up</code>. We provide an <strong>optional local Docker Compose</strong> exercise to run on a computer with Docker installed.</p>
+<p><strong>Safety and budget:</strong> Container Apps has a monthly Consumption free grant, but not an unlimited free tier. Consumption beyond grants and other integrated Azure services may cost money. Our configuration uses 0–1 replicas, 0.5 total vCPU and 1 GiB total RAM across both containers. It does not enable a Log Analytics workspace, Private Endpoints, VNet injection, NAT Gateway, ACR or AKS. Do not upgrade your Azure subscription or disable trial protections merely for the lab. <strong>Check the subscription's remaining credit and cost before <code>terraform apply</code>.</strong> The existing <code>clouddrive</code> Azure Files mount can also incur storage charges.</p>
+<h2>Architecture</h2>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-text">                   PUBLIC INTERNET (HTTPS)
+                             |
+                             v
+            Azure Container Apps / Consumption
+          ca-cg360-voting   (min 0, max 1 replica)
+           +-----------------------------------+
+           | Azure Vote Front (Flask)  :80     |
+           |       REDIS=localhost            |
+           |               |                   |
+           |               v                   |
+           | Redis 7 Alpine            :6379  |
+           +-----------------------------------+
+                             |
+       Managed environment cae-cg360-lab
+                             |
+          Existing rg-cg360-app (READ only)
+
+ Phase 01 VNet is READ to select region. The new Container Apps
+ environment is NOT injected into the Phase 01 VNet.
+</code></pre></div>
+<h3>Why the Redis address differs</h3>
+<p>In <strong>Docker Compose</strong>, frontend and Redis are separate services on a Docker network; use <code>REDIS=azure-vote-back</code>. In <strong>Azure Container Apps</strong>, both containers live in one Container App replica with a shared network namespace; the frontend uses <code>REDIS=localhost</code>. Neither configuration publicly exposes port 6379.</p>
+<p><strong>Data limitation:</strong> Redis is <strong>ephemeral</strong>, has no durable volume, and has no password because it is only used internally for this isolated lab. Scaling to zero or restarting the app loses voting data. Do not send personal or real business data. The frontend is publicly accessible and does not yet use Entra SSO.</p>
+<hr />
+<h1>Main Phase 03 — Full end-to-end guide</h1>
+<h2 id="step-1">Step 1 — Verify the Azure prerequisites and budget</h2>
+<ol>
+<li>Open <strong>https://portal.azure.com/</strong> and sign in with the account you used for Phases 01–02.</li>
+<li>Open <strong>Subscriptions</strong>, select your existing subscription and verify that it is <strong>Enabled</strong>.</li>
+<li>Navigate to <strong>Cost Management + Billing → Cost Management → Budgets</strong>. Check your remaining trial credits and applicable budget alerts. Do <strong>not</strong> upgrade the subscription to proceed.</li>
+<li>From the Azure Portal toolbar, launch <strong>Cloud Shell</strong>, select <strong>Bash</strong> and confirm the <code>clouddrive</code> mount.</li>
+<li>Copy the commands below into Cloud Shell Bash. This initial set <strong>only reads</strong> existing resources.</li>
+</ol>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">mountpoint -q &quot;$HOME/clouddrive&quot; &amp;&amp; echo 'PASS: persistent Cloud Shell mount' || echo 'STOP: persistent mount unavailable'
+az account show --query '{Name:name,State:state}' -o table
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+az group show -n rg-cg360-app --query '{Name:name,Location:location}' -o table
+az network vnet show -g rg-cg360-app -n vnet-cg360-app --query '{Name:name,Location:location}' -o table
+</code></pre></div>
+<p><strong>Expected:</strong> a mounted <code>clouddrive</code>, <code>Enabled</code> subscription, existing <code>rg-cg360-app</code> and existing <code>vnet-cg360-app</code>. <strong>Stop</strong> if the networking resources are missing or the mount is unavailable.</p>
+<ol start="6">
+<li>Register the container service provider only if it is not registered. Resource Provider registration requires appropriate subscription permissions and does <strong>not</strong> create a billed Container App:</li>
+</ol>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">az provider show --namespace Microsoft.App --query registrationState -o tsv
+# Run the following command ONLY if it says NotRegistered:
+az provider register --namespace Microsoft.App --wait --output none
+az provider show --namespace Microsoft.App --query registrationState -o tsv
+</code></pre></div>
+<p><strong>Expected final state:</strong> <code>Registered</code>. A registered provider and an existing VNet do <strong>not</strong> guarantee your subscription is eligible for Container Apps in that region. Your earlier <code>westeurope</code> 403 may recur; see Troubleshooting.</p>
+<h2 id="step-2">Step 2 — Download, upload and extract the Phase 03 ZIP</h2>
+<ol>
+<li>Download <code>CloudGuard360_Phase03_Docker_Application.zip</code> from ChatGPT to your computer.</li>
+<li>In the Azure Portal, open <strong>Cloud Shell → Manage files → Upload</strong>.</li>
+<li>Choose the downloaded ZIP and wait until upload succeeds.</li>
+<li>Paste the commands below into <strong>Bash</strong>. The ZIP normally uploads to your home directory (<code>~</code>).</li>
+</ol>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">ls -lh ~/CloudGuard360_Phase03_Docker_Application.zip
+mkdir -p ~/clouddrive/cloudguard360
+unzip -n ~/CloudGuard360_Phase03_Docker_Application.zip -d ~/clouddrive/cloudguard360
+cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application
+ls -la
+</code></pre></div>
+<p><strong>Expected folders:</strong> <code>terraform</code>, <code>docker</code>, <code>scripts</code>, <code>docs</code>. The <code>unzip -n</code> flag <strong>does not overwrite existing files</strong>. Do not extract this project over your existing Phase 01/02 Terraform directories.</p>
+<p>Check the included network architecture and Terraform source:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">ls -la terraform
+sed -n '1,220p' terraform/main.tf
+</code></pre></div>
+<p>This new Terraform root reads <code>rg-cg360-app</code> and <code>vnet-cg360-app</code> as <strong>data sources</strong>. Its managed resources are <strong>only</strong> the Container Apps environment and the Container App.</p>
+<h2 id="step-3">Step 3 — Configure Terraform, one separate state</h2>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+cp -n terraform.tfvars.example terraform.tfvars
+cat terraform.tfvars
+bash ../scripts/preflight.sh
+</code></pre></div>
+<p>The file <code>terraform.tfvars</code> identifies the existing RG and VNet. <code>location_override = &quot;&quot;</code> means <em>use the actual VNet location</em>, <strong>not the Resource Group's metadata location</strong>. This matters because your earlier network deployment was blocked in <code>westeurope</code>.</p>
+<p>If your existing VNet is in a region where Container Apps is not allowed for your subscription, you may choose an alternate <code>location_override</code> after checking eligibility and cost. <strong>Do not pick a new region at random</strong>. Run a read-only check before modifying the variable:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">az network vnet show -g rg-cg360-app -n vnet-cg360-app --query location -o tsv
+az account list-locations --query '[].{Name:name,DisplayName:displayName}' -o table
+</code></pre></div>
+<p>The <code>list-locations</code> output is a reference list, <strong>not proof of permission for specific services</strong>.</p>
+<p><strong>State safety:</strong> Phase 03 uses local state stored in the mounted Azure Files directory. This is appropriate for a single-user, supervised lab but is <strong>not</strong> the final enterprise backend. Never upload <code>.tfstate</code> or a saved plan to GitHub, never delete them, and do not run multiple Terraform clients simultaneously. The next DevOps phase will introduce a protected Blob backend and automated deployments.</p>
+<h2 id="step-4">Step 4 — Terraform init, validate, inspect and plan</h2>
+<p>Run commands in order:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">terraform fmt -recursive
+terraform init
+terraform validate
+terraform plan -out=phase03.tfplan
+terraform show -no-color phase03.tfplan | grep -E 'will be created|will be destroyed|Plan:'
+terraform show -json phase03.tfplan | python3 ../scripts/check-plan.py
+</code></pre></div>
+<p><strong>Expected results (first deployment):</strong> <code>Success! The configuration is valid.</code>, then <strong><code>Plan: 2 to add, 0 to change, 0 to destroy</code></strong> and <strong><code>PLAN PASS</code></strong>. The two created resources must be:</p>
+<ol>
+<li><code>azurerm_container_app_environment.lab</code></li>
+<li><code>azurerm_container_app.voting</code></li>
+</ol>
+<p>The output must <strong>not</strong> contain resource group, VNet, NSG, peering, identity or RBAC changes. The strict plan checker rejects any unexpected resources and any change/delete actions.</p>
+<p><strong>Stop</strong> if you have anything other than exactly those two creates. Revisit <code>terraform.tfvars</code> and check for existing resources or drift.</p>
+<h2 id="step-5">Step 5 — Deploy the application to Azure (first billed operation)</h2>
+<p>Only after you have checked credit/eligibility, accepted the public demo endpoint and reviewed <code>PLAN PASS</code>, execute:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">terraform apply phase03.tfplan
+</code></pre></div>
+<p>For a first successful deployment expect a summary close to:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-text">Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+</code></pre></div>
+<p>Next extract the HTTPS endpoint:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">terraform output
+terraform output -raw app_url
+</code></pre></div>
+<p><strong>Expected:</strong> an <code>https://...azurecontainerapps.io</code> address. Copy it to your browser. Wait for a cold start if the replica was scaled to zero. Try selecting an option in the Voting App.</p>
+<blockquote>
+<p>Azure Container Apps can have a service-level regional restriction. An Azure <code>403 RequestDisallowedByAzure</code> means you must check the region/subscription eligibility, and possibly use a different permitted region; do not keep retrying the same location. If <code>apply</code> only partially succeeds, run <code>terraform state list</code> and inspect Azure before changing code or destroying anything.</p>
+</blockquote>
+<h2 id="step-6">Step 6 — Verify the live application and understand Docker</h2>
+<p>Run the verification script:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application
+bash scripts/verify.sh
+</code></pre></div>
+<p>Or check manually:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd terraform
+terraform state list
+terraform output -raw app_url
+az containerapp show -g rg-cg360-app -n ca-cg360-voting --query '{Name:name,Status:properties.provisioningState,FQDN:properties.configuration.ingress.fqdn}' -o table
+az containerapp revision list -g rg-cg360-app -n ca-cg360-voting --query '[].{Name:name,Active:properties.active,Health:properties.healthState}' -o table
+</code></pre></div>
+<p>If <code>az containerapp ...</code> is unavailable, check the CLI's Container Apps command group and add/update the extension as appropriate:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">az extension add --name containerapp --upgrade
+</code></pre></div>
+<p><strong>Browser tests:</strong> HTTPS URL loads, the Voting App UI is visible, a sample vote can be submitted. Note that Redis is not persistent and its values may disappear between cold starts.</p>
+<p><strong>What you just learned:</strong></p>
+<ul>
+<li><strong>Docker image</strong> — a packaged application specification (<code>mcr.microsoft.com/azuredocs/azure-vote-front:v1</code>).</li>
+<li><strong>Container</strong> — one running instance of an image.</li>
+<li><strong>Two-container application</strong> — application container plus Redis container, in the same ACA replica.</li>
+<li><strong>Port 80</strong> — frontend listens for web requests.</li>
+<li><strong>Port 6379</strong> — private Redis endpoint inside the shared network namespace.</li>
+<li><strong>Ingress</strong> — Azure's managed HTTPS entry point to port 80.</li>
+<li><strong>Replica</strong> — one instance of the whole container combination, with scale-to-zero for cost control.</li>
+</ul>
+<h3>Optional hands-on Docker Compose on a PC (not in Cloud Shell)</h3>
+<ol>
+<li>Install Docker Desktop / Docker Engine on a suitable personal computer.</li>
+<li>Copy the included <code>docker/compose.yaml</code> to that computer.</li>
+<li>In a terminal on that <strong>computer</strong>, open its directory and run:</li>
+</ol>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">docker version
+docker compose up -d
+docker compose ps
+docker compose logs --tail=30
+# Open http://localhost:8080 in your computer's browser
+docker compose down
+</code></pre></div>
+<p><strong>Important:</strong> this Docker Compose file uses the same two public prebuilt images, but with <code>REDIS=azure-vote-back</code> because containers communicate by <strong>Compose service name</strong>, not <code>localhost</code>. It does <strong>not</strong> expose Redis port 6379 to the host, and the voting UI is bound to loopback <code>127.0.0.1:8080</code>.</p>
+<h2 id="step-7">Step 7 — Troubleshoot and collect proof</h2>
+<p>If the app does not load, inspect the revision and logs:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">az containerapp revision list -g rg-cg360-app -n ca-cg360-voting -o table
+az containerapp logs show -g rg-cg360-app -n ca-cg360-voting --type system --tail 30
+az containerapp logs show -g rg-cg360-app -n ca-cg360-voting --container vote-frontend --tail 30
+</code></pre></div>
+<p>If you get a Container App revision/container selection error, use <code>az containerapp replica list</code> / <code>az containerapp revision list</code> to identify the active replica and supply <code>--replica</code> and <code>--revision</code> as required. If the scale-to-zero replica is absent, open the HTTPS URL first to trigger activation.</p>
+<p>Create a small evidence folder without exporting the sensitive Terraform State:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application
+mkdir -p evidence
+cd terraform
+terraform validate &gt; ../evidence/01-validation.txt 2&gt;&amp;1
+terraform state list &gt; ../evidence/02-resource-addresses.txt
+terraform output -raw app_url &gt; ../evidence/03-app-url.txt
+az containerapp show -g rg-cg360-app -n ca-cg360-voting --query '{Name:name,Status:properties.provisioningState}' -o json &gt; ../evidence/04-app-status.json
+</code></pre></div>
+<p>Your complete proof is: passing Terraform validation; <strong>two Phase 03 resources</strong> managed in state; a working HTTPS address; app screen; a sample vote; and no changes to Phase 01/02.</p>
+<h2 id="step-8">Step 8 — Final check, then cleanup or handover</h2>
+<p>Check idempotency:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform
+terraform plan -detailed-exitcode
+</code></pre></div>
+<p>Exit code <code>0</code> = no changes; <code>2</code> = changes; <code>1</code> = error. Review any changes before applying them.</p>
+<h3>Option A — Keep the demo temporarily</h3>
+<p>Keep <code>min_replicas=0</code> to reduce idle costs and check Cost Management. The public URL will remain available but wake a new replica when traffic arrives. This is <strong>not a guarantee of zero total cost</strong>, and other services such as your Cloud Shell Azure Files share may still be charged.</p>
+<h3>Option B — Delete only Phase 03 resources to eliminate unnecessary lab usage</h3>
+<p><strong>Do not delete <code>rg-cg360-app</code>, the original VNet or any Phase 01/02 resources.</strong> Preview destruction first:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application
+bash scripts/cleanup-preview.sh
+</code></pre></div>
+<p>Expect <strong>only these two resources</strong> planned for deletion:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-text">azurerm_container_app.voting
+azurerm_container_app_environment.lab
+</code></pre></div>
+<p>If so, and after verifying no other workloads use the environment, run:</p>
+<div class="codebox"><button type="button" class="copy" aria-label="Copy command" onclick="copyCode(this)">Copy</button><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform
+terraform apply phase03-destroy.tfplan
+terraform state list
+</code></pre></div>
+<p>The state list should be empty of <strong>managed</strong> Phase 03 resources. The <code>data.azurerm_resource_group.app</code> and <code>data.azurerm_virtual_network.app</code> data sources may still be listed if they were read by Terraform; <strong>do not delete the Phase 01/02 resources</strong>.</p>
+<hr />
+<h2>Troubleshooting table</h2>
+<table>
+<thead>
+<tr>
+  <th>Symptom</th>
+  <th>Probable cause</th>
+  <th>Safe action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ARM_SUBSCRIPTION_ID</code> missing</td>
+  <td>Shell restarted</td>
+  <td>Re-run <code>export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;</code></td>
+</tr>
+<tr>
+  <td><code>clouddrive</code> not mounted</td>
+  <td>Ephemeral Cloud Shell</td>
+  <td>Reconnect persistent storage; do not apply</td>
+</tr>
+<tr>
+  <td><code>Microsoft.App NotRegistered</code></td>
+  <td>Resource Provider inactive</td>
+  <td>Register provider if you have permission</td>
+</tr>
+<tr>
+  <td><code>403 RequestDisallowedByAzure</code></td>
+  <td>Region not accepting your subscription</td>
+  <td>Check subscription-specific eligibility, choose an allowed supported region</td>
+</tr>
+<tr>
+  <td><code>AuthorizationFailed</code></td>
+  <td>Azure RBAC insufficient for Microsoft.App</td>
+  <td>Verify effective role/scope; ask authorised admin</td>
+</tr>
+<tr>
+  <td><code>terraform validate</code> fails</td>
+  <td>HCL/provider mismatch</td>
+  <td>Inspect line and error; <code>terraform init -upgrade</code> only after checking compatibility</td>
+</tr>
+<tr>
+  <td>Plan shows RG replacement</td>
+  <td>Wrong root/state or extra code</td>
+  <td>STOP; correct project directory, never apply</td>
+</tr>
+<tr>
+  <td>Container revision unhealthy</td>
+  <td>Image pull, startup or memory</td>
+  <td>Check revision state and Container Apps logs</td>
+</tr>
+<tr>
+  <td>App returns Redis connection error</td>
+  <td>Redis is not ready / wrong hostname</td>
+  <td>Confirm <code>REDIS=localhost</code> in ACA and 2 containers exist</td>
+</tr>
+<tr>
+  <td>Voting resets</td>
+  <td>Redis ephemeral / scale-to-zero</td>
+  <td>Expected for lab; persistence is future work</td>
+</tr>
+<tr>
+  <td>Docker command fails in Cloud Shell</td>
+  <td>No Docker daemon</td>
+  <td>Use local Docker / Codespaces, or deploy public images via Terraform</td>
+</tr>
+<tr>
+  <td>Plan after apply shows changes</td>
+  <td>Drift, state/version/config mismatch</td>
+  <td>Review drift, do not auto-apply</td>
+</tr>
+</tbody>
+</table>
+<h2>Official references</h2>
+<ul>
+<li>Azure Voting App sample: https://github.com/Azure-Samples/azure-voting-app-redis</li>
+<li>Azure Container Apps billing: https://learn.microsoft.com/azure/container-apps/billing</li>
+<li>Container Apps multiple containers: https://learn.microsoft.com/azure/container-apps/containers</li>
+<li>Azure Container App Terraform resource: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app</li>
+<li>Container App Environment Terraform resource: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app_environment</li>
+<li>Cloud Shell Docker limitation: https://github.com/MicrosoftDocs/azure-dev-docs/blob/main/articles/azure-developer-cli/troubleshoot.md</li>
+</ul>
+<p><strong>Exit criterion:</strong> the web frontend works from your browser, both containers run as one Azure Container App replica, Terraform owns only two Phase 03 resources, and you have either documented the operating cost or deleted those temporary resources safely. The next workstream is GitHub Actions CI/CD and DevSecOps scanning, followed by AKS and Zabbix/Grafana.</p>
+<div class="checks" id="checklist"><h2>Final milestone checklist</h2><p>Check each box when validated in your own Azure account; the completion progress is stored only in this browser tab.</p><label><input type="checkbox" class="task" onchange="updateProgress()"> Persistent Cloud Shell mount verified</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Correct Azure subscription and credits confirmed</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Phase 03 package uploaded and extracted</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Microsoft.App provider Registered</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Terraform validation successful</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Exactly two intended creates in plan</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Azure Voting App reachable at HTTPS URL</label><label><input type="checkbox" class="task" onchange="updateProgress()"> Evidence captured and cost/cleanup decision made</label></div></section></main></div>
+<script>
+async function copyCode(b){let t=b.closest('.codebox').querySelector('code').innerText; try{await navigator.clipboard.writeText(t);b.innerText='Copied!'}catch(e){let ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();b.innerText='Copied!'}setTimeout(()=>b.innerText='Copy',1500)}
+function updateProgress(){let n=document.querySelectorAll('.task:checked').length;document.getElementById('progress-label').innerText=n+'/8 milestones';document.getElementById('progress-bar').style.width=(n/8*100)+'%'}
+</script></body></html>

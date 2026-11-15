@@ -1,0 +1,10 @@
+# Use these values unless your Phase 01 resources have different names.
+resource_group_name = "rg-cg360-app"
+application_vnet_name = "vnet-cg360-app"
+
+# Normally leave empty. If Azure Container Apps rejects the VNet region,
+# change this only after checking regional eligibility for your subscription.
+location_override = ""
+
+frontend_image = "mcr.microsoft.com/azuredocs/azure-vote-front:v1"
+redis_image    = "redis:7-alpine"
