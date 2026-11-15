@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="CloudGuard 360 Phase 03 - Troubleshooting Azure Container Apps, Terraform State, Docker image, Redis, Cloud Shell. Offline interactive runbook."/>
+<title>CloudGuard 360 | Phase 03 Incident Runbook</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--ink:#152338;--muted:#617189;--line:#dae3ee;--nav:#10233b;--soft:#eef3f9;--blue:#2675e2;--good:#158466;--warn:#a66f24;--shadow:0 12px 36px #233e6412}
+body.dark{--bg:#0d1625;--panel:#142338;--ink:#eef5ff;--muted:#acbfd8;--line:#30445f;--nav:#0a1425;--soft:#20354e;--blue:#92bfff;--good:#71ddba;--warn:#f7c37e;--shadow:0 12px 36px #0003}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;line-height:1.72}a{color:var(--blue)}button,input{font:inherit}button{cursor:pointer}::selection{background:#76b0f757}
+.readbar{position:fixed;top:0;left:0;width:0%;height:4px;background:linear-gradient(90deg,#3888f6,#34d0ad);z-index:50;transition:width .1s}
+.layout{display:grid;grid-template-columns:285px minmax(0,1fr);min-height:100vh}.side{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--nav);color:white;padding:29px 18px;z-index:12;scrollbar-width:thin}.brand{display:flex;align-items:center;gap:12px;margin-bottom:25px;padding:6px 7px}.logo{width:40px;height:40px;display:grid;place-items:center;background:#2675e2;border-radius:11px;font-weight:900;box-shadow:0 9px 23px #2675e250}.brand strong{font-size:14px;letter-spacing:.045em}.brand small{display:block;color:#a5bddc;font-size:10px}.navlabel{font-size:10px;letter-spacing:.15em;color:#80a7d9;text-transform:uppercase;font-weight:800;margin:20px 12px 10px}.navlink{display:flex;gap:10px;align-items:flex-start;text-decoration:none;color:#bbcee5;font-size:12px;padding:8px 10px;border-radius:10px;line-height:1.4;transition:.2s;margin:2px 0}.navlink:hover,.navlink.active{background:#243e5a;color:#fff}.navnum{font:700 11px ui-monospace,Consolas,monospace;color:#7fb7ff;padding-top:1px}.navlink.active .navnum{color:#6be5c1}.sidebox{margin-top:22px;border:1px solid #3b506a;border-radius:14px;padding:15px 13px;background:#ffffff0b}.sidebox h4{font-size:12px;margin:0 0 7px}.sidebox p{font-size:11px;color:#afc5e0;margin:6px 0}.progress-track{border-radius:100px;background:#ffffff25;height:8px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#3b92f6,#43d5b4);transition:width .35s}
+.main{width:100%;max-width:1450px;padding:0 42px 65px;min-width:0}.top{height:73px;display:flex;align-items:center;justify-content:space-between;gap:14px}.breadcrumbs{font-size:11px;color:var(--muted)}.controls{display:flex;gap:8px;align-items:center}.btn{border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:8px 12px;color:var(--ink);font-size:12px;font-weight:700}.btn:hover{border-color:var(--blue)}.search{max-width:200px;width:180px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink);outline:0;padding:8px 11px;font-size:12px}.search:focus{border-color:var(--blue)}.mobile-menu{display:none}
+.hero{background:radial-gradient(circle at 90% 10%,#2e719f 0%,transparent 35%),linear-gradient(130deg,#102743,#143454 70%,#17586e);padding:33px 35px;border-radius:21px;box-shadow:var(--shadow);color:#fff;display:grid;grid-template-columns:1.04fr .96fr;gap:20px;min-height:282px;overflow:hidden}.eyebrow{font-size:11px;letter-spacing:.15em;color:#90dbe8;font-weight:800}.hero h1{font-size:clamp(27px,3vw,37px);letter-spacing:-.035em;line-height:1.15;margin:14px 0 12px;color:#fff}.hero p{color:#c9def4;font-size:13px;line-height:1.8;max-width:500px}.pillrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}.pill{font-size:10px;color:#daefff;border-radius:25px;padding:6px 10px;border:1px solid #ffffff39;background:#ffffff0e}.hero svg{width:100%;max-height:245px;align-self:center}.flow{fill:none;stroke:#89e1db;stroke-width:2.5;stroke-dasharray:7 8;animation:flow 4s linear infinite}.ring{animation:ring 2.5s ease-in-out infinite;transform-origin:center}.ring2{animation:ring 2.5s ease-in-out 1s infinite;transform-origin:center}@keyframes flow{to{stroke-dashoffset:-90}}@keyframes ring{50%{opacity:.35;transform:scale(.88)}}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 24px}.kpi{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:16px;box-shadow:0 7px 22px #1a3b5610}.kpi .klabel{font-size:11px;color:var(--muted);display:block}.kpi strong{display:block;font-size:19px;line-height:1.3;margin-top:6px;white-space:nowrap}.kpi small{font-size:10px;color:var(--muted)}.good{color:var(--good)}.warn{color:var(--warn)}
+.route{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:19px 20px;margin-bottom:20px}.route h3{font-size:14px;margin:0 0 4px}.route p{font-size:12px;color:var(--muted);margin:3px 0 13px}.routebtns{display:flex;gap:8px;flex-wrap:wrap}.routebtn{background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:8px 11px;color:var(--ink);font-size:11px;font-weight:700}.routebtn:hover{border-color:var(--blue);color:var(--blue)}
+.notice{border-radius:13px;padding:13px 18px;border:1px solid var(--line);border-left:4px solid var(--warn);background:var(--panel);color:var(--muted);font-size:12px;margin:20px 0}.notice strong{color:var(--ink)}.content{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:33px 39px;box-shadow:var(--shadow);min-width:0}.content h1{display:none}.content h2{border-top:1px solid var(--line);padding-top:30px;margin:51px 0 17px;font-size:22px;letter-spacing:-.02em;line-height:1.35;scroll-margin-top:28px}.content h2:first-of-type{border-top:0;padding-top:0;margin-top:3px}.content h3{font-size:16px;margin:26px 0 9px;scroll-margin-top:20px}.content p,.content li{font-size:13px}.content ul,.content ol{padding-left:22px}.content li{margin-bottom:5px}.content code:not(pre code){background:var(--soft);padding:2px 4px;border-radius:4px;font-size:.91em;overflow-wrap:anywhere}.content table{width:100%;display:block;overflow:auto;border-collapse:collapse;font-size:11px;margin:17px 0 23px}.content th{background:var(--soft);text-align:left;font-weight:800}.content th,.content td{padding:9px 12px;border:1px solid var(--line);vertical-align:top;min-width:104px}.content tr:nth-child(even){background:color-mix(in srgb,var(--soft) 35%,transparent)}.content blockquote{background:var(--soft);border-left:4px solid var(--blue);padding:12px 18px;margin:18px 0;color:var(--ink)}.content blockquote p{margin:2px 0}.content hr{border:0;border-top:1px solid var(--line);margin:33px 0}.content a{word-break:break-word}
+.terminal{background:#0c1c2d;border:1px solid #253e57;border-radius:12px;overflow:hidden;margin:14px 0 20px;box-shadow:0 9px 24px #101e3215}.terminal-head{height:38px;background:#ffffff0b;color:#a8c3db;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 10px}.dots{display:flex;gap:5px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:#a8c2d4}.dot.red{background:#ee6a70}.dot.amber{background:#e8bb62}.dot.green{background:#55c9a5}.terminal-title{margin-right:auto;font-size:9px;letter-spacing:.1em;font-weight:800}.copy-btn{font-size:11px;font-weight:750;border:1px solid #4b708d;background:#243c55;color:#fff;border-radius:7px;padding:4px 11px}.copy-btn:hover{background:#315772}.terminal pre{overflow-x:auto;margin:0;padding:16px 17px 19px;font:12px/1.65 ui-monospace,"SFMono-Regular",Consolas,monospace;color:#e1edf9;white-space:pre;tab-size:2}
+.checks{margin:25px 0 0;background:var(--soft);border:1px solid var(--line);border-radius:15px;padding:22px 24px}.checks h3{margin:0 0 13px;font-size:15px}.checkline{display:flex;gap:10px;align-items:flex-start;font-size:12px;padding:5px 0;color:var(--ink);cursor:pointer}.checkline input{accent-color:#2675e2;width:16px;height:16px;flex-shrink:0;margin-top:4px}.checkline em{color:var(--muted);font-size:11px;font-style:normal}.searchhint{font-size:12px;color:var(--muted);padding:10px 15px;border-radius:9px;background:var(--soft);display:none;margin-bottom:18px}footer{text-align:center;font-size:11px;color:var(--muted);padding:25px}
+@media(max-width:1100px){.main{padding:0 22px 55px}.kpis{grid-template-columns:repeat(2,1fr)}.content{padding:27px}.hero{padding:26px}}@media(max-width:800px){.layout{display:block}.side{width:min(305px,85vw);position:fixed;left:0;transform:translateX(-101%);transition:transform .25s;box-shadow:0 0 35px #0005}.side.open{transform:translateX(0)}.mobile-menu{display:inline-flex}.breadcrumbs{display:none}.main{padding:0 13px 55px}.hero{grid-template-columns:1fr;min-height:0;padding:23px}.hero svg{max-height:160px}.kpis{grid-template-columns:repeat(2,1fr)}.content{padding:21px 17px}.content h2{font-size:19px}.route{padding:16px}.terminal pre{font-size:11px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}@media print{.side,.top,.readbar,.route,.copy-btn,.checks{display:none!important}.layout{display:block}.main{max-width:100%;padding:0}.content{border:none;box-shadow:none}.content h2{break-after:avoid}.terminal{break-inside:avoid}.hero{break-inside:avoid}}
+</style></head>
+<body><div class="readbar" id="readbar"></div><div class="layout"><aside class="side" id="sidebar"><div class="brand"><div class="logo">CG</div><div><strong>CLOUDGUARD 360</strong><small>PHASE 03 · INCIDENT RUNBOOK</small></div></div><div class="navlabel">Sections du runbook</div><nav><a class="navlink" href="#section-01"><span class="navnum">01</span><span>Synthèse exécutive et contexte technique</span></a><a class="navlink" href="#section-02"><span class="navnum">02</span><span>Chronologie réelle des incidents et causes</span></a><a class="navlink" href="#section-03"><span class="navnum">03</span><span>Reprise immédiate de Cloud Shell (5 vérifications, sans modification)</span></a><a class="navlink" href="#section-04"><span class="navnum">04</span><span>Arbre de décision : ressource Azure vs Terraform State</span></a><a class="navlink" href="#section-05"><span class="navnum">05</span><span>Plan Terraform : procédure sûre après une déconnexion</span></a><a class="navlink" href="#section-06"><span class="navnum">06</span><span>Diagnostic fonctionnel : Hello World, vote et Redis</span></a><a class="navlink" href="#section-07"><span class="navnum">07</span><span>Pourquoi l&#x27;adaptateur Docker Samples est un changement sensible</span></a><a class="navlink" href="#section-08"><span class="navnum">08</span><span>Retour arrière contrôlé vers Quickstart</span></a><a class="navlink" href="#section-09"><span class="navnum">09</span><span>Preuves, évaluation des risques et critère de clôture</span></a><a class="navlink" href="#section-10"><span class="navnum">10</span><span>Raccourci pour le prochain diagnostic (sans appliquer)</span></a><a class="navlink" href="#section-11"><span class="navnum">11</span><span>Sources vérifiables</span></a></nav><div class="sidebox"><h4>Progression de récupération</h4><div class="progress-track"><div class="progress-fill" id="side-progress"></div></div><p id="side-count">0 / 7 étapes validées</p><p>État sauvegardé localement dans le navigateur si disponible.</p></div></aside>
+<main class="main"><div class="top"><div class="breadcrumbs">CloudGuard 360 / Phase 03 / <strong>Incident & Récupération</strong></div><div class="controls"><button class="btn mobile-menu" id="menu" type="button">☰ Menu</button><input class="search" id="search" type="search" placeholder="Rechercher…" aria-label="Rechercher dans le guide"><button class="btn" id="theme" type="button">◐ Thème</button></div></div>
+<section class="hero"><div><div class="eyebrow">GUIDE INTERACTIF · 15 NOVEMBRE 2026</div><h1>Réparer sans recréer<br>l’infrastructure Azure</h1><p>Retrouver une Cloud Shell stable, réconcilier Terraform State, vérifier le frontend Docker et Redis, puis clôturer l'incident avec des preuves.</p><div class="pillrow"><span class="pill">Terraform State</span><span class="pill">Azure Container Apps</span><span class="pill">Docker Images</span><span class="pill">Redis</span><span class="pill">Cloud Shell</span></div></div>
+<svg viewBox="0 0 410 255" role="img" aria-label="Flux animé : Terraform State puis Azure Container Apps, frontend et Redis"><defs><linearGradient id="linegradient" x1="0" x2="1"><stop stop-color="#5bafef"/><stop offset="1" stop-color="#52d9bd"/></linearGradient></defs>
+<rect x="140" y="10" width="132" height="44" rx="10" fill="#ffffff11" stroke="#8bcaff"/><text x="206" y="28" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Terraform State</text><text x="206" y="43" text-anchor="middle" fill="#b6d8ff" font-size="10">1 état cohérent</text>
+<path d="M206 54 V87" class="flow"/><circle cx="206" cy="70" r="6" fill="#83ddec" class="ring"/><rect x="125" y="88" width="162" height="50" rx="12" fill="#ffffff16" stroke="#65d5b4"/><text x="206" y="107" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Azure Container App</text><text x="206" y="123" text-anchor="middle" fill="#bcece4" font-size="10">Succeeded · Healthy</text>
+<path d="M206 138 V168 H100 V185 M206 168 H312 V185" class="flow"/><circle cx="100" cy="168" r="5" fill="#79c9f6" class="ring2"/><circle cx="312" cy="168" r="5" fill="#79e4b9" class="ring"/>
+<rect x="17" y="185" width="169" height="53" rx="10" fill="#ffffff10" stroke="#a1d0ff"/><text x="100" y="206" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">vote-frontend</text><text x="100" y="223" text-anchor="middle" fill="#b9ddff" font-size="10">Votes à valider</text>
+<rect x="228" y="185" width="168" height="53" rx="10" fill="#ffffff10" stroke="#81e1c7"/><text x="312" y="206" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Redis</text><text x="312" y="223" text-anchor="middle" fill="#b9eedd" font-size="10">PONG ✓</text></svg></section>
+<div class="kpis"><div class="kpi"><span class="klabel">Azure / provisionnement</span><strong class="good">Succeeded</strong><small>Observé dans les sorties</small></div><div class="kpi"><span class="klabel">Révision / conteneurs</span><strong class="good">Healthy</strong><small>Observé dans les sorties</small></div><div class="kpi"><span class="klabel">Redis / diagnostic</span><strong class="good">PONG</strong><small>Observé dans les sorties</small></div><div class="kpi"><span class="klabel">Frontend vote complet</span><strong class="warn">À vérifier</strong><small>Pas encore démontré</small></div></div>
+<div class="route"><h3>Quel problème veux-tu diagnostiquer ?</h3><p>Choisis un incident : le guide ouvrira directement la partie pertinente, sans exécuter de commande Azure.</p><div class="routebtns"><button type="button" class="routebtn" data-jump="section-02">Image MANIFEST_UNKNOWN</button><button type="button" class="routebtn" data-jump="section-04">Terraform already exists</button><button type="button" class="routebtn" data-jump="section-03">Cloud Shell déconnecté</button><button type="button" class="routebtn" data-jump="section-06">HTTP 200 mais Hello World</button><button type="button" class="routebtn" data-jump="section-07">Vrai vote / Redis</button><button type="button" class="routebtn" data-jump="section-05">Plan Terraform risqué</button></div></div>
+<div class="notice"><strong>Reprise sûre :</strong> commence par les contrôles en lecture seule. Ne réexécute jamais un ancien <code>terraform apply</code> après une déconnexion sans vérifier le State, l'image déployée et un nouveau plan.</div>
+<div id="searchhint" class="searchhint"></div><article class="content" id="article"><h1>CloudGuard 360 — Phase 03 | Runbook de dépannage &amp; récupération</h1>
+<p><strong>Version :</strong> 1.0 · <strong>Date de rédaction :</strong> 15 novembre 2026 · <strong>Langue :</strong> français · <strong>Environnement :</strong> Azure Cloud Shell (Bash), Terraform, Azure Container Apps, frontend Docker, Redis.</p>
+<blockquote>
+<p><strong>État du laboratoire : partiellement validé, pas encore clôturé.</strong> Les sorties réellement fournies confirment une Container App provisionnée (<code>Succeeded</code>), une révision active et saine (<code>Healthy</code>), HTTP <code>200</code>, un frontend <em>Hello World</em> et un Redis répondant <code>PONG</code>. Elles <strong>ne confirment pas</strong> que le frontend de vote <em>Cats vs Dogs</em> a été correctement déployé, qu'un vote est enregistré dans Redis, ni qu'un <code>terraform plan</code> final est sans dérive. Après une déconnexion de Cloud Shell pendant la préparation du déploiement du frontend, l'état final de Terraform doit être <strong>réinspecté avant tout nouvel <code>apply</code></strong>.</p>
+</blockquote>
+<p><strong>Principe de sécurité :</strong> cette procédure n'exécute aucune destruction de Resource Group, VNet, environnement Container Apps, groupe Entra ou affectation RBAC. Ne pas effacer <code>terraform.tfstate</code>, ne pas exécuter <code>terraform destroy</code>, ne pas appliquer un plan inconnu et ne pas recopier de valeurs sensibles dans un dépôt public.</p>
+<hr/>
+<h2 id="section-01">01 — Synthèse exécutive et contexte technique</h2>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>État confirmé à partir des sorties utilisateur</th>
+<th>Niveau de preuve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Azure Resource Group</td>
+<td><code>rg-cg360-app</code></td>
+<td>Confirmé par les commandes réalisées</td>
+</tr>
+<tr>
+<td>Azure Container App</td>
+<td><code>ca-cg360-voting</code> (région <code>northeurope</code>)</td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Azure Container Apps Environment</td>
+<td><code>cae-cg360-lab</code> dans Terraform Phase 03</td>
+<td>Création prévue ; existence exacte à confirmer dans le State</td>
+</tr>
+<tr>
+<td>Image frontend actuellement montrée dans le diagnostic</td>
+<td><code>mcr.microsoft.com/k8se/quickstart:latest</code></td>
+<td>Confirmé lors du contrôle utilisateur</td>
+</tr>
+<tr>
+<td>Image Redis</td>
+<td><code>redis:7-alpine</code></td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Provisionnement</td>
+<td><code>Succeeded</code></td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Révision</td>
+<td>Active = <code>True</code>, Health = <code>Healthy</code></td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td>HTTPS, HTTP <code>200</code></td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Application web</td>
+<td><em>Hello World</em> Quickstart</td>
+<td>Confirmé auparavant, pas une application de vote</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td><code>redis-cli ping</code> → <code>PONG</code></td>
+<td>Confirmé</td>
+</tr>
+<tr>
+<td>Frontend de vote <em>Cats vs Dogs</em></td>
+<td>État après tentative de correctif inconnu</td>
+<td><strong>NON VALIDÉ</strong></td>
+</tr>
+<tr>
+<td>Terraform sans dérive</td>
+<td>Résultat final de <code>terraform plan</code> non fourni</td>
+<td><strong>NON VALIDÉ</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="architecture-cible-et-distinctions">Architecture cible et distinctions</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">EXPECTED OUTPUT</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-text">Navigateur HTTPS
+     |
+     v
+Azure Container App : ca-cg360-voting
+  +--------------------------------------------------+
+  | vote-frontend (:80)                              |
+  |    - état précédent : Quickstart / Hello World    |
+  |    - cible : vrai formulaire Cats vs Dogs         |
+  |    - dépend du processus Python/Flask             |
+  |             |                                    |
+  |             v                                    |
+  |  Redis sidecar (:6379, accès interne uniquement)  |
+  +--------------------------------------------------+
+       |
+     Container Apps Environment : cae-cg360-lab
+       |
+     Resource Group déjà existant : rg-cg360-app
+</code></pre></div>
+<p>Les deux conteneurs sont dans <strong>la même Container App</strong> : ils partagent des ressources réseau et leur cycle de vie, ce qui permet au frontend de contacter Redis via <code>localhost:6379</code> <strong>si son code utilise bien ce nom d'hôte</strong>. Cette architecture <em>lab</em> n'est pas une solution de production : Redis n'a pas de persistance durable, le frontend est public et l'intégration à la VNet Phase 01 n'a pas été réalisée.</p>
+<h3 id="ce-que-prouve-un-http-200">Ce que prouve un HTTP 200</h3>
+<ul>
+<li><code>HTTP 200</code> : <strong>l'endpoint web répond</strong>.</li>
+<li><code>Healthy</code> : <strong>une révision s'est déclarée saine</strong>.</li>
+<li><code>PONG</code> : <strong>le processus Redis répond</strong>.</li>
+<li>Aucun de ces contrôles ne prouve qu'une requête POST de vote écrit dans la file Redis.</li>
+</ul>
+<hr/>
+<h2 id="section-02">02 — Chronologie réelle des incidents et causes</h2>
+<table>
+<thead>
+<tr>
+<th>Référence</th>
+<th>Symptôme</th>
+<th>Diagnostic documenté</th>
+<th>Mesure déjà réalisée / état</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INC-03-01</strong></td>
+<td><code>MANIFEST_UNKNOWN</code> pour <code>mcr.microsoft.com/azuredocs/azure-vote-front:v1</code></td>
+<td>Le registre ne fournissait pas ce manifeste avec le tag demandé. Azure ne pouvait pas créer de révision exploitable.</td>
+<td>Image remplacée par Microsoft Quickstart pour rétablir un déploiement de démonstration. <strong>Résolu pour le démarrage du conteneur.</strong></td>
+</tr>
+<tr>
+<td><strong>INC-03-02</strong></td>
+<td><code>resource already exists ... needs to be imported into the State</code></td>
+<td>L'objet Azure existait après une création partielle, mais n'était pas référencé sous <code>azurerm_container_app.voting</code> dans le Terraform State utilisé.</td>
+<td>Procédure de récupération/import appliquée ; le provisionnement a ensuite réussi. Il faut toujours vérifier le State actif.</td>
+</tr>
+<tr>
+<td><strong>INC-03-03</strong></td>
+<td>L'URL affiche <em>Hello World</em> au lieu du vote</td>
+<td>L'image Quickstart sert une page de démonstration, <strong>pas</strong> un frontend de vote connecté à Redis.</td>
+<td>Azure/HTTPS validés. <strong>Fonctionnalité vote non validée.</strong></td>
+</tr>
+<tr>
+<td><strong>INC-03-04</strong></td>
+<td>Impossible de prouver le fonctionnement Redis par la simple URL</td>
+<td>Le frontend Quickstart n'utilise pas Redis ; <code>HTTP 200</code> est insuffisant.</td>
+<td>Test <code>az containerapp exec ... redis-cli ping</code> retournant <strong><code>PONG</code></strong>. Redis opérationnel, mais liaison de vote non prouvée.</td>
+</tr>
+<tr>
+<td><strong>INC-03-05</strong></td>
+<td>Cloud Shell s'est déconnecté pendant « Contrôler le plan et appliquer »</td>
+<td>Une cause probable est <code>set -euo pipefail</code> utilisé dans la session <strong>interactive</strong> : un contrôle Python avec code retour ≠ 0 peut déclencher la fermeture du shell. Une interruption propre à Cloud Shell reste également possible.</td>
+<td><strong>Récupération non destructive nécessaire.</strong> Ne pas supposer qu'<code>apply</code> a eu lieu, ni qu'il a échoué.</td>
+</tr>
+<tr>
+<td><strong>INC-03-06</strong></td>
+<td>Adaptateur proposé pour l'image Docker Samples</td>
+<td>Le code de <code>dockersamples/example-voting-app</code> utilise <code>Redis(host="redis")</code>, alors que les conteneurs de notre ACA partagent <code>localhost</code>. Un patch au démarrage a été proposé.</td>
+<td><strong>Changement non validé dans Azure dans les sorties reçues.</strong> Ne pas présenter le digest ou l'adaptateur comme une réussite observée.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cha-ne-de-causalit">Chaîne de causalité</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">EXPECTED OUTPUT</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-text">IMAGE TAG ABSENT
+   ↓
+ÉCHEC DE LA PREMIÈRE CRÉATION
+   ↓
+OBJET AZURE ÉVENTUELLEMENT PRÉSENT MAIS ABSENT DU TF STATE
+   ↓
+« RESOURCE ALREADY EXISTS » AU DEUXIÈME APPLY
+   ↓
+RÉCONCILIATION / RÉCUPÉRATION DE L'APPLICATION
+   ↓
+QUICKSTART DÉPLOYÉ : Succeeded + Healthy + HTTP 200
+   ↓
+REDIS TESTÉ : PONG
+   ↓
+TENTATIVE DE PASSAGE À L'IMAGE DE VOTE
+   ↓
+DÉCONNEXION CLOUD SHELL PENDANT LE CONTRÔLE
+   ↓
+ÉTAT COURANT INCONNU → REPRISE EN LECTURE SEULE AVANT TOUT APPLY
+</code></pre></div>
+<hr/>
+<h2 id="section-03">03 — Reprise immédiate de Cloud Shell (5 vérifications, sans modification)</h2>
+<p><strong>N'exécuter que de petites commandes séparées.</strong> Ces commandes conviennent à Cloud Shell <strong>Bash</strong> ; elles ne déploient ni ne suppriment de ressource.</p>
+<h3 id="03-1-rouvrir-le-bon-terminal">03.1 — Rouvrir le bon terminal</h3>
+<ol>
+<li>Dans <a href="https://portal.azure.com/">Azure Portal</a>, sélectionner l'icône <strong>Cloud Shell</strong> puis <strong>Bash</strong>.</li>
+<li>Ne pas relancer <code>az login</code> si Cloud Shell utilise déjà l'authentification du portail.</li>
+<li>Vérifier que <code>~/clouddrive</code> est monté (sinon, ne pas continuer avec Terraform).</li>
+<li>Éviter de coller un grand bloc dont chaque erreur pourrait fermer le shell.</li>
+</ol>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash"># Réinitialiser les options éventuellement héritées de commandes précédentes
+set +e
+set +u
+set +o pipefail
+</code></pre></div>
+<blockquote>
+<p><strong>Pourquoi c'est important :</strong> <code>set -e</code> dans <strong>un shell interactif</strong> peut provoquer sa sortie lorsqu'une commande renvoie un statut non nul. Utiliser <code>set -euo pipefail</code> à l'intérieur d'un <strong>script exécuté dans un sous-processus</strong> (<code>bash ./script.sh</code>) est différent : en cas d'échec, le script se termine mais n'est pas censé fermer le shell parent. Il peut aussi y avoir une déconnexion Cloud Shell indépendante (inactivité, interruption de session). Ne pas affirmer que <code>set -e</code> était la cause certaine.</p>
+</blockquote>
+<h3 id="03-2-confirmer-le-bon-environnement">03.2 — Confirmer le bon environnement</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">mountpoint -q "$HOME/clouddrive" &amp;&amp; echo "STORAGE OK" || echo "STOP : Cloud Shell non persistant"
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform
+pwd
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+az account show --query '{Name:name,State:state}' -o table
+</code></pre></div>
+<p><strong>Attendu :</strong> même dossier Phase 03, souscription activée, fichiers persistants. Aucun identifiant de souscription à publier.</p>
+<h3 id="03-3-v-rifier-l-inventaire-terraform">03.3 — Vérifier l'inventaire Terraform</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform state list
+</code></pre></div>
+<p>Vérifier notamment :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">EXPECTED OUTPUT</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-text">azurerm_container_app_environment.lab
+azurerm_container_app.voting
+</code></pre></div>
+<p>Les <code>data.azurerm_*</code> peuvent également apparaître ; ce sont des références en lecture seule. Si <code>azurerm_container_app.voting</code> est absent alors que l'application existe dans Azure, passer à <strong>04.2 Import</strong>, pas à <code>terraform apply</code>.</p>
+<h3 id="03-4-v-rifier-la-configuration-r-ellement-pr-sente-dans-azure">03.4 — Vérifier la configuration réellement présente dans Azure</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp show -g rg-cg360-app -n ca-cg360-voting \
+  --query '{Name:name,Provisioning:properties.provisioningState,LatestRevision:properties.latestRevisionName}' -o table
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp show -g rg-cg360-app -n ca-cg360-voting \
+  --query 'properties.template.containers[].{Name:name,Image:image,Command:command}' -o json
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp revision list -g rg-cg360-app -n ca-cg360-voting \
+  --query '[].{Name:name,Active:properties.active,Health:properties.healthState}' -o table
+</code></pre></div>
+<p><strong>Décision :</strong> si le frontend affiche toujours Quickstart, le vote n'est pas déployé. S'il affiche une image Docker Samples et que la révision est dégradée, regarder les journaux avant toute modification.</p>
+<h3 id="03-5-v-rifier-les-fichiers-terraform-sans-les-modifier">03.5 — Vérifier les fichiers Terraform sans les modifier</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform validate
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">grep -n 'frontend_image' terraform.tfvars
+grep -n 'CG360-VOTE-ADAPTER' main.tf || echo 'Adaptateur non détecté dans main.tf'
+</code></pre></div>
+<p><code>grep</code> peut retourner <code>1</code> lorsqu'il n'y a pas de correspondance : <strong>ce n'est pas une raison de fermer Cloud Shell</strong>.</p>
+<hr/>
+<h2 id="section-04">04 — Arbre de décision : ressource Azure vs Terraform State</h2>
+<h3 id="04-1-cas-a-application-pr-sente-dans-le-state">04.1 — Cas A : application présente dans le State</h3>
+<p>Si <code>terraform state list</code> contient <strong><code>azurerm_container_app.voting</code></strong>, <strong>ne pas réimporter</strong>. Continuer avec un nouveau <code>terraform plan</code>.</p>
+<h3 id="04-2-cas-b-application-pr-sente-dans-azure-absente-du-state">04.2 — Cas B : application présente dans Azure, absente du State</h3>
+<p><strong>Uniquement dans le Terraform root original de Phase 03</strong> :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">APP_ID="$(az containerapp show -g rg-cg360-app -n ca-cg360-voting --query id -o tsv)"
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform import azurerm_container_app.voting "$APP_ID"
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform state list
+</code></pre></div>
+<p><strong>But :</strong> importer <strong>une seule</strong> ressource existante sous <strong>une seule</strong> adresse Terraform. Un import ajoute l'objet distant au State ; <strong>il ne rend pas automatiquement la configuration conforme</strong>. Il faut vérifier le plan ensuite. Si la ressource est déjà suivie ailleurs, résoudre cette divergence au préalable.</p>
+<h3 id="04-3-cas-c-application-introuvable-dans-azure-mais-pr-sente-dans-le-state">04.3 — Cas C : application introuvable dans Azure mais présente dans le State</h3>
+<p>C'est une possible <strong>dérive externe</strong>. Ne pas lancer de création automatiquement. Inspecter l'historique des changements et l'Azure Activity Log. Protéger l'environnement et vérifier que le bon abonnement et le bon State sont utilisés.</p>
+<h3 id="04-4-cas-d-application-absente-dans-azure-et-dans-le-state">04.4 — Cas D : application absente dans Azure et dans le State</h3>
+<p>Un nouveau déploiement est possible, mais seulement à partir d'une image valide et après un plan complet. Éviter l'ancienne image MCR avec <code>v1</code> qui a déjà échoué.</p>
+<hr/>
+<h2 id="section-05">05 — Plan Terraform : procédure sûre après une déconnexion</h2>
+<blockquote>
+<p><strong>Point clé :</strong> <code>terraform plan</code> n'effectue pas de changement. <code>terraform apply</code> peut en effectuer. Le plan doit être <strong>refait et inspecté</strong> si l'état de Terraform ou Azure est incertain. Ne pas réutiliser un ancien plan enregistré avant la déconnexion.</p>
+</blockquote>
+<h3 id="05-1-calculer-un-nouveau-plan">05.1 — Calculer un nouveau plan</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform plan -out=phase03-recovery-review.tfplan
+</code></pre></div>
+<p>Vérifier l'existence du plan :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">ls -lh phase03-recovery-review.tfplan
+</code></pre></div>
+<p>Afficher un résumé :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform show -no-color phase03-recovery-review.tfplan | grep -E 'will be created|will be updated|must be replaced|will be destroyed|Plan:'
+</code></pre></div>
+<p>Afficher <strong>le plan complet</strong> (à conserver en privé) :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform show -no-color phase03-recovery-review.tfplan
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Résultat</th>
+<th>Décision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No changes</code> + vraie interface de vote + POST/Redis OK</td>
+<td>Préparer la clôture ; ne pas réappliquer</td>
+</tr>
+<tr>
+<td><code>No changes</code> + image Quickstart</td>
+<td>Terraform est synchronisé avec <strong>Hello World</strong>, pas avec le vote</td>
+</tr>
+<tr>
+<td><code>0 add, 1 change, 0 destroy</code> sur <code>azurerm_container_app.voting</code></td>
+<td>Candidat à la mise à jour ; contrôler les champs de l'image et le reste du plan</td>
+</tr>
+<tr>
+<td><code>1 add</code> sur <code>azurerm_container_app.voting</code> alors qu'Azure possède déjà l'app</td>
+<td><strong>STOP</strong> ; importer/réconcilier le State</td>
+</tr>
+<tr>
+<td><code>must be replaced</code>, <code>destroy</code>, nouvelle VNet, nouveau RG, changements IAM</td>
+<td><strong>STOP</strong> ; ne pas appliquer</td>
+</tr>
+<tr>
+<td><code>Error</code>, plan inexistant ou compte non autorisé</td>
+<td><strong>STOP</strong> ; diagnostiquer l'erreur exacte</td>
+</tr>
+</tbody>
+</table>
+<h3 id="05-2-contr-le-compl-mentaire-de-s-curit">05.2 — Contrôle complémentaire de sécurité</h3>
+<p>Si tu as extrait ce kit dans <code>~/clouddrive/cloudguard360/CloudGuard360_Phase03_Troubleshooting</code>, lance :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform show -json phase03-recovery-review.tfplan | python3 \
+  ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Troubleshooting/scripts/validate_frontend_plan.py
+</code></pre></div>
+<p>Le vérificateur exige <strong>une unique modification de l'application existante</strong>, les deux conteneurs <code>vote-frontend</code> et <code>redis</code>, Redis inchangé, le port 80 et l'ingress HTTPS conservés. Il refuse une création, destruction ou modification inattendue. Le résultat <code>PLAN PASS</code> n'est <strong>pas</strong> une preuve que l'image distante démarrera ; il complète la revue humaine du plan, sans la remplacer.</p>
+<p><strong>Ne pas exécuter le guard si le plan annonce déjà <code>No changes</code></strong> : dans ce cas il rejettera volontairement puisqu'il est conçu pour une mise à jour de frontend.</p>
+<h3 id="05-3-application-uniquement-apr-s-validation">05.3 — Application uniquement après validation</h3>
+<p>Si <strong>le plan complet</strong> ne change que le frontend, que l'image est vérifiée et que le contrôle est <code>PLAN PASS</code> :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform apply phase03-recovery-review.tfplan
+</code></pre></div>
+<p><strong>Ne jamais</strong> combiner <code>terraform apply</code> avec un contrôle qui peut échouer dans un grand bloc interactif <code>set -euo pipefail</code>. Après toute déconnexion, reprendre à <strong>03.3</strong>, pas directement à <code>apply</code>.</p>
+<hr/>
+<h2 id="section-06">06 — Diagnostic fonctionnel : Hello World, vote et Redis</h2>
+<h3 id="06-1-v-rifier-http-sans-confondre-disponibilit-et-fonctionnalit">06.1 — Vérifier HTTP (sans confondre disponibilité et fonctionnalité)</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">URL="$(terraform output -raw app_url)"
+curl -L -sS -o /dev/null -w 'HTTP %{http_code}\n' --max-time 45 "$URL/"
+</code></pre></div>
+<p><code>HTTP 200</code> prouve que la page répond, <strong>pas</strong> qu'elle affiche un formulaire de vote.</p>
+<h3 id="06-2-distinguer-hello-world-du-formulaire-cats-vs-dogs">06.2 — Distinguer Hello World du formulaire <em>Cats vs Dogs</em></h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">curl -fsS --max-time 45 "$URL/" | grep -Eio 'Cats|Dogs|Hello World|Your container app is running' | head -12
+</code></pre></div>
+<p><strong>Interprétation :</strong> si la page affiche seulement « Your container app is running », c'est encore Quickstart. Si la page comporte les options de vote, continuer au POST. Une absence de correspondance ne prouve pas à elle seule un échec : examiner le HTML et les journaux.</p>
+<h3 id="06-3-v-rifier-redis-d-j-r-alis-et-confirm">06.3 — Vérifier Redis (déjà réalisé et confirmé)</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp exec -g rg-cg360-app -n ca-cg360-voting \
+  --container redis --command 'redis-cli ping'
+</code></pre></div>
+<p><strong>Résultat utilisateur observé :</strong> <code>PONG</code>. C'est la preuve que Redis est accessible dans son conteneur.</p>
+<h3 id="06-4-v-rifier-un-vote-r-el-non-encore-observ">06.4 — Vérifier un vote réel (NON ENCORE OBSERVÉ)</h3>
+<p>À exécuter <strong>uniquement si la vraie interface de vote est déployée</strong> et si un vote de test est acceptable :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">curl -sS -o /dev/null -w 'POST vote HTTP %{http_code}\n' --max-time 45 \
+  -X POST -d 'vote=a' "$URL/"
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp exec -g rg-cg360-app -n ca-cg360-voting \
+  --container redis --command 'redis-cli LLEN votes'
+</code></pre></div>
+<p>Le frontend Docker Samples écrit les votes dans la liste Redis <code>votes</code> ; un résultat positif après le POST appuie la validation fonctionnelle. Redis est <strong>volatile</strong> dans cette architecture : si le conteneur redémarre ou si le réplica passe à zéro, la liste peut disparaître.</p>
+<h3 id="06-5-v-rifier-les-journaux-azure">06.5 — Vérifier les journaux Azure</h3>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp logs show -g rg-cg360-app -n ca-cg360-voting \
+  --type system --tail 30
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">az containerapp logs show -g rg-cg360-app -n ca-cg360-voting \
+  --container vote-frontend --tail 40
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Trace</th>
+<th>Diagnostic probable</th>
+<th>Réponse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MANIFEST_UNKNOWN</code>, <code>ErrImagePull</code>, <code>ImagePullBackOff</code></td>
+<td>Référence d'image absente/inaccessible</td>
+<td>Vérifier le nom, le tag ou le digest avant un nouveau plan</td>
+</tr>
+<tr>
+<td><code>CrashLoopBackOff</code>, <code>container exited</code></td>
+<td>Erreur de démarrage du frontend</td>
+<td>Vérifier <code>command</code>, <code>args</code>, dépendances et journaux applicatifs</td>
+</tr>
+<tr>
+<td><code>Connection refused</code> Redis</td>
+<td>Adresse/port incorrect ou service indisponible</td>
+<td>Confirmer <code>localhost:6379</code> et <code>PONG</code> dans la même révision</td>
+</tr>
+<tr>
+<td>HTTP <code>502</code></td>
+<td>Révision non prête, mauvais port, crash</td>
+<td>Vérifier revision health et ingress <code>target_port=80</code></td>
+</tr>
+<tr>
+<td>HTTP <code>200</code> + Hello World</td>
+<td>Image Quickstart toujours active</td>
+<td>Pas d'incident Azure ; la fonctionnalité vote reste à déployer</td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h2 id="section-07">07 — Pourquoi l'adaptateur Docker Samples est un changement sensible</h2>
+<p>Le dépôt <a href="https://github.com/dockersamples/example-voting-app">Docker Samples Example Voting App</a> est une application distribuée avec un frontend de vote, Redis, un worker, PostgreSQL et une interface de résultats. <strong>Notre laboratoire n'a que le frontend et Redis</strong> : on peut vérifier l'ajout à la file de votes, mais pas la totalité de l'architecture de résultats.</p>
+<p>Les sources publiques actuellement consultées indiquent :</p>
+<ul>
+<li>Le code <code>vote/app.py</code> contient <code>Redis(host="redis", db=0, socket_timeout=5)</code>.</li>
+<li>Le Dockerfile du frontend utilise <code>WORKDIR /usr/local/app</code>, expose le port <code>80</code> et lance <code>gunicorn app:app ...</code>.</li>
+<li>Deux conteneurs dans la <strong>même</strong> Azure Container App partagent le réseau. Un frontend utilisant strictement <code>Redis(host="redis")</code> a donc besoin d'une adaptation pour rejoindre le sidecar via <code>localhost</code>.</li>
+</ul>
+<p>Le correctif proposé auparavant utilisait <code>command=["/bin/sh","-c"]</code> et un script qui modifie <code>app.py</code> au démarrage. <strong>Ce correctif reste une hypothèse d'implémentation tant qu'il n'a pas démarré correctement sur la révision Azure et passé le test POST → Redis.</strong> Un digest SHA-256 fourni dans un exemple ne doit pas être traité comme une garantie permanente de disponibilité de l'image.</p>
+<p><strong>Approche recommandée pour stabiliser la Phase 03 :</strong> conserver le déploiement Quickstart en état sain jusqu'à ce que le frontend de vote ait été reconstruit et testé dans une image que vous contrôlez, avec un paramètre <code>REDIS_HOST=localhost</code> pris en charge directement par l'application. Pour un laboratoire rapide, une modification contrôlée au démarrage peut suffire, mais elle doit être testée comme une modification de code, avec possibilité de retour arrière.</p>
+<hr/>
+<h2 id="section-08">08 — Retour arrière contrôlé vers Quickstart</h2>
+<p>Si l'image de vote est défectueuse, <strong>ne supprimez pas</strong> le Resource Group, l'environnement ou le Terraform State. L'objectif est de revenir au frontend Quickstart déjà observé fonctionnel.</p>
+<ol>
+<li>Dans le Terraform root Phase 03, vérifier les backups créés par le patch précédent.</li>
+<li>Comparer les fichiers actuels et les backups <strong>avant</strong> de les restaurer.</li>
+<li>Si les backups sont bien la version Quickstart, les restaurer dans le même Terraform root.</li>
+<li>Exécuter <code>terraform validate</code>, puis <code>terraform plan -out=rollback.tfplan</code> ; la seule modification acceptable est la configuration de <code>azurerm_container_app.voting</code>.</li>
+<li>Appliquer uniquement ce plan vérifié et confirmer une révision saine.</li>
+</ol>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">ls -l main.tf.before-votefix.bak terraform.tfvars.before-votefix.bak
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">diff -u main.tf.before-votefix.bak main.tf || true
+diff -u terraform.tfvars.before-votefix.bak terraform.tfvars || true
+</code></pre></div>
+<p><strong>Ne pas exécuter de copie automatique des backups si vous avez d'autres changements intentionnels depuis leur création.</strong> Si un retour arrière est décidé, sauvegardez d'abord les versions présentes puis restaurez <strong>seulement</strong> les fichiers reconnus comme appartenant à la version saine. N'exécutez pas <code>terraform destroy</code> pour un défaut applicatif.</p>
+<hr/>
+<h2 id="section-09">09 — Preuves, évaluation des risques et critère de clôture</h2>
+<h3 id="matrice-de-tests-et-de-preuves">Matrice de tests et de preuves</h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Commande / preuve</th>
+<th>Statut réel au 15/11/2026</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Infrastructure provisionnée</td>
+<td><code>az containerapp show</code> : <code>Succeeded</code></td>
+<td><strong>PASS observé</strong></td>
+</tr>
+<tr>
+<td>Révision opérationnelle</td>
+<td><code>az containerapp revision list</code> : <code>Healthy</code></td>
+<td><strong>PASS observé</strong></td>
+</tr>
+<tr>
+<td>Endpoint HTTPS</td>
+<td><code>curl</code> : <code>200</code></td>
+<td><strong>PASS observé</strong></td>
+</tr>
+<tr>
+<td>Redis vivant</td>
+<td><code>redis-cli ping</code> : <code>PONG</code></td>
+<td><strong>PASS observé</strong></td>
+</tr>
+<tr>
+<td>Image de vote déployée</td>
+<td>Images de la révision actuelle</td>
+<td><strong>À RECONTRÔLER</strong> après déconnexion</td>
+</tr>
+<tr>
+<td>Formulaire Cats vs Dogs</td>
+<td>HTML réel de l'application</td>
+<td><strong>NON VALIDÉ</strong></td>
+</tr>
+<tr>
+<td>Vote enregistré dans Redis</td>
+<td>POST + <code>LLEN votes</code></td>
+<td><strong>NON VALIDÉ</strong></td>
+</tr>
+<tr>
+<td>Terraform synchronisé</td>
+<td><code>terraform plan -detailed-exitcode</code> code <code>0</code></td>
+<td><strong>NON VALIDÉ</strong></td>
+</tr>
+<tr>
+<td>Aucune modification Phase 01/02</td>
+<td>Revue Terraform Plan</td>
+<td><strong>À JUSTIFIER</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="crit-re-de-cl-ture-phase-03">Critère de clôture Phase 03</h3>
+<p><strong>VALIDÉE (infrastructure seulement)</strong> : Azure provisionné, révision Healthy, HTTPS 200, Redis PONG.</p>
+<p><strong>VALIDÉE (complète)</strong> : les tests précédents <strong>et</strong> le véritable formulaire de vote, POST HTTP 200, Redis <code>LLEN votes</code> cohérent, plan Terraform sans dérive, absence de modifications imprévues de Phase 01/02 et décision de coûts/cleanup documentée.</p>
+<h3 id="risques-r-siduels">Risques résiduels</h3>
+<ul>
+<li><strong>Source d'image Docker</strong> : image publique évolutive ou digest non confirmé, risque de retrait du manifeste.</li>
+<li><strong>Dérive Terraform</strong> : import dans un mauvais root, plan stale ou interruption pendant une opération.</li>
+<li><strong>Commandes en session interactive</strong> : <code>set -euo pipefail</code> peut provoquer une fermeture inattendue de Bash.</li>
+<li><strong>Exploitabilité applicative</strong> : HTTP 200 sans test fonctionnel de vote.</li>
+<li><strong>Données temporaires</strong> : Redis sans volume, pertes au scale-to-zero ou au redémarrage.</li>
+<li><strong>Exposition publique</strong> : application de démonstration sans authentification, n'y envoyer aucune donnée sensible.</li>
+</ul>
+<hr/>
+<h2 id="section-10">10 — Raccourci pour le prochain diagnostic (sans appliquer)</h2>
+<p>Copiez les commandes séparément, dans cet ordre :</p>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">set +e
+set +u
+set +o pipefail
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase03_Docker_Application/terraform
+export ARM_SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform state list
+az containerapp show -g rg-cg360-app -n ca-cg360-voting --query 'properties.template.containers[].{Name:name,Image:image}' -o table
+</code></pre></div>
+<div class="terminal"><div class="terminal-head"><div class="dots"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div><span class="terminal-title">AZURE CLOUD SHELL · BASH</span><button aria-label="Copier cette commande" class="copy-btn" type="button">Copier</button></div><pre><code class="language-bash">terraform validate
+terraform plan -out=phase03-recovery-review.tfplan
+terraform show -no-color phase03-recovery-review.tfplan | grep -E 'will be created|will be updated|must be replaced|will be destroyed|Plan:'
+</code></pre></div>
+<p><strong>Arrêtez-vous au plan avant toute modification</strong>, et transmettez le <strong>résumé du plan (sans ID/secret)</strong> si une création, un remplacement ou une suppression apparaît. Ne pas exécuter <code>terraform apply</code> tant que l'état précis post-déconnexion n'est pas confirmé.</p>
+<hr/>
+<h2 id="section-11">11 — Sources vérifiables</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-deployment-errors">Microsoft Learn — Dépannage des erreurs de déploiement Azure Container Apps</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/container-apps/troubleshoot-container-start-failures">Microsoft Learn — Démarrage des conteneurs et diagnostics</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/container-apps/containers">Microsoft Learn — Plusieurs conteneurs dans une Container App</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/cloud-shell/overview">Microsoft Learn — Caractéristiques et persistance Azure Cloud Shell</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/cli/commands/import">Terraform / HashiCorp — Importer un objet distant dans le State</a></li>
+<li><a href="https://github.com/dockersamples/example-voting-app">Docker Samples — Example Voting App (architecture générale)</a></li>
+<li><a href="https://github.com/dockersamples/example-voting-app/blob/main/vote/app.py">Docker Samples — <code>vote/app.py</code> (connexion Redis et file <code>votes</code>)</a></li>
+<li><a href="https://github.com/dockersamples/example-voting-app/blob/main/vote/Dockerfile">Docker Samples — <code>vote/Dockerfile</code> (répertoire <code>/usr/local/app</code>, port 80 et Gunicorn)</a></li>
+</ul>
+<p><strong>Méthodologie :</strong> seuls les résultats explicitement fournis par l'utilisateur sont présentés comme <em>observés</em>. Les résultats futurs, la disponibilité d'une image distante et la réussite d'un patch Terraform sont des <strong>critères à vérifier dans la souscription réelle</strong>, pas des faits acquis.</p>
+
+<section class="checks" id="final-checklist"><h3>Checklist de récupération — à cocher seulement après vérification</h3>
+<label class="checkline"><input type="checkbox" data-progress="0"><span>Cloud Shell reconnecté en mode Bash, options <code>set -e</code> désactivées.</span></label>
+<label class="checkline"><input type="checkbox" data-progress="1"><span>Bon projet Phase 03 ouvert dans <code>clouddrive</code>.</span></label>
+<label class="checkline"><input type="checkbox" data-progress="2"><span>Terraform State comparé à l'application Azure réelle.</span></label>
+<label class="checkline"><input type="checkbox" data-progress="3"><span>Images et révision actuellement déployées inspectées.</span></label>
+<label class="checkline"><input type="checkbox" data-progress="4"><span>Nouveau plan généré et modifications inattendues exclues.</span></label>
+<label class="checkline"><input type="checkbox" data-progress="5"><span>Fonctionnalité de vote : HTML + POST + file Redis vérifiés, <em>ou enregistrés comme non testés.</em></span></label>
+<label class="checkline"><input type="checkbox" data-progress="6"><span>Décision finale documentée : récupération, rollback ou déploiement différé.</span></label>
+</section></article><footer>CloudGuard 360 · Runbook Phase 03 · Documentation des observations réelles et des contrôles à réaliser · Fonctionne hors connexion</footer></main></div>
+<script>
+(()=>{'use strict';
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+let progress=[];let dark=false;
+try{progress=JSON.parse(localStorage.getItem('cg360-phase03-troubleshoot-progress')||'[]');if(!Array.isArray(progress))progress=[];dark=localStorage.getItem('cg360-phase03-dark')==='1';}catch(e){progress=[];}
+if(dark)document.body.classList.add('dark');
+function update(){const n=progress.length;$('#side-count').textContent=n+' / 7 étapes validées';$('#side-progress').style.width=(n/7*100)+'%'; $$('[data-progress]').forEach(c=>c.checked=progress.includes(Number(c.dataset.progress)));}
+$$('[data-progress]').forEach(c=>c.addEventListener('change',()=>{const v=Number(c.dataset.progress);progress=c.checked?[...new Set([...progress,v])]:progress.filter(x=>x!==v);try{localStorage.setItem('cg360-phase03-troubleshoot-progress',JSON.stringify(progress));}catch(e){}update();}));update();
+$$('.copy-btn').forEach(b=>b.addEventListener('click',async()=>{const code=b.closest('.terminal').querySelector('code');if(!code)return;const value=code.innerText;let ok=false;try{await navigator.clipboard.writeText(value);ok=true;}catch(e){try{const x=document.createElement('textarea');x.value=value;document.body.appendChild(x);x.focus();x.select();ok=document.execCommand('copy');x.remove();}catch(err){}}b.textContent=ok?'✓ Copié':'Sélectionner';setTimeout(()=>b.textContent='Copier',1700)}));
+$$('[data-jump]').forEach(b=>b.addEventListener('click',()=>document.getElementById(b.dataset.jump)?.scrollIntoView({behavior:'smooth',block:'start'})));
+const bar=()=>{const m=document.documentElement.scrollHeight-innerHeight;$('#readbar').style.width=(m>0?(scrollY/m)*100:0)+'%';let active='';$$('article h2[id]').forEach(h=>{if(h.getBoundingClientRect().top<155)active=h.id});$$('.navlink').forEach(a=>a.classList.toggle('active',a.hash==='#'+active))};window.addEventListener('scroll',bar,{passive:true});bar();
+$('#theme').addEventListener('click',()=>{document.body.classList.toggle('dark');try{localStorage.setItem('cg360-phase03-dark',document.body.classList.contains('dark')?'1':'0')}catch(e){}});
+$('#menu').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));$$('.navlink').forEach(a=>a.addEventListener('click',()=>$('#sidebar').classList.remove('open')));
+const sections=$$('article h2[id]').map(h=>{const n=[];let p=h;while(p&&(p===h||p.tagName!=='H2')){n.push(p);p=p.nextElementSibling;}return {h,n};});
+$('#search').addEventListener('input',e=>{const term=e.target.value.toLowerCase().trim();let found=0;sections.forEach(s=>{const isMatch=!term||s.n.map(n=>n.textContent||'').join(' ').toLowerCase().includes(term);s.n.forEach(n=>{n.style.display=isMatch?'':'none'});if(isMatch)found++;});const hint=$('#searchhint');hint.style.display=term?'block':'none';hint.textContent=term?(found+' section(s) contenant « '+term+' » — efface la recherche pour tout afficher.'):' ';});
+})();
+</script></body></html>
