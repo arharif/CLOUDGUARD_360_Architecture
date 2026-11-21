@@ -1,0 +1,17 @@
+digraph CloudGuard {
+  graph [rankdir=LR, bgcolor="#081421", pad="0.45", nodesep="0.65", ranksep="0.78", fontname="DejaVu Sans", splines=ortho, label="CLOUDGUARD 360  |  PHASE 04 - DEVSECOPS DELIVERY ARCHITECTURE", labelloc=t, fontsize=19, fontcolor="#E9F5FF"];
+  node [shape=box, style="filled,rounded", fillcolor="#14253B", color="#38516C", penwidth=1.5, fontname="DejaVu Sans", fontcolor="#EEF7FF", fontsize=11, margin="0.20,0.13"];
+  edge [fontname="DejaVu Sans", fontcolor="#C4DBEE", color="#63DED3", arrowsize=0.8, penwidth=1.7, fontsize=9];
+  GitHub [label="GitHub Repository\nNabilNet/cloudguard360-phase04\nMicrosoft sample + Dockerfile"];
+  CI [label="GitHub Actions CI\nPython check + Trivy scan\nDocker frontend + Redis smoke test"];
+  GHCR [label="GHCR Container Image\nsha-tagged · public demo\nSBOM + vulnerabilities evidence"];
+  OIDC [label="GitHub OIDC Federation\nImmutable subject (2026)\nManaged Identity + App RBAC", fillcolor="#182B39", color="#72E2B5"];
+  Azure [label="Azure Container Apps\nrg-cg360-app / ca-cg360-voting\nFrontend replaced only", color="#6AB8FF"];
+  Redis [label="Redis Sidecar\nImage remains unchanged", color="#FDBF85"];
+  Docs [label="Audit Evidence & Terraform Drift\nREPORT_FR.md + plan preview", color="#93A2FD"];
+  GitHub -> CI -> GHCR -> Azure;
+  CI -> OIDC [style=dashed, color="#93A2FD"];
+  OIDC -> Azure [label="short-lived token"];
+  Azure -> Redis [label="localhost:6379"];
+  Azure -> Docs;
+}
