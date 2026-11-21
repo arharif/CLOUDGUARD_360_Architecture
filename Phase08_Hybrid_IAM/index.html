@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><title>CloudGuard 360 · Phase 08 Hybrid IAM & Automation</title><style>
+:root{--bg:#071422;--sidebar:#0e2335;--panel:#112b3f;--panel2:#15384b;--text:#edf7ff;--muted:#abc2d3;--line:#274b61;--mint:#64dab3;--blue:#88c9ff;--gold:#ffd08a;--red:#ff988c;--code:#06121b;--shadow:rgba(0,0,0,.22)}
+body.light{--bg:#eef5f9;--sidebar:#f7fbfd;--panel:#ffffff;--panel2:#eaf3f9;--text:#132c41;--muted:#4b6175;--line:#d5e4ee;--mint:#16875e;--blue:#146cb1;--gold:#ab6800;--red:#b4493e;--code:#132c41;--shadow:rgba(20,40,60,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.68 system-ui,-apple-system,Segoe UI,Arial,sans-serif}button,input{font:inherit}a{color:var(--blue);text-underline-offset:3px}a:hover{color:var(--mint)}.shell{display:grid;grid-template-columns:315px 1fr;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;overflow:auto;background:var(--sidebar);border-right:1px solid var(--line);padding:24px 16px 35px}.brand{padding:13px 12px 22px}.brand .icon{width:38px;height:38px;display:grid;place-items:center;background:var(--mint);color:#102d39;border-radius:12px;font-weight:900;margin-bottom:12px}.eyebrow{font-size:11px;color:var(--mint);font-weight:800;letter-spacing:.13em;text-transform:uppercase}.brand h2{font-size:20px;line-height:1.3;margin:7px 0}.brand p{font-size:13px;color:var(--muted);margin:0}.progress{height:8px;background:var(--panel2);border-radius:50px;overflow:hidden;margin:16px 10px 5px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--blue));transition:width .3s}.progresslabel{display:flex;justify-content:space-between;padding:0 10px 17px;color:var(--muted);font-size:12px}#search{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:11px 12px;border-radius:12px;outline:none;margin-bottom:16px}#search:focus-visible,button:focus-visible{outline:3px solid var(--mint);outline-offset:2px}.navstep{background:transparent;color:var(--muted);border:1px solid transparent;border-radius:12px;text-align:left;display:flex;align-items:center;gap:11px;padding:11px 12px;width:100%;margin:2px 0;cursor:pointer}.navstep:hover,.navstep.active{background:var(--panel2);color:var(--text);border-color:var(--line)}.navnumber{font-size:12px;font-weight:800;color:var(--mint)}.navstep span:nth-child(2){font-size:13px;flex:1}.tick{font-size:18px;color:var(--mint)}.main{min-width:0}.masthead{padding:45px clamp(22px,4.5vw,75px) 25px;background:radial-gradient(ellipse at 70% 12%,rgba(99,218,180,.13),transparent 60%)}.masthead .kicker{color:var(--mint);font-size:12px;font-weight:900;letter-spacing:.15em;text-transform:uppercase}.masthead h1{font-weight:850;font-size:clamp(32px,3.8vw,61px);line-height:1.07;letter-spacing:-.04em;max-width:980px;margin:12px 0 17px}.sub{font-size:18px;color:var(--muted);max-width:870px}.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px}.ctl{border:1px solid var(--line);color:var(--text);background:var(--panel2);padding:10px 15px;border-radius:11px;cursor:pointer}.ctl:hover{border-color:var(--mint)}.chip{background:rgba(99,218,180,.1);border:1px solid var(--mint);border-radius:999px;font-size:12px;color:var(--mint);padding:7px 11px;font-weight:700}.arch{display:block;width:100%;height:auto;border-radius:20px;border:1px solid var(--line);box-shadow:0 15px 40px var(--shadow);margin:26px 0;animation:rise .8s ease}.content{padding:15px clamp(20px,4.5vw,75px) 70px;max-width:1280px}.lesson{scroll-margin-top:25px;border:1px solid var(--line);background:var(--panel);border-radius:21px;padding:26px clamp(18px,3vw,42px);margin:22px 0;box-shadow:0 9px 26px var(--shadow);animation:rise .35s ease}.lesson-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:20px}.stepnum{letter-spacing:.11em;font-weight:900;color:var(--mint);font-size:12px}.complete{cursor:pointer;color:var(--muted);font-size:13px}.complete input{accent-color:var(--mint);width:16px;height:16px;vertical-align:middle}.lesson h1,.lesson h2{line-height:1.2;letter-spacing:-.025em}.lesson h1{font-size:31px}.lesson h2{font-size:26px}.lesson h3{font-size:20px;margin-top:30px}.lesson p,.lesson li{max-width:900px}.lesson strong{color:var(--text)}.lesson table{border-collapse:collapse;width:100%;min-width:550px}.lesson th,.lesson td{text-align:left;border-bottom:1px solid var(--line);padding:10px 12px;font-size:13px}.lesson th{color:var(--mint)}.lesson table{display:block;overflow-x:auto}.lesson pre{background:var(--code);color:#c8f0e5;border-radius:15px;overflow:auto;padding:43px 17px 20px;position:relative;margin:17px 0}.lesson pre code{font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre}.copy{position:absolute;top:7px;right:8px;background:#19394a;border:1px solid #476174;color:#ebf9ff;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px}.copy:hover{border-color:#7decca}.lesson blockquote{border-left:4px solid var(--gold);background:var(--panel2);border-radius:0 12px 12px 0;padding:12px 20px;margin-left:0}.lesson code:not(pre code){color:var(--mint);background:var(--panel2);padding:1px 5px;border-radius:5px}.footer{padding:0 30px 55px;color:var(--muted);font-size:13px}.pulse{display:inline-block;height:9px;width:9px;border-radius:50%;background:var(--mint);margin-right:7px;box-shadow:0 0 0 5px rgba(100,218,179,.12);animation:blink 2s infinite}@keyframes blink{50%{box-shadow:0 0 0 14px rgba(100,218,179,0)}}@keyframes rise{from{opacity:.3;transform:translateY(13px)}to{opacity:1;transform:none}}
+@media(max-width:1000px){.shell{grid-template-columns:1fr}.sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line);padding:15px}.brand{padding:5px 10px}.navstep{display:inline-flex;width:calc(50% - 7px);vertical-align:top}.masthead{padding-top:30px}}@media(max-width:600px){.navstep{width:100%}.masthead h1{font-size:33px}.lesson{padding:18px}.lesson pre code{font-size:11px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style></head><body><div class="shell"><aside class="sidebar" aria-label="Navigation du cours"><div class="brand"><div class="icon">08</div><span class="eyebrow">CLOUDGUARD 360 ACADEMY</span><h2>Hybrid IAM &amp;<br>Automation</h2><p>PowerShell · AD DS · Microsoft Entra</p></div><div class="progress" aria-label="Progression du cours"><span id="bar"></span></div><div class="progresslabel"><span>Votre progression</span><strong id="pct">0 %</strong></div><input id="search" placeholder="Rechercher une étape…" aria-label="Rechercher une étape"/><nav id="nav"><button class="navstep" data-target="lesson-0" type="button"><span class="navnumber">00</span><span>0. La vue globale : pourquoi cette phase ?</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-1" type="button"><span class="navnumber">01</span><span>1. Étape 01 — Priorité absolue : votre dernier jour Azure</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-2" type="button"><span class="navnumber">02</span><span>2. Étape 02 — Préparer Active Directory LOCAL sans coût cloud</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-3" type="button"><span class="navnumber">03</span><span>3. Étape 03 — Construire la forêt AD DS</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-4" type="button"><span class="navnumber">04</span><span>4. Étape 04 — Automatiser le provisioning AD</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-5" type="button"><span class="navnumber">05</span><span>5. Étape 05 — Auditer Active Directory et offboarder un utilisateur</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-6" type="button"><span class="navnumber">06</span><span>6. Étape 06 — Lire Microsoft Entra et les rôles Azure</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-7" type="button"><span class="navnumber">07</span><span>7. Étape 07 — Réconcilier AD DS et Microsoft Entra</span><span class="tick" aria-hidden="true">○</span></button>
+<button class="navstep" data-target="lesson-8" type="button"><span class="navnumber">08</span><span>8. Étape 08 — Clôture et conservation des preuves</span><span class="tick" aria-hidden="true">○</span></button></nav></aside><main class="main"><header class="masthead"><div class="kicker"><span class="pulse"></span>LABORATOIRE PRATIQUE · BONNE PHASE 08</div><h1>Identités hybrides, <br><span style="color:var(--mint)">AD &amp; automatisation</span></h1><p class="sub">Maîtrisez Active Directory local, le provisioning PowerShell, les permissions Azure RBAC et la réconciliation d’identités. Sans AKS, sans EKS, et sans créer de nouvelle ressource Azure payante.</p><div class="controls"><button id="theme" class="ctl">☀ Basculer le thème</button><button id="expand" class="ctl">Afficher toutes les étapes</button><a class="ctl" href="GUIDE_COMPLET_FR.md" download="GUIDE_COMPLET_FR.md">↓ Manuel Markdown</a><span class="chip">Dernier jour Azure : exportez les preuves d’abord</span></div><img class="arch" src="assets/architecture_hybrid_iam.svg" alt="Architecture hybride AD DS local, PowerShell, inventaire Entra et Azure RBAC ; Cloud Sync indiqué comme option"/></header><div class="content"><section class="lesson" id="lesson-0" data-keywords="0. La vue globale : pourquoi cette phase ?"><div class="lesson-header"><span class="stepnum">00 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="0"/> Terminé</label></div><h1>CloudGuard 360 — PHASE 08</h1>
+<h2>HYBRID IAM &amp; AUTOMATION — Formation pratique intégrale</h2>
+<p><strong>Niveau : débutant → ingénieur IAM / administrateur système / GRC.</strong><br />
+<strong>Environnement : Active Directory Domain Services (AD DS) sur Windows Server local, PowerShell, Microsoft Entra ID, Azure RBAC, comparaison et gouvernance des identités.</strong><br />
+<strong>Écart explicitement assumé : le rapprochement AD/Entra ne remplace PAS un produit de synchronisation.</strong></p>
+<blockquote>
+<p>Le laboratoire Kubernetes/AKS précédemment présenté comme Phase 08 est remplacé. La Phase 08 officielle CloudGuard 360 de votre cursus porte sur l'IAM hybride et l'automatisation.</p>
+</blockquote>
+<h2>0. La vue globale : pourquoi cette phase ?</h2>
+<p>Imaginez une banque : les ressources humaines tiennent la liste des employés (source métier), l'annuaire AD DS gère les comptes des ordinateurs et applications internes, Microsoft Entra gère l'identité cloud, et Azure RBAC autorise ou refuse l'accès à des ressources Azure. Les changements RH doivent déclencher des changements contrôlés sur les identités et les permissions.</p>
+<h3>Six idées essentielles</h3>
+<ol>
+<li><strong>AD DS</strong> est un annuaire Windows sur vos propres contrôleurs de domaine. Il utilise notamment LDAP, Kerberos et DNS, et permet les Group Policies.</li>
+<li><strong>Microsoft Entra ID</strong> est un annuaire d'identités cloud. Ce n'est pas « un AD DS accessible depuis Internet ».</li>
+<li><strong>L'authentification</strong> répond à « qui êtes-vous ? » et <strong>l'autorisation</strong> répond à « que pouvez-vous faire ? ».</li>
+<li><strong>Le RBAC</strong> attribue un rôle à un principal sur un scope. Les permissions héritées s'ajoutent généralement aux permissions propres à un groupe.</li>
+<li><strong>PowerShell</strong> automatise les changements répétitifs et rend les contrôles reproductibles. Il faut borner précisément les scripts à un périmètre.</li>
+<li><strong>L'hybride réel</strong> suppose un mécanisme de provisioning pris en charge, tel que Microsoft Entra Cloud Sync, et la vérification de ses journaux de provisionnement.</li>
+</ol>
+<h3>Objectifs pédagogiques et preuves</h3>
+<table>
+<thead>
+<tr>
+  <th>Compétence</th>
+  <th>Démonstration réelle</th>
+  <th>Preuve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>AD DS</td>
+  <td>Créer une forêt de laboratoire isolée</td>
+  <td><code>Get-ADDomain</code>, capture ADUC</td>
+</tr>
+<tr>
+  <td>OUs</td>
+  <td>Organiser les comptes et groupes</td>
+  <td>Export AD OU</td>
+</tr>
+<tr>
+  <td>Identités</td>
+  <td>Quatre comptes de démonstration</td>
+  <td><code>ad_users.csv</code></td>
+</tr>
+<tr>
+  <td>Autorisations</td>
+  <td>Quatre groupes Security / Global</td>
+  <td><code>ad_groups.csv</code>, <code>ad_membership.csv</code></td>
+</tr>
+<tr>
+  <td>Lifecycle</td>
+  <td>Désactiver un compte ; retirer ses groupes</td>
+  <td>Export avant/après</td>
+</tr>
+<tr>
+  <td>Entra</td>
+  <td>Lire les groupes de Phase 02</td>
+  <td><code>entra_groups.json</code></td>
+</tr>
+<tr>
+  <td>Azure RBAC</td>
+  <td>Examiner les droits existants</td>
+  <td><code>rbac_*.json</code></td>
+</tr>
+<tr>
+  <td>Réconciliation</td>
+  <td>Comparer les inventaires</td>
+  <td><code>reconciliation.json</code> + <code>.md</code></td>
+</tr>
+<tr>
+  <td>Cloud Sync réel</td>
+  <td>Option si prérequis satisfaits</td>
+  <td>Logs de provisioning (non couverts automatiquement)</td>
+</tr>
+</tbody>
+</table>
+<h3>Architecture</h3>
+<pre><code class="language-text">[VM Windows Server locale, isolée]
+  AD DS : corp.cg360.test
+    OU=CG360
+      OU=Users: cg360.dev / cg360.eng / cg360.ops / cg360.audit
+      OU=Groups: quatre groupes CG360
+           | PowerShell -&gt; CSV (comptes / groupes / membres)
+           v
+[Reconciliation.py] &lt;-- JSON en lecture seule &lt;-- [Microsoft Entra ID]
+         |                                         4 groupes Phase 02
+         |                                         |
+         |                                         v
+         +----&gt; Rapport                         [Azure RBAC]
+                « mêmes noms »                  7 affectations Reader/Monitoring Reader
+
+   OPTION SÉPARÉE, non installée par nos scripts :
+     AD DS -&gt; Agent Microsoft Entra Cloud Sync -&gt; Entra ID
+      (Serveur joint au domaine, accès sortant, autorisations, scopes, logs)
+</code></pre>
+</section>
+<section class="lesson" id="lesson-1" data-keywords="1. Étape 01 — Priorité absolue : votre dernier jour Azure"><div class="lesson-header"><span class="stepnum">01 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="1"/> Terminé</label></div><h2>1. Étape 01 — Priorité absolue : votre dernier jour Azure</h2>
+<h3>Pourquoi ?</h3>
+<p>Un essai gratuit Azure peut être désactivé après l'épuisement du crédit ou au bout de la durée d'essai. Les données doivent être exportées pendant qu'elles sont accessibles. Une VM Azure n'est <strong>pas nécessaire</strong> pour ce laboratoire. Vérifiez le statut réel de votre abonnement sous <strong>Cost Management + Billing</strong>, sans supposer que l'expiration permet automatiquement toute utilisation future du tenant Entra.</p>
+<h3>Dans le portail</h3>
+<ol>
+<li>Aller sur https://portal.azure.com et ouvrir <strong>Cloud Shell → Bash</strong>.</li>
+<li>Cliquer <strong>Manage files → Upload</strong> et choisir <code>CloudGuard360_Phase08_Hybrid_IAM_2026.zip</code>.</li>
+<li>Vérifier <code>~/clouddrive</code> ; extraire sans écraser les dossiers précédents :</li>
+</ol>
+<pre><code class="language-bash">mkdir -p ~/clouddrive/cloudguard360
+unzip -n ~/CloudGuard360_Phase08_Hybrid_IAM_2026.zip -d ~/clouddrive/cloudguard360
+cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Hybrid_IAM_2026
+bash azure/00-preflight.sh
+bash azure/01-export-entra.sh
+bash azure/02-archive-evidence.sh
+</code></pre>
+<p><code>00-preflight.sh</code> affiche le contexte courant sans modification. <code>01-export-entra.sh</code> interroge exactement les quatre groupes de Phase 02 et les affectations existantes des deux Resource Groups. <code>02-archive-evidence.sh</code> archive uniquement des sorties d'audit (pas de Terraform State ni de secrets).</p>
+<h3>Résultats attendus</h3>
+<ul>
+<li><code>evidence/cloud/entra_groups.json</code> : liste des groupes et leurs Object IDs, s'ils sont accessibles.</li>
+<li><code>evidence/cloud/rbac_rg-cg360-app.json</code> et <code>rbac_rg-cg360-network.json</code> lorsque les Resource Groups sont visibles.</li>
+<li><code>evidence/CG360_Phase08_Evidence_....zip</code> : archive téléchargeable.</li>
+</ul>
+<p>Si Azure répond <code>AuthorizationFailed</code>, <code>Insufficient privileges</code>, ou subscription disabled, <strong>ne créez pas de rôle administratif</strong>. Enregistrez le message ; continuez en local et utilisez les données DEMO uniquement à titre pédagogique.</p>
+<blockquote>
+<p>Pratique : faites aussi une copie privée des répertoires CloudGuard360 Phase 01–04 et des états Terraform existants. Ne publiez jamais <code>terraform.tfstate</code>, fichiers secrets ou tokens GitHub.</p>
+</blockquote>
+</section>
+<section class="lesson" id="lesson-2" data-keywords="2. Étape 02 — Préparer Active Directory LOCAL sans coût cloud"><div class="lesson-header"><span class="stepnum">02 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="2"/> Terminé</label></div><h2>2. Étape 02 — Préparer Active Directory LOCAL sans coût cloud</h2>
+<h3>Pourquoi une VM locale ?</h3>
+<p>AD DS a besoin de Windows Server. Une installation directe sur Windows 11 n'est pas un contrôleur de domaine. Microsoft propose Windows Server Evaluation pour les exercices de laboratoire : https://www.microsoft.com/en-us/evalcenter/download-windows-server-2025</p>
+<h3>Préparation recommandée sur Windows 11 Pro/Enterprise</h3>
+<ol>
+<li>Ouvrir <strong>Turn Windows features on or off</strong> et activer <strong>Hyper-V</strong>, si disponible.</li>
+<li>Ouvrir <strong>Hyper-V Manager → Virtual Switch Manager → New virtual network switch → Internal</strong>.</li>
+<li>Nommer le switch <code>CG360-Private</code>. Ne pas connecter directement le DC au réseau d'entreprise.</li>
+<li>Créer <code>CG360-DC01</code> : <strong>Generation 2</strong>, <strong>2 vCPU</strong>, <strong>4–6 Go RAM</strong>, <strong>60 Go disque virtuel</strong>, ISO Windows Server 2025 Evaluation.</li>
+<li>Connecter la VM au switch <code>CG360-Private</code>, installer l'édition <strong>Desktop Experience</strong>.</li>
+<li>Dans la VM, régler une adresse IP <strong>statique</strong> pour le lab, p. ex. <code>192.168.88.10/24</code>, <strong>sans passerelle</strong> ; DNS local <code>192.168.88.10</code>. La connectivité Internet n'est pas nécessaire à ce premier lab, mais peut être nécessaire à l'activation de l'édition d'évaluation.</li>
+<li>Dans le PC hôte, configurer <code>vEthernet (CG360-Private)</code> à <code>192.168.88.1/24</code> si ce sous-réseau est libre. Ne le faites pas sur l'interface réseau principale.</li>
+</ol>
+<h3>Vérification réseau dans la VM (PowerShell administrateur)</h3>
+<pre><code class="language-powershell">Get-NetAdapter
+Get-NetIPAddress -AddressFamily IPv4 | Format-Table InterfaceAlias,IPAddress,PrefixLength
+Get-DnsClientServerAddress -AddressFamily IPv4
+</code></pre>
+<p><strong>N'appliquez pas aveuglément <code>New-NetIPAddress</code></strong> : confirmez d'abord le nom de l'interface et l'absence de conflit IP. Vous pouvez définir l'adresse et DNS depuis les paramètres de la carte réseau Windows.</p>
+<p>Si vous utilisez Windows Home, Hyper-V peut être indisponible : utilisez un hyperviseur compatible avec votre édition Windows. L'important est de garder la VM <strong>isolée</strong>.</p>
+</section>
+<section class="lesson" id="lesson-3" data-keywords="3. Étape 03 — Construire la forêt AD DS"><div class="lesson-header"><span class="stepnum">03 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="3"/> Terminé</label></div><h2>3. Étape 03 — Construire la forêt AD DS</h2>
+<h3>Analogie</h3>
+<p>Une forêt AD est le territoire administratif ; le <strong>domaine</strong> est une zone d'identités ; le <strong>Domain Controller</strong> est le serveur qui stocke et vérifie l'annuaire ; les <strong>OUs</strong> structurent les objets ; un <strong>groupe</strong> représente une population ayant le même besoin d'accès.</p>
+<ol>
+<li>Copier <code>powershell/</code> depuis le ZIP vers <code>C:\CG360\powershell</code> dans <strong>la VM Windows Server</strong>.</li>
+<li>Ouvrir <strong>Windows PowerShell 5.1 en administrateur</strong> sur cette VM.</li>
+<li>Utiliser, uniquement pour le processus PowerShell courant :</li>
+</ol>
+<pre><code class="language-powershell">Set-ExecutionPolicy -Scope Process Bypass -Force
+cd C:\CG360\powershell
+.\00-Preflight-LocalAD.ps1
+.\01-Install-LabForest.ps1
+</code></pre>
+<p>Le script refuse Windows client, une machine déjà membre d'un domaine et une installation AD DS existante. Il exige de saisir <code>INSTALL LAB FOREST</code>, puis installe AD DS, demande le mot de passe <strong>DSRM</strong> en mode sécurisé et promeut la VM comme premier contrôleur du domaine <code>corp.cg360.test</code>.</p>
+<p><strong>Risque :</strong> le script change le système d'exploitation de la VM et la redémarre. Ne jamais l'exécuter sur une machine contenant des données importantes, ni sur un serveur d'entreprise.</p>
+<h3>Après le redémarrage</h3>
+<p>Se connecter au domaine de laboratoire, ouvrir PowerShell administrateur :</p>
+<pre><code class="language-powershell">Import-Module ActiveDirectory
+Get-ADDomain | Select-Object DNSRoot,NetBIOSName
+Get-ADForest | Select-Object Name,ForestMode
+Get-Service NTDS,DNS | Select-Object Name,Status
+</code></pre>
+<p>Résultat attendu : DNSRoot <code>corp.cg360.test</code>, services <code>NTDS</code> et <code>DNS</code> opérationnels.</p>
+<blockquote>
+<p>Dépannage : si une étape de promotion échoue, vérifier le journal des événements AD DS/DNS, IP/DNS local, prérequis et mot de passe DSRM ; ne pas relancer les commandes sur une machine non isolée.</p>
+</blockquote>
+</section>
+<section class="lesson" id="lesson-4" data-keywords="4. Étape 04 — Automatiser le provisioning AD"><div class="lesson-header"><span class="stepnum">04 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="4"/> Terminé</label></div><h2>4. Étape 04 — Automatiser le provisioning AD</h2>
+<h3>Objectif</h3>
+<p>Créer des <strong>OUs</strong> : <code>CG360/Users</code> et <code>CG360/Groups</code> ; <strong>4 groupes de sécurité Global</strong> et <strong>4 comptes fictifs</strong>. L'automatisation est idempotente dans le domaine de laboratoire : le script recherche un objet existant avant de le créer, refuse un objet du même nom hors OU et n'utilise jamais les groupes <code>Domain Admins</code>.</p>
+<pre><code class="language-powershell">cd C:\CG360\powershell
+.\02-Provision-LabAD.ps1
+Get-ADGroup -Filter 'Name -like &quot;CG360-*&quot;' | Select-Object Name,GroupCategory,GroupScope
+Get-ADUser -SearchBase 'OU=Users,OU=CG360,DC=corp,DC=cg360,DC=test' -Filter * |
+  Select-Object SamAccountName,Enabled
+</code></pre>
+<p>L'invite demande un mot de passe initial complexe pour <strong>ces comptes fictifs uniquement</strong>, que l'utilisateur devra changer à la connexion. Ne réutilisez pas un mot de passe d'entreprise.</p>
+<h3>Groupes et comptes</h3>
+<table>
+<thead>
+<tr>
+  <th>Groupe</th>
+  <th>Compte test membre</th>
+  <th>Rôle professionnel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>CG360-Cloud-Engineers</td>
+  <td>cg360.eng</td>
+  <td>Infrastructure cloud</td>
+</tr>
+<tr>
+  <td>CG360-Developers</td>
+  <td>cg360.dev</td>
+  <td>Développement</td>
+</tr>
+<tr>
+  <td>CG360-Security-Auditors</td>
+  <td>cg360.audit</td>
+  <td>Lecture et audit</td>
+</tr>
+<tr>
+  <td>CG360-Operations</td>
+  <td>cg360.ops</td>
+  <td>Exploitation</td>
+</tr>
+</tbody>
+</table>
+<h3>Pourquoi les groupes ?</h3>
+<p>Accorder un accès à un groupe plutôt qu'à quatre comptes séparés réduit la charge administrative : lorsque l'employé change d'équipe, on change son appartenance au groupe plutôt que de modifier directement chaque ressource. C'est un fondement de <strong>RBAC</strong>.</p>
+</section>
+<section class="lesson" id="lesson-5" data-keywords="5. Étape 05 — Auditer Active Directory et offboarder un utilisateur"><div class="lesson-header"><span class="stepnum">05 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="5"/> Terminé</label></div><h2>5. Étape 05 — Auditer Active Directory et offboarder un utilisateur</h2>
+<h3>Audit (lecture seule)</h3>
+<pre><code class="language-powershell">.\03-Export-LabEvidence.ps1 -OutputDirectory 'C:\CG360\evidence\ad'
+Get-ADGroupMember -Identity 'CG360-Developers' | Select-Object Name,SamAccountName
+Get-ADUser -Identity cg360.dev -Properties Enabled | Select-Object SamAccountName,Enabled
+</code></pre>
+<p>Preuves : <code>ad_users.csv</code>, <code>ad_groups.csv</code>, <code>ad_membership.csv</code>, <code>ad_summary.json</code>.</p>
+<h3>Cycle de vie : départ d'un salarié</h3>
+<p>Dans la vraie vie, l'offboarding exige coordination RH, revocation des sessions, accès VPN/SaaS, comptes locaux, MFA, etc. Le labo effectue <strong>seulement deux actions AD</strong> : <code>Disable-ADAccount</code> et retrait des quatre groupes CG360 du compte fictif.</p>
+<pre><code class="language-powershell">.\04-Offboard-LabUser.ps1 -SamAccountName cg360.dev -WhatIf
+.\04-Offboard-LabUser.ps1 -SamAccountName cg360.dev
+Get-ADUser cg360.dev -Properties Enabled | Select-Object SamAccountName,Enabled
+.\03-Export-LabEvidence.ps1 -OutputDirectory 'C:\CG360\evidence\ad'
+</code></pre>
+<p>Pour finir, rapprocher l'export avant/après. La commande <code>-WhatIf</code> simule les modifications ; la commande sans cette option demande confirmation.</p>
+<p><strong>Ne supprimez pas les objets de laboratoire</strong> : leur conservation vous aidera à comprendre la traçabilité d'une décision de sécurité.</p>
+</section>
+<section class="lesson" id="lesson-6" data-keywords="6. Étape 06 — Lire Microsoft Entra et les rôles Azure"><div class="lesson-header"><span class="stepnum">06 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="6"/> Terminé</label></div><h2>6. Étape 06 — Lire Microsoft Entra et les rôles Azure</h2>
+<h3>Rappel de vos phases précédentes</h3>
+<p>Vous avez préparé quatre <strong>groupes CloudGuard 360 dans Microsoft Entra</strong> et sept affectations Azure RBAC <code>Reader</code>/<code>Monitoring Reader</code>. Cette phase utilise l'inventaire existant : <strong>aucune duplication</strong>.</p>
+<p>Dans Azure Portal : https://entra.microsoft.com → <strong>Entra ID → Groups → All groups</strong>, rechercher <code>CG360-</code>. Puis https://portal.azure.com → <code>rg-cg360-app</code> → <strong>Access control (IAM) → Role assignments</strong> ; répéter sur <code>rg-cg360-network</code>.</p>
+<p>Dans Cloud Shell <strong>Bash</strong> :</p>
+<pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Hybrid_IAM_2026
+bash azure/01-export-entra.sh
+cat evidence/cloud/entra_groups.json
+</code></pre>
+<p>La commande est en lecture seule ; l'accès Microsoft Graph peut être interdit selon les rôles du compte. En cas de refus, ne contournez pas la politique de l'organisation.</p>
+<h3>Variante Azure Cloud Shell PowerShell</h3>
+<p>Passer Cloud Shell en mode <strong>PowerShell</strong>, puis :</p>
+<pre><code class="language-powershell">.\powershell\05-Inspect-CloudWithAz.ps1
+</code></pre>
+<p>Cela permet de comprendre <code>Get-AzADGroup</code>, <code>Get-AzRoleAssignment</code>, ainsi que la distinction entre <strong>objet Entra</strong> et <strong>permission Azure RBAC</strong>.</p>
+<blockquote>
+<p><strong>Attention</strong> : les groupes homonymes créés dans AD DS LOCAL restent indépendants des groupes Entra de votre Phase 02. Ils n'accordent aucun droit Azure à vos comptes fictifs du lab.</p>
+</blockquote>
+</section>
+<section class="lesson" id="lesson-7" data-keywords="7. Étape 07 — Réconcilier AD DS et Microsoft Entra"><div class="lesson-header"><span class="stepnum">07 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="7"/> Terminé</label></div><h2>7. Étape 07 — Réconcilier AD DS et Microsoft Entra</h2>
+<h3>Objectif</h3>
+<p>Le script Python compare <strong>des inventaires</strong>, sans écrire dans AD ou Entra. Cela entraîne la capacité d'audit : identifier les groupes attendus, l'absence d'un groupe, et les écarts entre systèmes d'identités.</p>
+<p>Copier <code>ad_groups.csv</code> de la VM Windows Server vers le dossier <code>evidence/ad/</code> du package sur votre PC ou Cloud Shell. Vous devez également disposer du fichier Entra exporté à l'étape 06.</p>
+<pre><code class="language-bash">python3 tools/reconcile.py \
+  --ad evidence/ad/ad_groups.csv \
+  --entra evidence/cloud/entra_groups.json \
+  --out evidence/reconciliation
+cat evidence/reconciliation/reconciliation.md
+</code></pre>
+<p>Résultat attendu <strong>si les mêmes quatre noms sont présents</strong> : <code>Group-name overlap 4/4; cloud sync status NOT VERIFIED</code>.</p>
+<p>Cette phrase est volontaire : <strong>un nom identique n'établit ni le même identifiant objet, ni une synchronisation d'identités, ni le même accès</strong>.</p>
+<h3>Parcours sans Azure (pour continuer après expiration)</h3>
+<pre><code class="language-bash">python3 tools/reconcile.py --demo \
+  --ad examples/ad_groups.csv \
+  --entra examples/entra_groups_DEMO.json \
+  --out evidence/reconciliation-demo
+</code></pre>
+<p>Le rapport indiquera clairement <code>SYNTHETIC_DEMO</code>.</p>
+<h3>À quoi ressemblerait une vraie synchronisation ?</h3>
+<p>Microsoft Entra <strong>Cloud Sync</strong> nécessite notamment un serveur Windows joint à AD DS avec connectivité vers le service cloud, un agent, des autorisations adéquates et une configuration de provisioning. On configure le <strong>scope sur une OU/un groupe pilote</strong>, on teste la synchronisation puis on vérifie <strong>les logs de provisioning</strong> et les attributs des objets dans Entra. Pour des utilisateurs devant se connecter avec leur UPN AD, un domaine DNS public vérifié dans Entra est habituellement nécessaire ; <code>corp.cg360.test</code> est uniquement un espace de noms de labo <strong>non vérifiable publiquement</strong> et ne doit pas être utilisé comme domaine d'ouverture de session cloud réel.</p>
+<p>Références :</p>
+<ul>
+<li>https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/how-to-prerequisites</li>
+<li>https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/tutorial-single-forest</li>
+<li>https://learn.microsoft.com/en-us/entra/identity/hybrid/cloud-sync/how-to-configure</li>
+</ul>
+<p>Le guide détaillé est disponible dans <a href="docs/CLOUD_SYNC_OPTIONNEL.md"><code>docs/CLOUD_SYNC_OPTIONNEL.md</code></a>. Ce package n'installe pas l'agent, afin de protéger votre tenant et d'éviter de dépasser les conditions de votre fin d'essai.</p>
+</section>
+<section class="lesson" id="lesson-8" data-keywords="8. Étape 08 — Clôture et conservation des preuves"><div class="lesson-header"><span class="stepnum">08 / 08</span><label class="complete"><input type="checkbox" class="done-check" data-i="8"/> Terminé</label></div><h2>8. Étape 08 — Clôture et conservation des preuves</h2>
+<h3>Rapport de fin de projet</h3>
+<p>Vérifiez que vous possédez :</p>
+<ul>
+<li>[ ] AD DS <code>corp.cg360.test</code> fonctionnel sur VM locale <strong>isolée</strong>.</li>
+<li>[ ] OU <code>CG360</code> avec <code>Users</code> et <code>Groups</code>.</li>
+<li>[ ] Quatre comptes fictifs et quatre groupes de sécurité avec membership.</li>
+<li>[ ] Export AD (<code>ad_users.csv</code>, <code>ad_groups.csv</code>, <code>ad_membership.csv</code>).</li>
+<li>[ ] Test d'offboarding avec preuve avant/après et sortie <code>-WhatIf</code>.</li>
+<li>[ ] Export Entra réel, ou donnée DEMO explicitement signalée.</li>
+<li>[ ] Comparaison des groupes, y compris écarts.</li>
+<li>[ ] Examen Azure RBAC des groupes existants si abonnement accessible.</li>
+<li>[ ] Archive conservée sur le PC hors d'Azure.</li>
+<li>[ ] Statut de synchronisation : <strong>non configuré</strong> ou <strong>réellement prouvé par logs</strong> — jamais supposé.</li>
+</ul>
+<h3>Conservation et coûts</h3>
+<p>Aucune nouvelle ressource Azure payante n'est créée par nos scripts de formation. La VM AD DS est locale, et vous pouvez l'éteindre depuis l'hyperviseur. Ne supprimez pas <code>rg-cg360-app</code> ou <code>rg-cg360-network</code> sans une stratégie de sauvegarde de l'ensemble du projet. Attention à d'éventuelles ressources Azure existantes dont la facturation perdure si vous avez converti l'essai en abonnement payant.</p>
+<h3>Test oral — 3 questions d'entretien</h3>
+<ol>
+<li><strong>Quelle différence entre AD DS et Microsoft Entra ID ?</strong> AD DS héberge des identités et mécanismes d'authentification d'un domaine Windows (Kerberos, LDAP, DNS). Entra ID gère l'authentification et l'accès des applications cloud et Azure. Ce ne sont pas des services équivalents.</li>
+<li><strong>Un membre d'un groupe AD portant le même nom qu'un groupe Entra reçoit-il automatiquement les droits Azure ?</strong> Non. Une synchronisation effective, un objet Entra approprié, une appartenance effective et une affectation RBAC sont nécessaires. La simple égalité des noms n'apporte rien.</li>
+<li><strong>Comment prouvez-vous un offboarding correct ?</strong> Par une demande autorisée, un journal de modifications, la désactivation, la suppression des accès pertinents et une vérification indépendante, avec clôture documentée. Le laboratoire couvre une partie AD DS seulement.</li>
+</ol>
+<h2>Dépannage</h2>
+<table>
+<thead>
+<tr>
+  <th>Message</th>
+  <th>Diagnostic</th>
+  <th>Correctif sûr</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>Get-ADUser not recognized</code></td>
+  <td>AD module absent ou mauvaise machine</td>
+  <td>Exécuter sur Windows Server/RSAT et installer les outils AD DS</td>
+</tr>
+<tr>
+  <td><code>The server is not operational</code></td>
+  <td>DNS, AD DS non installé, domaine indisponible</td>
+  <td>Vérifier IP/DNS, <code>Get-Service NTDS,DNS</code>, logs</td>
+</tr>
+<tr>
+  <td><code>Password does not meet policy</code></td>
+  <td>Complexité non satisfaite</td>
+  <td>Entrer un mot de passe lab fort, sans le stocker dans un fichier</td>
+</tr>
+<tr>
+  <td><code>REFUSED: unexpected domain</code></td>
+  <td>Évitez tout domaine de production</td>
+  <td>Utiliser exclusivement <code>corp.cg360.test</code> dans une VM isolée</td>
+</tr>
+<tr>
+  <td><code>AuthorizationFailed</code></td>
+  <td>Manque de permissions Azure</td>
+  <td>Continuer en local ; demander autorisation plutôt que contourner</td>
+</tr>
+<tr>
+  <td><code>No subscription found</code></td>
+  <td>Expiration Azure/absence de contexte</td>
+  <td>Utiliser le laboratoire local et le dataset DEMO</td>
+</tr>
+<tr>
+  <td><code>0/4 matching</code></td>
+  <td>Exports manquants ou noms divergents</td>
+  <td>Contrôler que l'export Entra est bien réel et correspond au bon tenant</td>
+</tr>
+<tr>
+  <td><code>Module Az.Resources missing</code></td>
+  <td>Az PowerShell non installé</td>
+  <td>Utiliser Cloud Shell ou la variante Azure CLI Bash</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Règle finale :</strong> un laboratoire est complet quand les contrôles sont prouvés par des observations réelles, pas quand un script affiche seulement « PASS ».</p>
+</section></div><footer class="footer">CloudGuard 360 · Phase 08 IAM Hybride · Laboratoire à visée pédagogique. Toute synchronisation réelle doit être prouvée, jamais inférée à partir du seul nom des groupes.</footer></main></div><script>
+(()=>{'use strict';const nav=[...document.querySelectorAll('.navstep')],steps=[...document.querySelectorAll('.lesson')],done=[...document.querySelectorAll('.done-check')];let saved=[];try{saved=JSON.parse(localStorage.getItem('cg360phase08done')||'[]');}catch(e){};for(const c of done){c.checked=saved.includes(Number(c.dataset.i));c.addEventListener('change',()=>{const completed=done.filter(x=>x.checked).map(x=>Number(x.dataset.i));try{localStorage.setItem('cg360phase08done',JSON.stringify(completed));}catch(e){};update();});}function update(){const n=done.filter(x=>x.checked).length;document.querySelector('#pct').textContent=Math.round(100*n/done.length)+' %';document.querySelector('#bar').style.width=(100*n/done.length)+'%';nav.forEach((b,i)=>b.querySelector('.tick').textContent=done[i].checked?'✓':'○');}update();nav.forEach(b=>b.addEventListener('click',()=>{const step=document.getElementById(b.dataset.target);if(step.hidden)step.hidden=false;step.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});nav.forEach(n=>n.classList.toggle('active',n===b));}));document.querySelector('#search').addEventListener('input',e=>{const q=e.target.value.toLocaleLowerCase('fr');for(const [i,s] of steps.entries()){const found=s.textContent.toLocaleLowerCase('fr').includes(q);s.hidden=!found;nav[i].hidden=!found;} });const theme=document.querySelector('#theme');theme.onclick=()=>{document.body.classList.toggle('light');try{localStorage.setItem('cg360phase08theme',document.body.classList.contains('light')?'light':'dark');}catch(e){}};try{if(localStorage.getItem('cg360phase08theme')==='light')document.body.classList.add('light');}catch(e){};const expand=document.querySelector('#expand');expand.onclick=()=>{steps.forEach(s=>s.hidden=false);nav.forEach(n=>n.hidden=false);document.querySelector('#search').value='';};document.querySelectorAll('pre').forEach(pre=>{const code=pre.querySelector('code');if(!code)return;const btn=document.createElement('button');btn.type='button';btn.className='copy';btn.textContent='Copier la commande';btn.setAttribute('aria-label','Copier le bloc de code');btn.onclick=async()=>{const value=code.innerText;let ok=false;try{if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(value);ok=true;}}catch(e){}if(!ok){const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();try{ok=document.execCommand('copy');}catch(e){}t.remove();}btn.textContent=ok?'✓ Copié':'Sélectionner / copier';setTimeout(()=>btn.textContent='Copier la commande',1800);};pre.append(btn);});})();
+</script></body></html>

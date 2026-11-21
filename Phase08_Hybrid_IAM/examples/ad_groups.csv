@@ -1,0 +1,5 @@
+Name,SamAccountName,GroupScope,GroupCategory
+CG360-Cloud-Engineers,CG360-Cloud-Engineers,Global,Security
+CG360-Developers,CG360-Developers,Global,Security
+CG360-Security-Auditors,CG360-Security-Auditors,Global,Security
+CG360-Operations,CG360-Operations,Global,Security

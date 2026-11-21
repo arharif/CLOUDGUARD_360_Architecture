@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-label="Architecture hybride IAM locale PowerShell AD DS vers audit Entra RBAC et option Cloud Sync">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#091629"/><stop offset="1" stop-color="#183b50"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-opacity=".28"/></filter></defs>
+<rect width="1600" height="760" fill="url(#bg)"/><g opacity=".1" stroke="#fff"><path d="M0 110H1600 M0 220H1600 M0 330H1600 M0 440H1600 M0 550H1600 M0 660H1600 M200 0V760 M400 0V760 M600 0V760 M800 0V760 M1000 0V760 M1200 0V760 M1400 0V760"/></g>
+<text x="80" y="91" fill="#fafcff" font-family="Arial" font-weight="700" font-size="49">CloudGuard 360 · Hybrid IAM &amp; Automation</text>
+<text x="82" y="131" fill="#a9d5e7" font-family="Arial" font-size="24">Phase 08  ·  AD DS + PowerShell + Microsoft Entra + Azure RBAC</text>
+<g filter="url(#shadow)"><rect x="75" y="190" width="360" height="197" rx="24" fill="#e4f4ff"/><rect x="610" y="190" width="360" height="197" rx="24" fill="#e8fff0"/><rect x="1150" y="190" width="365" height="197" rx="24" fill="#fff3da"/>
+<rect x="75" y="503" width="360" height="172" rx="24" fill="#e8f2fa"/><rect x="610" y="503" width="360" height="172" rx="24" fill="#e8fff0"/><rect x="1150" y="503" width="365" height="172" rx="24" fill="#e8f2fa"/></g>
+<g font-family="Arial" fill="#133047">
+<text x="110" y="246" font-size="27" font-weight="bold">AD DS LOCAL</text><text x="110" y="290" font-size="23">corp.cg360.test</text><text x="110" y="326" font-size="21">4 comptes · 4 groupes</text><text x="110" y="356" font-size="19">VM Windows Server isolée</text>
+<text x="645" y="246" font-size="27" font-weight="bold">PowerShell</text><text x="645" y="290" font-size="22">Provisioning · Offboarding</text><text x="645" y="327" font-size="21">Exports CSV + JSON</text><text x="645" y="357" font-size="19">Validation et preuves</text>
+<text x="1185" y="245" font-size="27" font-weight="bold">Microsoft Entra ID</text><text x="1185" y="291" font-size="22">Groupes Phase 02 existants</text><text x="1185" y="327" font-size="21">Lecture seule</text><text x="1185" y="356" font-size="19">Azure RBAC : 7 affectations</text>
+<text x="110" y="559" font-size="26" font-weight="bold">Cycle de vie</text><text x="110" y="601" font-size="21">Activer · Désactiver</text><text x="110" y="635" font-size="20">Contrôler les adhésions</text>
+<text x="645" y="559" font-size="26" font-weight="bold">Réconciliation</text><text x="645" y="601" font-size="21">Comparer les noms AD / Entra</text><text x="645" y="635" font-size="20">Aucune synchro présumée</text>
+<text x="1185" y="559" font-size="26" font-weight="bold">Cloud Sync (option)</text><text x="1185" y="601" font-size="21">Agent + provisioning réel</text><text x="1185" y="635" font-size="20">Prérequis + journaux obligatoires</text>
+</g>
+<g stroke-width="7" stroke-linecap="round" fill="none"><path d="M435 290H597" stroke="#60d6b1"/><path d="M970 290H1138" stroke="#72d4fa" stroke-dasharray="15 13"/><path d="M255 388V494" stroke="#72d4fa"/><path d="M790 388V494" stroke="#60d6b1"/><path d="M1330 388V494" stroke="#f6c363" stroke-dasharray="13 12"/></g>
+<g fill="#60d6b1"><path d="M599 290l-22 -15v30z"/><path d="M790 497l-15 -22h30z"/></g><g fill="#72d4fa"><path d="M1141 290l-22 -15v30z"/><path d="M255 497l-15 -22h30z"/></g><path d="M1330 497l-15 -22h30z" fill="#f6c363"/>
+<text x="990" y="268" font-family="Arial" font-size="18" fill="#a5e9fe">Export / lecture seule</text>
+<text x="85" y="734" font-family="Arial" font-size="20" fill="#a6cde1">Trait plein = opérations du laboratoire  ·  Tirets = lien conceptuel ou optionnel</text>
+</svg>

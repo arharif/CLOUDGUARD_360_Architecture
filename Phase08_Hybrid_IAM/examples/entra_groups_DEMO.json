@@ -1,0 +1,6 @@
+[
+  {"displayName":"CG360-Cloud-Engineers","id":"SYNTHETIC-1","securityEnabled":true},
+  {"displayName":"CG360-Developers","id":"SYNTHETIC-2","securityEnabled":true},
+  {"displayName":"CG360-Security-Auditors","id":"SYNTHETIC-3","securityEnabled":true},
+  {"displayName":"CG360-Operations","id":"SYNTHETIC-4","securityEnabled":true}
+]
