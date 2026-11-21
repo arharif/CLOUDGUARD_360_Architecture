@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CloudGuard 360 | Phase 08 — AKS & Kubernetes</title><style>
+:root{--bg:#080f1e;--surface:#111d30;--surface2:#172842;--border:#32405c;--text:#eff7ff;--muted:#a6bbcf;--accent:#49d9d2;--accent2:#79a9ff;--warn:#f8bf67;--code:#060e19;--shadow:0 14px 36px #0006}
+body.light{--bg:#f7faff;--surface:#fff;--surface2:#eaf1f9;--border:#d4dfed;--text:#192d44;--muted:#53677b;--accent:#087b84;--accent2:#215db6;--warn:#b05b00;--code:#14253b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font:16px/1.68 system-ui,-apple-system,'Segoe UI',sans-serif;margin:0}
+a{color:var(--accent2)}.layout{display:grid;grid-template-columns:265px 1fr;min-height:100vh}.nav{position:sticky;top:0;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--border);padding:24px 18px}.brand{letter-spacing:.14em;font-weight:800;font-size:12px;color:var(--accent)}.brand strong{display:block;font-size:21px;letter-spacing:0;color:var(--text);margin-top:7px}.navlist a{display:block;padding:9px 12px;border-radius:10px;text-decoration:none;color:var(--muted);font-size:13px;margin:2px 0}.navlist a:hover,.navlist a.active{background:var(--surface2);color:var(--text)}.main{min-width:0}.top{position:sticky;top:0;z-index:5;display:flex;gap:14px;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);padding:14px 4%;border-bottom:1px solid var(--border)}.top .p{font-weight:650}.actions{display:flex;gap:8px;flex-wrap:wrap}button{font:inherit;cursor:pointer;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);padding:8px 12px}button:hover{border-color:var(--accent)}.content{max-width:1090px;margin:auto;padding:20px 5% 88px}.hero{border-radius:25px;border:1px solid var(--border);margin:24px 0 38px;background:radial-gradient(circle at 78% 19%,#1784c838,transparent 36%),linear-gradient(135deg,#10303e,var(--surface));padding:35px;box-shadow:var(--shadow);overflow:hidden}.hero .pill{border:1px solid #81d8d14b;color:#7df0df;display:inline-block;padding:5px 12px;border-radius:30px;font-size:12px;font-weight:700}.hero h1{font-size:clamp(30px,4vw,48px);line-height:1.14;max-width:670px;margin:15px 0}.hero p{color:#c0d8e8;font-size:16px}.diagram{width:100%;max-height:240px;margin-top:8px;overflow:visible}.diagram .line{stroke-dasharray:6 9;animation:flow 12s linear infinite}.diagram .node{animation:float 4s ease-in-out infinite}.diagram .node:nth-of-type(even){animation-delay:-1.7s}@keyframes flow{to{stroke-dashoffset:-150}}@keyframes float{50%{transform:translateY(-3px)}}.progress{border:1px solid var(--border);background:var(--surface);padding:16px 20px;border-radius:16px;margin-bottom:26px}.track{height:8px;border-radius:9px;background:var(--surface2);overflow:hidden;margin:10px 0}.fill{background:linear-gradient(90deg,var(--accent2),var(--accent));height:100%;width:0;transition:width .25s}.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.checks label{font-size:13px;color:var(--muted);cursor:pointer}.checks input{accent-color:var(--accent)}article h1{display:none}article h2{font-size:27px;line-height:1.3;margin:53px 0 12px;scroll-margin-top:88px;border-bottom:1px solid var(--border);padding-bottom:15px}article h3{font-size:19px;line-height:1.4;margin:28px 0 10px;scroll-margin-top:90px;color:var(--accent)}article p{color:var(--text)}article strong{color:var(--text)}article blockquote{border-left:3px solid var(--warn);background:var(--surface);padding:13px 19px;margin:20px 0;border-radius:0 12px 12px 0}article blockquote p{margin:0}article table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);border-radius:12px;overflow:hidden}article th,article td{padding:11px 13px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}article th{color:var(--accent);background:var(--surface2)}article li{margin:7px 0}article code{font-size:.89em;border-radius:5px;background:var(--surface2);padding:2px 5px}article pre{margin:0;border-radius:13px;background:var(--code);overflow:auto;color:#d8f4ef;padding:19px 15px;font-size:13px;line-height:1.55}article pre code{background:transparent;color:inherit;padding:0}.codebox{border-radius:13px;border:1px solid var(--border);margin:16px 0;overflow:hidden}.codehead{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;background:var(--surface2);color:var(--muted);font-size:12px}.codehead button{padding:3px 9px;font-size:12px}.command{color:var(--accent)}#search{min-width:125px;max-width:200px;width:100%;background:var(--surface2);border:1px solid var(--border);padding:10px;border-radius:11px;color:var(--text)}#search:focus{outline:1px solid var(--accent)}.toast{position:fixed;bottom:20px;right:20px;background:var(--surface2);border:1px solid var(--accent);padding:9px 15px;border-radius:12px;opacity:0;transition:opacity .2s;pointer-events:none}.toast.show{opacity:1}.hidden{display:none!important}.footer{color:var(--muted);font-size:12px;padding:16px 5%;border-top:1px solid var(--border)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.nav{position:static;height:auto;padding:12px 20px;border-right:0;border-bottom:1px solid var(--border)}.navlist{display:flex;gap:5px;overflow:auto}.navlist a{white-space:nowrap}.top{padding:10px 20px}.content{padding:15px 20px 60px}.hero{padding:23px}.hero h1{font-size:29px}}@media print{.nav,.top,.checks,.codehead button{display:none}.layout{display:block}.content{max-width:none}.hero{background:#edf6fc;color:#000}article h2{break-after:avoid}}
+</style></head><body><div class="layout"><aside class="nav"><div class="brand">CLOUDGUARD 360<strong>Phase 08</strong></div><p style="color:var(--muted);font-size:13px">Kubernetes + Azure AKS<br>Laboratoire et clôture du Free Trial</p><nav class="navlist" id="navlist"></nav><p style="color:var(--muted);font-size:12px;margin-top:25px">Le tutoriel fonctionne sans connexion Internet une fois téléchargé.</p></aside><main class="main"><div class="top"><span class="p">☁️ Azure · Kubernetes · DevSecOps</span><div class="actions"><input id="search" placeholder="Rechercher..." aria-label="Rechercher dans le guide"><button id="theme" title="Basculer le thème">◐ Thème</button><button onclick="window.print()">⎙ Imprimer</button></div></div><div class="content"><header class="hero"><span class="pill">MASTERCLASS · PHASE 08 · 21 NOV 2026</span><h1>Comprendre Kubernetes.<br><span style="color:#75e7e2">Exploiter AKS. Maîtriser les coûts.</span></h1><p>Un laboratoire complet pour votre dernier jour Azure : diagnostic, cluster temporaire, YAML, tests, preuves et suppression. Continuez ensuite gratuitement avec kind sur PC.</p><svg class="diagram" viewBox="0 0 930 225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GitHub vers Kubernetes local et Azure AKS"><defs><linearGradient id="g"><stop stop-color="#2edcce"/><stop offset="1" stop-color="#528df8"/></linearGradient></defs><g fill="none" stroke="url(#g)" stroke-width="3"><path class="line" d="M165 99H301"/><path class="line" d="M165 99C245 99 245 191 301 191"/><path class="line" d="M463 99H578"/><path class="line" d="M463 191C530 191 530 99 578 99"/><path class="line" d="M743 99H825"/></g><g fill="#152b41" stroke="#6bb6e4" stroke-width="2"><rect class="node" x="12" y="56" rx="17" width="153" height="86"/><rect class="node" x="301" y="56" rx="17" width="162" height="86"/><rect class="node" x="301" y="159" rx="13" width="162" height="58"/><rect class="node" x="578" y="56" rx="17" width="165" height="86"/><rect class="node" x="825" y="56" rx="16" width="100" height="86"/></g><g font-family="system-ui" text-anchor="middle" fill="#ebf7ff" font-size="16" font-weight="650"><text x="88" y="91">GitHub</text><text x="88" y="116" font-size="11" fill="#9fc4df">CI / Image</text><text x="382" y="92">AKS</text><text x="382" y="115" font-size="11" fill="#9fc4df">Azure temporaire</text><text x="382" y="194" font-size="14">kind (local)</text><text x="660" y="91">Pods + Services</text><text x="660" y="116" font-size="11" fill="#9fc4df">NGINX · Vote · Redis</text><text x="875" y="91">Preuves</text><text x="875" y="116" font-size="11" fill="#9fc4df">+ Delete</text></g></svg></header><section class="progress"><b id="percentage">Progression : 0%</b><div class="track"><div class="fill" id="fill"></div></div><div class="checks" id="checks"></div></section><article id="guide"><h1 id="cloudguard-360-phase-08-kubernetes-local-azure-aks">CLOUDGUARD 360 — PHASE 08 | Kubernetes local + Azure AKS</h1>
+<p><strong>Édition 21 novembre 2026 — laboratoire final, dernier jour Azure Free Trial</strong><br />
+<strong>Langue : français | Mode : un seul laboratoire complet | Objectif : comprendre, exécuter, vérifier, sauvegarder et nettoyer</strong></p>
+<blockquote>
+<p>Cette formation respecte le programme initial CloudGuard 360 : Phase 08 = Kubernetes <code>kind</code> en local, puis AKS temporaire. Ce package <strong>n'efface pas</strong> les réseaux créés en Phase 01, ne prend pas le contrôle des projets Terraform des Phases 01–04, ne crée ni ACR, ni Firewall, ni Load Balancer applicatif. <strong>L'AKS lui-même peut créer des ressources réseau administrées et facturables, notamment un équilibreur de charge de plateforme, et un groupe de ressources géré.</strong> Aucun Service Kubernetes de type <code>LoadBalancer</code> n'est créé par nos manifests.</p>
+</blockquote>
+<h2 id="0-avant-tout-prot-ger-votre-dernier-jour-azure-indispensable">0. Avant tout : protéger votre dernier jour Azure (indispensable)</h2>
+<ol>
+<li>Dans Azure Portal, consultez <strong>Subscriptions → Azure subscription 1</strong>, vérifiez <code>State</code>, la date exacte d'expiration du crédit et le statut Free Trial. Dans <strong>Cost Management + Billing</strong>, consultez les crédits restants et le détail des ressources facturées. Ne présumez pas que l'expiration sera à 23h59.</li>
+<li>Si vous avez un abonnement Free Trial non converti, Microsoft indique que les services sont désactivés lorsque le crédit est épuisé ou à l'expiration des 30 jours. Si votre offre a été convertie en <em>pay-as-you-go</em>, les ressources peuvent continuer à facturer ! Les coûts ne s'arrêtent pas nécessairement à la date du crédit.</li>
+<li><strong>Sauvegardez tout de suite</strong> vos scripts et projets existants sur votre PC : fichiers <code>.tf</code>, <code>.tfvars</code> non sensibles, README, YAML, preuves, rapports. Ne mettez jamais les Terraform States, <code>.kube/config</code>, <code>hosts.yml</code> GitHub ou secrets sur un dépôt public. Les états Terraform peuvent contenir des données sensibles, et doivent rester en stockage privé et protégé.</li>
+<li>Exportez les vues utiles du portail (<code>rg-cg360-network</code>, <code>rg-cg360-app</code>, <code>ca-cg360-voting</code>) et un inventaire en lecture seule :</li>
+</ol>
+<pre><code class="language-bash">mkdir -p ~/clouddrive/cloudguard360/final-export
+az group list --query '[].{Group:name,Location:location}' -o table &gt; ~/clouddrive/cloudguard360/final-export/resource-groups.txt
+az resource list -g rg-cg360-network --query '[].{Name:name,Type:type,Location:location}' -o table &gt; ~/clouddrive/cloudguard360/final-export/network-inventory.txt
+az resource list -g rg-cg360-app --query '[].{Name:name,Type:type,Location:location}' -o table &gt; ~/clouddrive/cloudguard360/final-export/app-inventory.txt
+</code></pre>
+<p>Ces commandes <strong>ne modifient aucune ressource</strong>. Enregistrez les résultats localement avant la fin de l'abonnement. Le contenu de votre <code>clouddrive</code> peut ne pas être accessible ensuite.</p>
+<h2 id="1-architecture-de-cette-phase">1. Architecture de cette phase</h2>
+<pre><code class="language-mermaid">flowchart TD
+  P[Votre PC Windows + Docker Desktop] --&gt; K[kind : Kubernetes local sans Azure]
+  P --&gt; GH[GitHub Phase 04 : image optionnelle GHCR]
+  U[Azure Cloud Shell : CLI + kubectl] --&gt; AKS[AKS Free control plane]
+  AKS --&gt; N[1 VM système : facturée + disque]
+  N --&gt; NS[Namespace cg360]
+  NS --&gt; D[Deployment nginx : test obligatoire]
+  NS --&gt; R[Redis + Voting App : test avancé optionnel]
+  D --&gt; S[Service ClusterIP]
+  R --&gt; T[Services ClusterIP]
+  S --&gt; F[kubectl port-forward : pas de LB applicatif]
+  T --&gt; F
+  AKS -. suppression en fin de labo .-&gt; X[Suppression du RG isolé + vérification du RG nœuds]
+</code></pre>
+<p><strong>Important :</strong> AKS gère Kubernetes, mais vous payez les nœuds, les disques et certaines ressources réseau. Le niveau gratuit d'AKS concerne le plan de contrôle, pas tout le cluster. Les documents AKS actuels ne prennent <strong>pas en charge les VM B-series pour les pools système</strong>, et imposent une taille d'au moins <strong>4 vCPU et 4 GiB</strong> pour le pool système. Nous utilisons <code>Standard_D4s_v5</code> comme valeur de départ <strong>conditionnelle</strong>, pas comme promesse de disponibilité : quotas régionaux et restrictions des essais gratuits peuvent empêcher la création. Si votre abonnement n'autorise pas les 4 vCPU nécessaires, <strong>ne forcez pas</strong>, poursuivez le parcours kind en local.</p>
+<h2 id="2-les-7-concepts-comprendre-avant-d-ex-cuter">2. Les 7 concepts à comprendre avant d'exécuter</h2>
+<table>
+<thead>
+<tr>
+  <th>Concept</th>
+  <th>Analogie</th>
+  <th>Réalité Kubernetes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Cluster</strong></td>
+  <td>Usine entière</td>
+  <td>Ensemble de machines gérées par un plan de contrôle</td>
+</tr>
+<tr>
+  <td><strong>Node</strong></td>
+  <td>Atelier de l'usine</td>
+  <td>VM exécutant les charges applicatives</td>
+</tr>
+<tr>
+  <td><strong>Pod</strong></td>
+  <td>Équipe de travail</td>
+  <td>Unité d'exécution contenant un ou plusieurs conteneurs</td>
+</tr>
+<tr>
+  <td><strong>Deployment</strong></td>
+  <td>Responsable de production</td>
+  <td>Garantit le nombre souhaité de réplicas, gère les mises à jour</td>
+</tr>
+<tr>
+  <td><strong>Service</strong></td>
+  <td>Numéro d'accueil stable</td>
+  <td>Point de contact réseau indépendant des IP changeantes des Pods</td>
+</tr>
+<tr>
+  <td><strong>Namespace</strong></td>
+  <td>Département</td>
+  <td>Organisation logique des ressources; ce n'est <strong>pas</strong> une frontière de sécurité complète</td>
+</tr>
+<tr>
+  <td><strong>Probe</strong></td>
+  <td>Contrôle de santé</td>
+  <td><code>readiness</code> décide si le Pod reçoit du trafic; <code>liveness</code> déclenche un redémarrage en cas d'échec répété</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Différence Docker/Kubernetes :</strong> Docker peut démarrer un conteneur. Kubernetes contrôle et rapproche en permanence <strong>état désiré</strong> (replicas=1) et <strong>état observé</strong>. Si le Pod disparaît, le contrôleur le remplace.</p>
+<p><strong>Différence RBAC :</strong> le rôle <code>Reader</code> Azure sur un RG ne donne pas automatiquement des permissions Kubernetes internes. Azure RBAC gère les ressources Azure; Kubernetes RBAC régit les objets K8s selon la configuration d'authentification et d'autorisation du cluster. Le quickstart utilise les identifiants d'administrateur courants du lab; ne réutilisez pas cette configuration pour la production.</p>
+<h2 id="3-pr-requis-et-fronti-re-entre-pc-cloud-shell">3. Prérequis et frontière entre PC / Cloud Shell</h2>
+<p><strong>Azure Cloud Shell Bash :</strong> Azure CLI, <code>kubectl</code>, fichiers YAML, commandes <code>az aks</code>. N'utilisez <strong>pas</strong> <code>docker build</code>, <code>docker run</code> ou <code>kind create cluster</code> dans Cloud Shell (pas de daemon Docker standard). La création AKS peut consommer du crédit ou échouer selon quota.</p>
+<p><strong>PC Windows :</strong> Docker Desktop avec backend WSL2, client <code>kubectl</code>, binaire officiel <code>kind</code> (<a href="https://kind.sigs.k8s.io/docs/user/quick-start">https://kind.sigs.k8s.io/docs/user/quick-start</a>). Le cluster local peut fonctionner même une fois Azure expiré. <code>kind</code> exige un moteur de conteneurs accessible; démarrer Docker Desktop d'abord.</p>
+<h3 id="installer-le-zip-dans-cloud-shell">Installer le ZIP dans Cloud Shell</h3>
+<p>Depuis la page Azure Portal, utilisez <strong>Cloud Shell → Manage files → Upload</strong> et envoyez <code>CloudGuard360_Phase08_Kubernetes_AKS.zip</code>.</p>
+<pre><code class="language-bash">mkdir -p ~/clouddrive/cloudguard360
+unzip -n ~/CloudGuard360_Phase08_Kubernetes_AKS.zip -d ~/clouddrive/cloudguard360
+cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Kubernetes_AKS
+ls -lah
+</code></pre>
+<p>Restez dans ce dossier jusqu'à la fin de la phase pour que tous les chemins relatifs fonctionnent.</p>
+<h2 id="4-exercice-aks-temporaire-r-aliser-aujourd-hui-seulement-si-budget-quota-disponibles">4. Exercice AKS temporaire — à réaliser aujourd'hui seulement si budget/quota disponibles</h2>
+<h3 id="tape-a-contr-ler-l-abonnement-la-r-gion-et-le-quota-lecture-seule">Étape A — Contrôler l'abonnement, la région et le quota (lecture seule)</h3>
+<pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Kubernetes_AKS
+export ARM_SUBSCRIPTION_ID=&quot;$(az account show --query id -o tsv)&quot;
+export CG360_AKS_REGION=&quot;$(az group show -n rg-cg360-app --query location -o tsv)&quot;
+export CG360_AKS_SIZE=&quot;Standard_D4s_v5&quot;
+bash scripts/00-preflight.sh
+</code></pre>
+<p>Examinez les sorties et contrôlez visuellement les quotas dans <strong>Azure Portal → Subscriptions → Usage + quotas</strong> : la VM <code>Standard_D4s_v5</code> doit être autorisée, la région doit permettre AKS, et le quota vCPU régional et de famille doit suffire. Le résultat <code>list-skus</code> indique la disponibilité/catalogue, <strong>pas</strong> nécessairement votre autorisation ni votre quota réel. Si <code>CG360_AKS_REGION</code> est bloquée dans votre Free Trial, cherchez <strong>une autre région autorisée</strong> et revalidez coût + quota; ne choisissez pas une région arbitraire. <code>az aks create</code> peut échouer à cause d'une politique, du quota ou d'un SKU indisponible.</p>
+<p><strong>Pourquoi créer un RG distinct ?</strong> Nous voulons pouvoir supprimer le labo AKS sans jamais supprimer <code>rg-cg360-network</code> ou <code>rg-cg360-app</code>. Notre nom unique est <code>rg-cg360-aks-lab</code>.</p>
+<h3 id="tape-b-cr-er-aks-d-ploiement-facturable-et-explicite">Étape B — Créer AKS (déploiement facturable et explicite)</h3>
+<p>Après avoir consulté les coûts estimés (Azure Pricing Calculator, tarification VM/stockage/réseau) et confirmé budget et quota :</p>
+<pre><code class="language-bash">bash scripts/01-create-aks.sh
+</code></pre>
+<p>Il vous demandera <code>CREATE-AKS</code> avant de créer :</p>
+<ul>
+<li>1 groupe <code>rg-cg360-aks-lab</code>;</li>
+<li>1 cluster <code>aks-cg360-lab</code>, plan de contrôle <code>--tier free</code>;</li>
+<li>1 VM système <code>Standard_D4s_v5</code>, OS Ubuntu;</li>
+<li>un réseau Azure CNI Overlay <strong>distinct de vos VNets historiques</strong>;</li>
+<li>des ressources gérées par AKS dans un deuxième RG <code>MC_...</code>.</li>
+</ul>
+<p><strong>Attendu :</strong> <code>kubectl get nodes -o wide</code> affiche un nœud <code>Ready</code>. Si l'Azure CLI indique <code>QuotaExceeded</code>, <code>RequestDisallowedByAzure</code> ou <code>SkuNotAvailable</code>, stoppez la tentative : n'appliquez pas de solutions payantes improvisées. Inspectez <code>rg-cg360-aks-lab</code>; si des ressources existent, lancez la procédure de nettoyage.</p>
+<h3 id="tape-c-d-ployer-et-tester-sans-ip-publique-applicative">Étape C — Déployer et tester sans IP publique applicative</h3>
+<pre><code class="language-bash">kubectl config current-context
+bash scripts/02-deploy-check.sh
+</code></pre>
+<p>Le script vérifie <code>aks-cg360-lab</code> ou <code>kind-cg360</code>, puis crée :</p>
+<ul>
+<li>un Namespace <code>cg360</code>;</li>
+<li>un Deployment <code>cg360-web</code> (1 Pod NGINX);</li>
+<li>un Service interne <strong>ClusterIP</strong>;</li>
+<li>deux sondes de santé (<code>readiness</code>, <code>liveness</code>) et des limites CPU/RAM.</li>
+</ul>
+<p>Le script lance aussi un port-forward local sur le port <strong>18080</strong>, récupère le HTML et confirme la présence de <code>nginx</code>. <strong>PAS</strong> d'IP publique, PAS de LoadBalancer applicatif.</p>
+<pre><code class="language-bash">kubectl -n cg360 get pods -o wide
+kubectl -n cg360 get svc
+kubectl -n cg360 describe deployment cg360-web
+kubectl -n cg360 logs deployment/cg360-web --tail=30
+</code></pre>
+<p><em>À comprendre :</em> <code>kubectl apply</code> décrit l'état souhaité, <code>rollout status</code> attend l'état déployé, <code>get</code> observe, <code>describe</code> montre configuration/événements, <code>logs</code> montre la sortie des conteneurs. <code>port-forward</code> ouvre un tunnel uniquement pendant la commande.</p>
+<h3 id="tape-d-faire-une-exp-rience-de-r-silience">Étape D — Faire une expérience de résilience</h3>
+<pre><code class="language-bash"># Consulter le Pod actuel
+kubectl -n cg360 get pods -l app=cg360-web
+
+# Simuler la perte d'un Pod applicatif de démonstration
+kubectl -n cg360 delete pod -l app=cg360-web
+
+# Vérifier que le Deployment recrée un Pod
+kubectl -n cg360 rollout status deployment/cg360-web --timeout=180s
+kubectl -n cg360 get pods -l app=cg360-web
+</code></pre>
+<p><strong>Question de compréhension :</strong> pourquoi un nouveau Pod apparaît-il ? Parce que le Deployment exige 1 réplica. Le contrôleur Kubernetes détecte la différence entre l'état actuel (0) et l'état cible (1), puis programme un remplaçant. La donnée stockée dans un Pod temporaire n'est pas forcément conservée.</p>
+<h3 id="tape-e-bonus-d-ployer-votre-vraie-voting-app-redis-si-la-phase-04-a-publi-son-image">Étape E — Bonus : déployer votre VRAIE Voting App + Redis (si la Phase 04 a publié son image)</h3>
+<p>Nous avons un manifest prêt pour l'image produite par votre dépôt <code>NabilNet/cloudguard360-phase04</code> :</p>
+<ul>
+<li>Redis (<code>redis:7-alpine</code>), accessible uniquement au Service interne <code>cg360-redis</code>;</li>
+<li>Voting App Flask, configurée avec <code>REDIS=cg360-redis</code>;</li>
+<li>2 Deployments, 2 Services <code>ClusterIP</code>, 2 probes.</li>
+</ul>
+<p>Le <strong>prérequis</strong> est une image GHCR <strong>réellement construite</strong>, publiée et accessible par le cluster. Le guide précédent utilisait une image GHCR taguée par SHA git complet (40 caractères) :</p>
+<pre><code class="language-bash"># Uniquement si le workflow 02-publish a réellement réussi
+cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Kubernetes_AKS
+SHA=&quot;$(gh api repos/NabilNet/cloudguard360-phase04/commits/main --jq .sha)&quot;
+IMAGE=&quot;ghcr.io/nabilnet/cloudguard360-vote:$SHA&quot;
+echo &quot;$IMAGE&quot;
+# Vérifier dans GitHub Packages que le tag exact existe ET que le package est public.
+bash scripts/04-vote.sh &quot;$IMAGE&quot;
+</code></pre>
+<p>Si la Phase 04 n'a pas publié cette révision, <strong>ne lancez pas</strong> ce bonus : le cluster afficherait <code>ImagePullBackOff</code>. GHCR peut exiger une authentification si le package est privé. L'absence d'image GHCR ne bloque <strong>pas</strong> la réussite du labo AKS avec NGINX.</p>
+<p>Test Voting App (commande interactive; conservez la session ouverte et testez le navigateur local si <code>kubectl</code> tourne sur votre PC) :</p>
+<pre><code class="language-bash">kubectl -n cg360 port-forward svc/cg360-vote 18081:80
+</code></pre>
+<p>Depuis le <strong>même environnement local</strong>, on peut faire <code>curl http://127.0.0.1:18081/</code>. Sur Cloud Shell, utilisez une seconde session Cloud Shell pour la requête HTTP ou une redirection de port temporaire; la page n'est pas automatiquement accessible dans le navigateur de votre PC.</p>
+<h3 id="tape-f-collecter-les-preuves">Étape F — Collecter les preuves</h3>
+<pre><code class="language-bash">cd ~/clouddrive/cloudguard360/CloudGuard360_Phase08_Kubernetes_AKS
+bash scripts/03-evidence.sh
+</code></pre>
+<p>Le script archive : statut des nœuds, Pods, Services, événements, logs, version et zone AKS (en cas d'AKS), dans <code>evidence/&lt;timestamp&gt;.zip</code>. Il n'exporte pas les credentials Kubernetes.</p>
+<p>Dans Azure Cloud Shell, utilisez <strong>Manage files → Download</strong> pour télécharger cette archive <strong>sur votre ordinateur immédiatement</strong>, avant l'expiration de l'abonnement.</p>
+<h3 id="tape-g-supprimer-les-ressources-aks-ne-pas-repousser-au-lendemain">Étape G — Supprimer les ressources AKS (ne pas repousser au lendemain)</h3>
+<p><strong>Après avoir sauvegardé les preuves :</strong></p>
+<pre><code class="language-bash">bash scripts/05-delete-aks.sh
+</code></pre>
+<p>Tapez <code>DELETE-LAB</code> après avoir vérifié les ressources concernées. Le script ne supprime que <code>rg-cg360-aks-lab</code> et vérifie la disparition du RG système géré par AKS. <strong>Ne supprimez jamais <code>rg-cg360-app</code> ou <code>rg-cg360-network</code> par automatisme.</strong></p>
+<p>Si une suppression reste incomplète ou si <code>MC_...</code> persiste, inspectez dans Azure Portal → Resource Groups et traitez l'échec immédiatement. La suppression peut prendre du temps. Pour une souscription convertie à pay-as-you-go, les coûts peuvent continuer tant que certaines ressources existent.</p>
+<h2 id="5-kubernetes-local-gratuit-avec-kind-aujourd-hui-ou-apr-s-l-expiration-azure">5. Kubernetes local gratuit avec kind — aujourd'hui ou après l'expiration Azure</h2>
+<p>Sur votre ordinateur Windows, ouvrez <strong>PowerShell</strong> (pas Azure Cloud Shell). Installez d'abord Docker Desktop + WSL2, <code>kubectl</code>, <code>kind</code> avec les installations officielles, puis vérifiez :</p>
+<pre><code class="language-powershell">docker version
+kubectl version --client
+kind version
+</code></pre>
+<p>Copiez et décompressez le ZIP sur votre ordinateur, puis ouvrez le dossier racine du projet en PowerShell :</p>
+<pre><code class="language-powershell">kind create cluster --name cg360
+kubectl config use-context kind-cg360
+kubectl get nodes
+kubectl apply -f .\k8s\00-smoke.yaml
+kubectl -n cg360 rollout status deploy/cg360-web --timeout=180s
+kubectl -n cg360 get pods,svc
+kubectl -n cg360 port-forward svc/cg360-web 8080:80
+</code></pre>
+<p>Dans le navigateur de votre PC, ouvrez <strong><a href="http://localhost:8080">http://localhost:8080</a></strong>. Pour reprendre le terminal, faites <code>Ctrl+C</code>, puis :</p>
+<pre><code class="language-powershell">kubectl -n cg360 delete pod -l app=cg360-web
+kubectl -n cg360 rollout status deploy/cg360-web --timeout=180s
+kind delete cluster --name cg360
+</code></pre>
+<p><strong>Le code YAML ne change pas :</strong> ce sont les mêmes concepts Kubernetes sur votre PC et sur AKS; les différences concernent l'implémentation du cluster et l'intégration réseau/cloud. Le coût local dépend de votre machine, pas de votre crédit Azure.</p>
+<h2 id="6-tableau-d-valuation-validez-personnellement">6. Tableau d'évaluation (validez personnellement)</h2>
+<table>
+<thead>
+<tr>
+  <th>Critère</th>
+  <th>Preuve à conserver</th>
+  <th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Sécurité de la souscription</td>
+  <td>Capture du statut/solde Azure</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Admission AKS / quota</td>
+  <td><code>00-preflight.sh</code></td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>AKS temporaire opérationnel, si autorisé</td>
+  <td><code>kubectl get nodes</code> = Ready</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Deployment NGINX</td>
+  <td><code>rollout status</code> = success</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Service &amp; réponse HTTP</td>
+  <td><code>02-deploy-check.sh</code> = PASS</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Résilience</td>
+  <td>Pod recréé après suppression</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Voting App (facultatif)</td>
+  <td>Frontend + Redis fonctionnels</td>
+  <td>Facultatif</td>
+</tr>
+<tr>
+  <td>Rapport technique</td>
+  <td>ZIP <code>evidence/</code> téléchargé sur PC</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Nettoyage AKS</td>
+  <td><code>rg-cg360-aks-lab</code> + <code>MC_...</code> absents</td>
+  <td>À vérifier</td>
+</tr>
+<tr>
+  <td>Compétences durables</td>
+  <td>Kubernetes local <code>kind</code></td>
+  <td>À vérifier</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ne déclarez pas un déploiement AKS réussi si le cluster n'a pas réellement atteint Ready et si l'application n'a pas été testée.</strong> Si Azure refuse AKS pour raisons de quota ou de politique, le parcours kind reste une validation technique pertinente; documentez honnêtement la limitation du cloud.</p>
+<h2 id="7-d-pannage-rapide">7. Dépannage rapide</h2>
+<table>
+<thead>
+<tr>
+  <th>Erreur</th>
+  <th>Cause probable</th>
+  <th>Action sûre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>RequestDisallowedByAzure</code></td>
+  <td>Région ou politique de souscription restreinte</td>
+  <td>Vérifier régions autorisées, ne pas improviser</td>
+</tr>
+<tr>
+  <td><code>QuotaExceeded</code> / <code>OperationNotAllowed</code></td>
+  <td>vCPU insuffisants pour le pool système</td>
+  <td>Ne pas choisir B-series; revenir à kind</td>
+</tr>
+<tr>
+  <td><code>SkuNotAvailable</code></td>
+  <td>SKU/région indisponibles</td>
+  <td>Vérifier <code>az vm list-skus</code>, quotas et région</td>
+</tr>
+<tr>
+  <td><code>ImagePullBackOff</code></td>
+  <td>Image GHCR manquante ou privée</td>
+  <td>Vérifier tag SHA, publication et visibilité</td>
+</tr>
+<tr>
+  <td><code>CrashLoopBackOff</code></td>
+  <td>App ne démarre pas / Redis inaccessible</td>
+  <td><code>kubectl logs</code>, <code>describe pod</code>, variable REDIS</td>
+</tr>
+<tr>
+  <td><code>Pending</code></td>
+  <td>CPU/RAM insuffisants ou problèmes de scheduling</td>
+  <td><code>kubectl describe pod</code>, événements, quotas</td>
+</tr>
+<tr>
+  <td><code>Forbidden</code></td>
+  <td>Permissions Kubernetes RBAC insuffisantes</td>
+  <td>Vérifier identité, contexte et droits, ne pas contourner</td>
+</tr>
+<tr>
+  <td>Port-forward déjà occupé</td>
+  <td>Port local 18080 utilisé</td>
+  <td>Arrêter l'autre processus ou choisir autre port</td>
+</tr>
+<tr>
+  <td>Suppression RG incomplète</td>
+  <td>Dépendance ou erreur Azure</td>
+  <td>Azure Portal et liste des ressources, conserver preuve</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-mini-entretien-professionnel-trois-questions">8. Mini entretien professionnel — trois questions</h2>
+<ol>
+<li><strong>Quelle différence entre Pod, Deployment et Service ?</strong> Un Pod exécute l'application; un Deployment maintient le nombre de Pods et leur mise à jour; un Service offre une adresse logique stable aux clients.</li>
+<li><strong>Pourquoi Kubernetes recrée un Pod supprimé ?</strong> Le contrôleur rapproche en continu état désiré (<code>replicas: 1</code>) et état réel; la suppression manuelle n'altère pas la cible du Deployment.</li>
+<li><strong>Pourquoi AKS Free n'est-il pas totalement gratuit ?</strong> Le plan de contrôle peut être gratuit, mais les nœuds VM, les disques et le réseau sous-jacent peuvent être facturés. La suppression des ressources doit être vérifiée.</li>
+</ol>
+<h2 id="9-sources-v-rifi-es-novembre-2026">9. Sources vérifiées (novembre 2026)</h2>
+<ul>
+<li>Azure Free Account : <a href="https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/avoid-charges-free-account">https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/avoid-charges-free-account</a></li>
+<li>AKS Free/Standard/Premium : <a href="https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers">https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers</a></li>
+<li>AKS System Node Pools (SKU B non pris en charge) : <a href="https://learn.microsoft.com/en-us/azure/aks/use-system-pools">https://learn.microsoft.com/en-us/azure/aks/use-system-pools</a></li>
+<li>AKS Azure CLI : <a href="https://learn.microsoft.com/en-us/cli/azure/aks">https://learn.microsoft.com/en-us/cli/azure/aks</a></li>
+<li>Azure CNI Overlay : <a href="https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay">https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay</a></li>
+<li>kind : <a href="https://kind.sigs.k8s.io/docs/user/quick-start/">https://kind.sigs.k8s.io/docs/user/quick-start/</a></li>
+<li>Azure RG deletion : <a href="https://learn.microsoft.com/en-us/cli/azure/group">https://learn.microsoft.com/en-us/cli/azure/group</a></li>
+</ul>
+<p><strong>Sécurité :</strong> ce projet est un environnement d'apprentissage, pas une architecture de production. Les contrôles de conformité, la résistance des identités, la gestion des secrets, la haute disponibilité, les dépendances logicielles et la posture réseau exigeraient un programme distinct avant toute utilisation réelle.</p>
+</article></div><div class="footer">CloudGuard 360 · Formation indépendante · Exécution Azure réelle non simulée · Sécurité et maîtrise des coûts prioritaires</div></main></div><div id="toast" class="toast" role="status"></div><script>
+const safeGet=(k)=>{try{return window.localStorage.getItem(k)}catch(e){return null}}; const safeSet=(k,v)=>{try{window.localStorage.setItem(k,v)}catch(e){}}; const tasks=['Sauvegarde et vérification du crédit','Architecture et Kubernetes compris','Préflight Azure vérifié','AKS temporaire ou kind local réalisé','Deployment et port-forward validés','Tests de résilience exécutés','Preuves téléchargées sur mon PC','Ressources AKS supprimées et vérifiées'];const checks=document.getElementById('checks');tasks.forEach((x,i)=>{const id='cg360-8-'+i;const label=document.createElement('label');label.innerHTML=`<input type="checkbox" id="${id}"> ${x}`;checks.appendChild(label);const box=label.querySelector('input');box.checked=safeGet(id)==='1';box.addEventListener('change',()=>{safeSet(id,box.checked?'1':'0');progress()})});function progress(){const n=[...checks.querySelectorAll('input')].filter(x=>x.checked).length;document.getElementById('percentage').textContent=`Progression : ${Math.round(n/tasks.length*100)}% (${n}/${tasks.length})`;document.getElementById('fill').style.width=(n/tasks.length*100)+'%'}progress();
+const heads=[...document.querySelectorAll('article h2')];heads.forEach(h=>{const link=document.createElement('a');link.href='#'+h.id;link.textContent=h.textContent;document.getElementById('navlist').appendChild(link)});
+document.querySelectorAll('article pre').forEach((pre,i)=>{const box=document.createElement('div');box.className='codebox';const bar=document.createElement('div');bar.className='codehead';bar.innerHTML='<span>⌘ Commandes / configuration</span>';const btn=document.createElement('button');btn.textContent='Copier';btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(pre.textContent);toast('Commande copiée')}catch(e){const t=document.createElement('textarea');t.value=pre.textContent;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();toast('Commande copiée')}});bar.appendChild(btn);pre.parentNode.insertBefore(box,pre);box.append(bar,pre)});
+function toast(msg){const x=document.getElementById('toast');x.textContent=msg;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1700)}
+const theme=document.getElementById('theme');const t=safeGet('cg360-theme');if(t==='light')document.body.classList.add('light');theme.onclick=()=>{document.body.classList.toggle('light');safeSet('cg360-theme',document.body.classList.contains('light')?'light':'dark')};
+const search=document.getElementById('search');search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();const entries=[...document.querySelectorAll('article h2')];entries.forEach((h,i)=>{const next=entries[i+1];let all=h.textContent;let el=h.nextElementSibling;while(el&&el!==next){all+=' '+el.textContent;el=el.nextElementSibling}document.querySelectorAll('.navlist a')[i]?.classList.toggle('hidden',!!query&&!all.toLowerCase().includes(query))});if(query&&query.length>2){const match=[...document.querySelectorAll('article h2, article h3')].find(x=>x.textContent.toLowerCase().includes(query));if(match)match.scrollIntoView({block:'center',behavior:'smooth'})}});
+</script></body></html>
